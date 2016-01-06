@@ -22,7 +22,11 @@ $(function() {
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
 
-  var socket = io();
+  var roomId = window.location.pathname.length ? window.location.pathname : null;
+
+  if (!roomId) return;
+
+  var socket = io(roomId);
 
   function addParticipantsMessage (data) {
     var message = '';
