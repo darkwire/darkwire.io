@@ -13,7 +13,6 @@ $(function() {
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
 
-  var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
 
   // Prompt for setting a username
@@ -37,13 +36,10 @@ $(function() {
 
   // Sets the client's username
   function setUsername () {
-    username = cleanInput($usernameInput.val().trim());
-
+    username = window.username;
     // If the username is valid
     if (username) {
-      $loginPage.fadeOut();
       $chatPage.show();
-      $loginPage.off('click');
       $currentInput = $inputMessage.focus();
 
       // Tell the server your username
@@ -211,13 +207,6 @@ $(function() {
     updateTyping();
   });
 
-  // Click events
-
-  // Focus input when clicking anywhere on login page
-  $loginPage.click(function () {
-    $currentInput.focus();
-  });
-
   // Focus input when clicking on the message input's border
   $inputMessage.click(function () {
     $inputMessage.focus();
@@ -263,4 +252,6 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
+
+  setUsername()
 });

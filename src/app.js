@@ -5,6 +5,7 @@ import session from 'express-session';
 import Redis from 'connect-redis';
 import Io from 'socket.io';
 import http from 'http';
+import shortid from 'shortid';
 
 const app = express();
 const server = http.createServer(app);
@@ -37,7 +38,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => {
 
-  res.render('index', {});
+  res.render('index', {username: shortid.generate()});
 });
 
 
@@ -53,7 +54,6 @@ io.on('connection', (socket) => {
     });
   });
 
-  // when the client emits 'add user', this listens and executes
   socket.on('add user', (username) => {
     if (addedUser) return;
 
