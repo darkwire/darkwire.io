@@ -54,7 +54,6 @@ class Room {
 
       // when the user disconnects.. perform this
       socket.on('disconnect', () => {
-        this.emit('empty');
         if (addedUser) {
           --this.numUsers;
 
@@ -66,7 +65,7 @@ class Room {
 
           // remove room from rooms array
           if (this.numUsers === 0) {
-
+            this.emit('empty');
           }
         }
       });
