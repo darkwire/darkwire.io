@@ -72,8 +72,6 @@ app.get('/:roomId', (req, res) => {
     return res.sendStatus(404);
   }
 
-  generateNewRoom(req, res, roomId);
-
 });
 
 // Events
