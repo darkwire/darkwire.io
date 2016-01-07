@@ -59,13 +59,8 @@ app.get('/', (req, res) => {
 
 app.get('/:roomId', (req, res) => {
   const roomId = req.params.roomId || false;
-  let roomExists = false;
 
-  rooms.forEach( (room) => {
-    if (room._id === roomId) {
-      roomExists = true;
-    }
-  });
+  let roomExists = _.findWhere(rooms, {_id: roomId}) ? true : false;
 
   if (roomExists) {
     return res.render('index', {username: shortid.generate()});
