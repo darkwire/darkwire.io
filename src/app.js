@@ -38,22 +38,22 @@ app.use(express.static(__dirname + '/public'));
 
 // Routes
 
-function generateNewRoom(id) {
+function generateNewRoom(req, res, id) {
   const room = new Room(io, id);
   rooms.push(room);
   console.log('generating new room');
 
   room.on('empty', function() {
     console.log('room empty');
-    rooms = _.without(rooms, _.findWhere(rooms, {_id: this._id}));
+    rooms = _.without(rooms, _.findWhere(rooms, {id: room.id}));
   });
 
+  return res.redirect(`/${id}`);
 }
 
 app.get('/', (req, res) => {
   const id = shortid.generate();
-  generateNewRoom(id);
-  res.redirect(`/${id}`);
+  generateNewRoom(req, res, id);
 });
 
 app.get('/:roomId', (req, res) => {
@@ -68,11 +68,10 @@ app.get('/:roomId', (req, res) => {
 
   if (roomExists) {
     return res.render('index', {username: shortid.generate()});
-  } else {
-    return res.sendStatus(404);
   }
 
-  generateNewRoom(req, res, roomId);
+  // generateNewRoom(req, res, roomId);
+  return res.render('noop', {});
 
 });
 
