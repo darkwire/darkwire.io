@@ -44,8 +44,9 @@ function generateNewRoom(req, res, id) {
   console.log('generating new room');
 
   room.on('empty', function() {
-    console.log('room empty');
-    rooms = _.without(rooms, _.findWhere(rooms, {id: room.id}));
+    console.log('room empty', room._id);
+    rooms = _.without(rooms, _.findWhere(rooms, {_id: room._id}));
+
   });
 
   return res.redirect(`/${id}`);
@@ -70,7 +71,6 @@ app.get('/:roomId', (req, res) => {
     return res.render('index', {username: shortid.generate()});
   }
 
-  // generateNewRoom(req, res, roomId);
   return res.render('noop', {});
 
 });
