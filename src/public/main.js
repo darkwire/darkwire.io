@@ -222,10 +222,15 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "FattyChat - Anonomous Chat";
+    var message = "Fatty.chat - Anonomous Chat";
     log(message, {
       prepend: true
     });
+
+    message = "Chatrooms are destroyed after all participants exit. Chat history is not persistent and not saved.";
+
+    log(message);
+
     addParticipantsMessage(data);
   });
 
