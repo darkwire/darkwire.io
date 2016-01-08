@@ -57,6 +57,10 @@ app.get('/', (req, res) => {
   generateNewRoom(req, res, id);
 });
 
+app.get('/loaderio-6f94612a3fa71ff98b23eecfcca2de6c.html', (req, res) => {
+  res.send('loaderio-6f94612a3fa71ff98b23eecfcca2de6c');
+});
+
 app.get('/:roomId', (req, res) => {
   const roomId = req.params.roomId || false;
 
