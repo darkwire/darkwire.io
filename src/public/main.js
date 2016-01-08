@@ -14,8 +14,12 @@ $(function() {
   var $usernameInput = $('.usernameInput'); // Input for username
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
+  var $key = $('#key');
 
   var $chatPage = $('.chat.page'); // The chatroom page
+
+  var key = CryptoJS.SHA3(Math.random().toString(36).substring(7)).toString();
+  $key.val(key);
 
   // Prompt for setting a username
   var username;
@@ -49,7 +53,7 @@ $(function() {
     } else {
       fs(window.TEMPORARY,
          100,
-         log.bind(log, "!!WARNING!! : Your browser is not in incognito mode! : !!WARNING!!"),
+         log.bind(log, "WARNING: Your browser is not in incognito mode!"),
          log.bind(log, "Your browser is in incognito mode."));
     }
 
@@ -81,11 +85,11 @@ $(function() {
   }
 
   function encrypt(text) {
-    return CryptoJS.AES.encrypt(text, roomId).toString();
+    return CryptoJS.AES.encrypt(text, $key.val()).toString();
   }
 
   function decrypt(text) {
-    return CryptoJS.AES.decrypt(text, roomId).toString(CryptoJS.enc.Utf8);
+    return CryptoJS.AES.decrypt(text, $key.val()).toString(CryptoJS.enc.Utf8) || text;
   }  
 
   // Log a message
@@ -161,7 +165,9 @@ $(function() {
     } else {
       $messages.append($el);
     }
-    $messages[0].scrollTop = $messages[0].scrollHeight;
+
+    $messages[0].scrollTop = $messages[0].scrollHeight; // minus 60 for key
+    console.log($messages[0]);
   }
 
   // Prevents input from having injected markup

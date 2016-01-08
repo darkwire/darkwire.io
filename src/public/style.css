@@ -98,7 +98,7 @@ ul {
   font-size: 150%;
 }
 
-.inputMessage {
+.inputMessage, #key {
   font-size: 100%;
 }
 
@@ -137,7 +137,7 @@ ul {
 
 /* Input */
 
-.inputMessage {
+.inputMessage{
   border: 10px solid #000;
   bottom: 0;
   height: 60px;
@@ -145,6 +145,16 @@ ul {
   outline: none;
   padding-left: 10px;
   position: absolute;
+  right: 0;
+  width: 100%;
+}
+
+#key {
+  border: 10px solid #000;
+  height: 60px;
+  left: 0;
+  outline: none;
+  padding-left: 10px;
   right: 0;
   width: 100%;
 }
