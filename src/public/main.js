@@ -222,7 +222,7 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Fatty.chat - Anonomous Chat";
+    var message = "Fatty.chat - Anonymous Chat";
     log(message, {
       prepend: true
     });
