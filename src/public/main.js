@@ -64,9 +64,17 @@ $(function() {
         message: message
       });
       // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', message);
+      socket.emit('new message', encrypt(message));
     }
   }
+
+  function encrypt(text) {
+    return CryptoJS.AES.encrypt(text, roomId).toString();
+  }
+
+  function decrypt(text) {
+    return CryptoJS.AES.decrypt(text, roomId).toString(CryptoJS.enc.Utf8);
+  }  
 
   // Log a message
   function log (message, options) {
@@ -236,6 +244,7 @@ $(function() {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
+    data.message = decrypt(data.message);
     addChatMessage(data);
   });
 
