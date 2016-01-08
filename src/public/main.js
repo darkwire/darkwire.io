@@ -37,9 +37,9 @@ $(function() {
   function addParticipantsMessage (data) {
     var message = '';
     if (data.numUsers === 1) {
-      message += "there's 1 participant";
+      message += "There's 1 participant";
     } else {
-      message += "there are " + data.numUsers + " participants";
+      message += "There are " + data.numUsers + " participants";
     }
     log(message);
   }
@@ -167,7 +167,6 @@ $(function() {
     }
 
     $messages[0].scrollTop = $messages[0].scrollHeight; // minus 60 for key
-    console.log($messages[0]);
   }
 
   // Prevents input from having injected markup
@@ -289,5 +288,10 @@ $(function() {
     removeChatTyping(data);
   });
 
-  setUsername()
+  setUsername();
+
+  $('span.key-btn').click(function() {
+    $('#key-modal').modal('show');
+  });
+
 });
