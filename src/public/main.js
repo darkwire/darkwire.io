@@ -216,19 +216,16 @@ $(function() {
   // Keyboard events
 
   $window.keydown(function (event) {
-    // Auto-focus the current input when a key is typed
-    if (!(event.ctrlKey || event.metaKey || event.altKey)) {
-      $currentInput.focus();
+    // When the client hits ENTER on their keyboard and chat message input is focused
+    if (event.which === 13 && $('.inputMessage').is(':focus')) {
+      sendMessage();
+      socket.emit('stop typing');
+      typing = false;
     }
-    // When the client hits ENTER on their keyboard
-    if (event.which === 13) {
-      if (username) {
-        sendMessage();
-        socket.emit('stop typing');
-        typing = false;
-      } else {
-        setUsername();
-      }
+
+    // If enter is pressed on key input then close key modal
+    if (event.which === 13 && $('input#key').is(':focus')) {
+      $('#key-modal').modal('hide');
     }
   });
 
