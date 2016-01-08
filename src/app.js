@@ -68,7 +68,7 @@ app.get('/:roomId', (req, res) => {
     return res.render('index', {username: shortid.generate()});
   }
 
-  return res.render('noop', {});
+  return res.redirect('/');
 
 });
 

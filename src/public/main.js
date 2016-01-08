@@ -244,12 +244,12 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Fatty.chat - Anonymous Chat";
+    var message = "Fatty.chat - Anonymous Chat - Room ID: " + roomId.replace('/', '');
     log(message, {
       prepend: true
     });
 
-    message = "Chatrooms are destroyed after all participants exit. Chat history is not persistent and not saved.";
+    message = "This chatroom is destroyed after all participants exit. Chat history is client side only and not persistent.";
 
     log(message);
 
