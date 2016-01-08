@@ -24,7 +24,7 @@ const sessionMiddleware = session({
   saveUninitialized: true
 });
 
-var rooms = [];
+let rooms = [];
 
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
@@ -44,9 +44,7 @@ function generateNewRoom(req, res, id) {
   console.log('generating new room');
 
   room.on('empty', function() {
-    console.log('room empty', room._id);
     rooms = _.without(rooms, _.findWhere(rooms, {_id: room._id}));
-
   });
 
   return res.redirect(`/${id}`);
@@ -64,7 +62,7 @@ app.get('/loaderio-6f94612a3fa71ff98b23eecfcca2de6c.html', (req, res) => {
 app.get('/:roomId', (req, res) => {
   const roomId = req.params.roomId || false;
 
-  let roomExists = _.findWhere(rooms, {_id: roomId}) ? true : false;
+  let roomExists = _.findWhere(rooms, {_id: roomId}) || false;
 
   if (roomExists) {
     return res.render('index', {username: shortid.generate()});

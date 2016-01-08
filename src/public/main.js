@@ -1,3 +1,5 @@
+var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+
 $(function() {
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
@@ -41,6 +43,16 @@ $(function() {
   // Sets the client's username
   function setUsername () {
     username = window.username;
+    // warn not incognitor
+    if (!fs) {
+      console.log('no fs');
+    } else {
+      fs(window.TEMPORARY,
+         100,
+         log.bind(log, "!!WARNING!! : Your browser is not in incognito mode! : !!WARNING!!"),
+         log.bind(log, "Your browser is in incognito mode."));
+    }
+
     // If the username is valid
     if (username) {
       $chatPage.show();
