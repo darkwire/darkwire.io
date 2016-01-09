@@ -24,6 +24,10 @@ class Room {
       socket.on('add user', (username) => {
         if (addedUser) return;
 
+        if (this.numUsers === 0) {
+          socket.emit('first');
+        }
+
         // we store the username in the socket session for this client
         socket.username = username;
         ++this.numUsers;

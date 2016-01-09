@@ -285,6 +285,10 @@ $(function() {
     removeChatTyping(data);
   });
 
+  socket.on('first', function() {
+    $('.modal').modal('show');
+  });
+
   setUsername();
 
   $('span.key-btn').click(function() {
