@@ -1,6 +1,8 @@
 var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
 $(function() {
+  var isActive = false;
+  var newMessages = 0;
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
   var COLORS = [
@@ -8,6 +10,11 @@ $(function() {
     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
   ];
+
+  window.favicon = new Favico({
+    animation:'pop',
+    type : 'rectangle'
+  });
 
   // Initialize variables
   var $window = $(window);
@@ -258,6 +265,10 @@ $(function() {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
+    if (!isActive) {
+      newMessages++;
+      favicon.badge(newMessages);
+    }
     data.message = decrypt(data.message);
     addChatMessage(data);
   });
@@ -294,5 +305,18 @@ $(function() {
   $('span.key-btn').click(function() {
     $('#key-modal').modal('show');
   });
+
+  window.onfocus = function () { 
+    console.log('window active');
+    isActive = true;
+    newMessages = 0;
+    favicon.reset();
+  }; 
+
+  window.onblur = function () { 
+    console.log('window not actives');
+    isActive = false;
+  }; 
+
 
 });
