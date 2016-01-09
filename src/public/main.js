@@ -43,6 +43,7 @@ $(function() {
   if (!roomId) return;
 
   var socket = io(roomId);
+  $('#roomIdKey').text(roomId.replace('/', ''));
 
   function addParticipantsMessage (data) {
     var message = '';
