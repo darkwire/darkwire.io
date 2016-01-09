@@ -94,7 +94,13 @@ $(function() {
 
   // Log a message
   function log (message, options) {
-    var $el = $('<li>').addClass('log').text(message);
+    var html = options && options.html === true || false;
+    var $el;
+    if (html) {
+      $el = $('<li>').addClass('log').html(message);
+    } else {
+      $el = $('<li>').addClass('log').text(message);
+    }
     addMessageElement($el, options);
   }
 
@@ -244,9 +250,10 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Fatty.chat - Anonymous Chat - Room ID: " + roomId.replace('/', '');
+    var message = "Fatty.chat - Anonymous Chat - Room ID: " + roomId.replace('/', '') + '&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-text="https://fatty.chat' + roomId + '">Copy link to share</button>';
     log(message, {
-      prepend: true
+      prepend: true,
+      html: true
     });
 
     message = "This chatroom is destroyed after all participants exit. Chat history is client side only and not persistent.";
@@ -289,6 +296,20 @@ $(function() {
 
   $('span.key-btn').click(function() {
     $('#key-modal').modal('show');
+  });
+
+  var clipboard = new Clipboard('.copyable');
+
+  clipboard.on('success', function(e) {
+    $(e.trigger).tooltip({
+      title: 'Copied!',
+      trigger: 'manual',
+      placement: 'auto'
+    });
+    $(e.trigger).tooltip('show');
+    setTimeout(function() {
+      $(e.trigger).tooltip('hide');
+    }, 2000);
   });
 
 });
