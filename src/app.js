@@ -71,7 +71,6 @@ app.get('/:roomId', (req, res) => {
   }
 
   return res.redirect('/');
-
 });
 
 // Events
