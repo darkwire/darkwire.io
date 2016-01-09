@@ -22,6 +22,7 @@ $(function() {
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
   var $key = $('#key');
+  var $genKey = $('#new_key');
 
   var $chatPage = $('.chat.page'); // The chatroom page
 
@@ -251,6 +252,11 @@ $(function() {
   // Focus input when clicking on the message input's border
   $inputMessage.click(function () {
     $inputMessage.focus();
+  });
+
+  $genKey.click(function () {
+    var key = CryptoJS.SHA3(Math.random().toString(36).substring(7)).toString();
+    $key.val(key);
   });
 
   // Socket events
