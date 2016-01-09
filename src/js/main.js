@@ -330,11 +330,24 @@ $(function() {
 
   window.onblur = function () { 
     isActive = false;
-  }; 
+  };
 
   clipboard.on('success', function(e) {
     $(e.trigger).tooltip({
       title: 'Copied!',
+      trigger: 'manual',
+      placement: 'auto'
+    });
+    $(e.trigger).tooltip('show');
+    setTimeout(function() {
+      $(e.trigger).tooltip('hide');
+    }, 2000);
+    e.clearSelection();
+  });
+
+  clipboard.on('error', function(e) {
+    $(e.trigger).tooltip({
+      title: 'Press ⌘C to copy',
       trigger: 'manual',
       placement: 'auto'
     });
