@@ -23,6 +23,7 @@ $(function() {
   var $inputMessage = $('.inputMessage'); // Input message input box
   var $key = $('#key');
   var $genKey = $('#new_key');
+  var $removeKey = $('#remove_key');
 
   var $chatPage = $('.chat.page'); // The chatroom page
 
@@ -258,6 +259,10 @@ $(function() {
   $genKey.click(function () {
     var key = CryptoJS.SHA3(Math.random().toString(36).substring(7)).toString();
     $key.val(key);
+  });
+
+  $removeKey.click(function(() {
+    $key.val('');
   });
 
   // Socket events
