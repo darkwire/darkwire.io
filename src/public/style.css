@@ -32,6 +32,15 @@ ul {
   word-wrap: break-word;
 }
 
+p {
+  margin: 15px 0 15px;
+}
+
+/* Typography */
+.bold {
+  font-weight: 700;
+}
+
 /* Pages */
 
 .pages {
@@ -114,6 +123,7 @@ input {
 .chatArea {
   height: 100%;
   padding-bottom: 80px;
+  padding-top: 60px;
 }
 
 .messages {
@@ -160,6 +170,10 @@ span.key-btn {
 
 span.key-btn img {
   width: 50px;
+}
+
+span.key-btn.active {
+  display: none;
 }
 
 #key-modal input{

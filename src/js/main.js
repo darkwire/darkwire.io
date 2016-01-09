@@ -2,6 +2,7 @@ var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
 $(function() {
   var isActive = false;
+  var encryptionEnabled = false;
   var newMessages = 0;
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
@@ -22,7 +23,7 @@ $(function() {
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
   var $key = $('#key');
-  var $genKey = $('#new_key');
+  var $genKey = $('.new_key');
   var $removeKey = $('#remove_key');
 
   var $chatPage = $('.chat.page'); // The chatroom page
@@ -97,11 +98,13 @@ $(function() {
   }
 
   function encrypt(text) {
-    return CryptoJS.AES.encrypt(text, $key.val()).toString();
+    var key = encryptionEnabled ? $key.val() : roomId;
+    return CryptoJS.AES.encrypt(text, key).toString();
   }
 
   function decrypt(text) {
-    return CryptoJS.AES.decrypt(text, $key.val()).toString(CryptoJS.enc.Utf8) || text;
+    var key = encryptionEnabled ? $key.val() : roomId;
+    return CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8) || text;
   }  
 
   // Log a message
@@ -270,17 +273,6 @@ $(function() {
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
     connected = true;
-    // Display the welcome message
-    var message = "Fatty.chat - Anonymous Chat - Room ID: " + roomId.replace('/', '') + '&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-text="https://fatty.chat' + roomId + '">Copy link to share</button>';
-    log(message, {
-      prepend: true,
-      html: true
-    });
-
-    message = "This chatroom is destroyed after all participants exit. Chat history is client side only and not persistent.";
-
-    log(message);
-
     addParticipantsMessage(data);
   });
 
@@ -317,14 +309,10 @@ $(function() {
     removeChatTyping(data);
   });
 
-  socket.on('first', function() {
-    $('.modal').modal('show');
-  });
-
   setUsername();
 
   $('span.key-btn').click(function() {
-    $('#key-modal').modal('show');
+    $('#settings-modal').modal('show');
   });
 
   window.onfocus = function () { 
@@ -361,5 +349,43 @@ $(function() {
       $(e.trigger).tooltip('hide');
     }, 2000);
   });
+
+  // Nav links
+  $('a#settings-nav').click(function() {
+    $('#settings-modal').modal('show');
+  });
+
+  $('a#about-nav').click(function() {
+    $('#about-modal').modal('show');
+  });
+
+  $('.room-url').text('https://fatty.chat' + roomId);
+  $('.room-id').text(roomId.replace('/', ''));
+
+  $('#disable-encryption').hide();
+
+  $('.encryption-status').text('OFF');
+
+  $('.encryption-settings').hide();
+
+  $('#disable-encryption').click(function() {
+    encryptionEnabled = false;
+    $('.encryption-settings,#disable-encryption').hide();
+    $('#enable-encryption').show();
+    $('.encryption-status').text('OFF');
+    $('.key-btn.inactive').show();
+    $('.key-btn.active').hide();
+  });
+
+  $('#enable-encryption').click(function() {
+    encryptionEnabled = true;
+    $('.encryption-settings,#disable-encryption').show();
+    $('#enable-encryption').hide();
+    $('.encryption-status').text('ON');
+    $('.key-btn.inactive').hide();
+    $('.key-btn.active').show();
+  });
+
+  $('[data-toggle="tooltip"]').tooltip();
 
 });
