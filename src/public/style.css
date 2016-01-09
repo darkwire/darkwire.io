@@ -151,7 +151,7 @@ input {
   border: none;
   border-top: 2px solid #ececec;
   bottom: 0;
-  height: 70px;
+  height: 60px;
   left: 0;
   outline: none;
   padding-left: 10px;
@@ -169,7 +169,9 @@ span.key-btn {
 }
 
 span.key-btn img {
-  width: 50px;
+  width: 35px;
+  top: -3px;
+  position: relative;
 }
 
 span.key-btn.active {
