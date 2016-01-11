@@ -160,6 +160,10 @@ input {
   width: 100%;
 }
 
+#settings-modal .modal-footer button.encryption-inactive {
+  display: none;
+}
+
 #first-modal .modal-footer button.encryption-inactive {
   display: none;
 }
