@@ -402,17 +402,19 @@ $(function() {
 
   $('.modal-footer button.encryption-inactive').click(function() {
     var n = noty({
-      text: 'Encryption is OFF. Anyone with this URL can read your messages. Turn encryption on in Settings.',
+      text: 'Encryption is OFF. Anyone with this URL can read your messages. Turn on encryption in Settings.',
       theme: 'relax',
-      type: 'error'
+      type: 'error',
+      timeout: 5000      
     });
   });
 
   $('.chat .warning-sign').click(function() {
     var n = noty({
-      text: 'Encryption is OFF. Anyone with this URL can read your messages. Turn encryption on in Settings.',
+      text: 'Encryption is OFF. Anyone with this URL can read your messages. Turn on encryption in Settings.',
       theme: 'relax',
-      type: 'error'
+      type: 'error',
+      timeout: 5000
     });
   });
 
