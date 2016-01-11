@@ -264,6 +264,7 @@ $(function() {
   $genKey.click(function () {
     var key = (Math.random() * Math.random()).toString(36).substring(7);
     $key.val(key);
+    keyInputChanged(key);
   });
 
   $removeKey.click(function() {
@@ -383,10 +384,7 @@ $(function() {
 
   $('[data-toggle="tooltip"]').tooltip();
 
-  $('.key').on('input', function() {
-    var val = $(this).val();
-    $('.key').val(val);
-
+  function keyInputChanged(val) {
     if (!val.trim().length) {
       encryptionEnabled = false;
       $('.modal-footer button.encryption-inactive').show();
@@ -399,7 +397,13 @@ $(function() {
       $('.modal-footer button.encryption-inactive').hide();
       $('.chat .warning-sign').hide();
       $('.inputMessage').removeClass('encryption-disabled');
-    }
+    }    
+  }
+
+  $('.key').on('input propertychange paste change', function() {
+    var val = $(this).val();
+    $('.key').val(val);
+    keyInputChanged(val);
   });
 
   $('.modal-footer button.encryption-inactive').click(function() {
