@@ -18,7 +18,9 @@
     "underscore": "^1.8.3",
     "uuid": "^2.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp-nodemon": "^2.0.6"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "jsbuild": "uglifyjs src/js/main.js --compress --mangle -o src/public/main.js"

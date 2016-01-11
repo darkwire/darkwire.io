@@ -11,12 +11,7 @@ Install dependencies
 You need Gulp installed globally:
 
     npm install -g gulp
-    gulp watch
-
-Run the app (nodemon is nice to have)
-
-    npm install -g nodemon
-    nodemon --watch src index.js -e css,js,mustache
+    gulp start
 
 FattyChat is now running on `http://localhost:3000`
 

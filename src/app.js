@@ -53,7 +53,7 @@ function generateNewRoom(req, res, id) {
 }
 
 app.get('/', (req, res) => {
-  const id = shortid.generate();
+  const id = shortid.generate() + shortid.generate();
   generateNewRoom(req, res, id);
 });
 

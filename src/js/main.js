@@ -25,6 +25,7 @@ $(function() {
   var $genKey = $('.new_key');
   var $removeKey = $('#remove_key');
   var encryptionEnabled;
+  var $participants = $('#participants');
 
   var $chatPage = $('.chat.page'); // The chatroom page
 
@@ -46,11 +47,17 @@ $(function() {
 
   function addParticipantsMessage (data) {
     var message = '';
+    var headerMsg = '';
+
     if (data.numUsers === 1) {
       message += "There's 1 participant";
+      headerMsg = "1 Participant";
     } else {
       message += "There are " + data.numUsers + " participants";
+      headerMsg = data.numUsers + " participants";
     }
+
+    $participants.text(headerMsg);
     log(message);
   }
 
