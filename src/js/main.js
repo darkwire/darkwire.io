@@ -262,7 +262,7 @@ $(function() {
   });
 
   $genKey.click(function () {
-    var key = CryptoJS.SHA3(Math.random().toString(36).substring(7)).toString();
+    var key = (Math.random() * Math.random()).toString(36).substring(7);
     $key.val(key);
   });
 
@@ -277,7 +277,7 @@ $(function() {
     connected = true;
     addParticipantsMessage(data);
 
-    var key = CryptoJS.SHA3(Math.random().toString(36).substring(7)).toString();
+    var key = (Math.random() * Math.random()).toString(36).substring(7);
 
     if (data.numUsers > 1) {
       $('#join-modal').modal('show');
