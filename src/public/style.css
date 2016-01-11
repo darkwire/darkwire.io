@@ -155,32 +155,28 @@ input {
   left: 0;
   outline: none;
   padding-left: 10px;
-  padding-right: 70px;
   position: absolute;
   right: 0;
   width: 100%;
 }
 
-span.key-btn {
-  position: absolute;
-  right: 7px;
-  bottom: 8px;  
-  cursor: pointer;
-}
-
-span.key-btn img {
-  width: 35px;
-  top: -3px;
-  position: relative;
-}
-
-span.key-btn.active {
+#first-modal .modal-footer button.encryption-inactive {
   display: none;
 }
 
-#key-modal input{
-  width: 100%;
-  height: 50px;
-  padding: 0px 15px;
-}  
+#join-modal .modal-footer button.encryption-active {
+  display: none;
+}
+
+.chat #input-icons {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+
+.chat .warning-sign {
+  display: none;
+  cursor: pointer;
+  color: red;
+  font-size: 24px;
 }

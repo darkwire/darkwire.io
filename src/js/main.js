@@ -2,7 +2,6 @@ var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
 $(function() {
   var isActive = false;
-  var encryptionEnabled = false;
   var newMessages = 0;
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
@@ -22,14 +21,12 @@ $(function() {
   var $usernameInput = $('.usernameInput'); // Input for username
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
-  var $key = $('#key');
+  var $key = $('.key');
   var $genKey = $('.new_key');
   var $removeKey = $('#remove_key');
+  var encryptionEnabled;
 
   var $chatPage = $('.chat.page'); // The chatroom page
-
-  var key = CryptoJS.SHA3(Math.random().toString(36).substring(7)).toString();
-  $key.val(key);
 
   // Prompt for setting a username
   var username;
@@ -98,13 +95,11 @@ $(function() {
   }
 
   function encrypt(text) {
-    var key = encryptionEnabled ? $key.val() : roomId;
-    return CryptoJS.AES.encrypt(text, key).toString();
+    return CryptoJS.AES.encrypt(text, $key.val()).toString();
   }
 
   function decrypt(text) {
-    var key = encryptionEnabled ? $key.val() : roomId;
-    return CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8) || text;
+    return CryptoJS.AES.decrypt(text, $key.val()).toString(CryptoJS.enc.Utf8) || text;
   }  
 
   // Log a message
@@ -274,6 +269,19 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     addParticipantsMessage(data);
+
+    var key = CryptoJS.SHA3(Math.random().toString(36).substring(7)).toString();
+
+    if (data.numUsers > 1) {
+      $('#join-modal').modal('show');
+      key = '';
+      encryptionEnabled = false;
+      $('.chat .warning-sign').show();      
+    } else {
+      encryptionEnabled = true;
+      $('.chat .warning-sign').hide();
+    }
+    $key.val(key);
   });
 
   // Whenever the server emits 'new message', update the chat body
@@ -307,6 +315,10 @@ $(function() {
   // Whenever the server emits 'stop typing', kill the typing message
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
+  });
+
+  socket.on('first', function() {
+    $('#first-modal').modal('show');
   });
 
   setUsername();
@@ -362,30 +374,39 @@ $(function() {
   $('.room-url').text('https://fatty.chat' + roomId);
   $('.room-id').text(roomId.replace('/', ''));
 
-  $('#disable-encryption').hide();
-
-  $('.encryption-status').text('OFF');
-
-  $('.encryption-settings').hide();
-
-  $('#disable-encryption').click(function() {
-    encryptionEnabled = false;
-    $('.encryption-settings,#disable-encryption').hide();
-    $('#enable-encryption').show();
-    $('.encryption-status').text('OFF');
-    $('.key-btn.inactive').show();
-    $('.key-btn.active').hide();
-  });
-
-  $('#enable-encryption').click(function() {
-    encryptionEnabled = true;
-    $('.encryption-settings,#disable-encryption').show();
-    $('#enable-encryption').hide();
-    $('.encryption-status').text('ON');
-    $('.key-btn.inactive').hide();
-    $('.key-btn.active').show();
-  });
-
   $('[data-toggle="tooltip"]').tooltip();
+
+  $('.key').on('input', function() {
+    var val = $(this).val();
+    $('.key').val(val);
+
+    if (!val.trim().length) {
+      encryptionEnabled = false;
+      $('.modal-footer button.encryption-inactive').show();
+      $('.modal-footer button.encryption-active').hide();
+      $('.chat .warning-sign').show();
+    } else {
+      encryptionEnabled = true;
+      $('.modal-footer button.encryption-active').show();
+      $('.modal-footer button.encryption-inactive').hide();
+      $('.chat .warning-sign').hide();
+    }
+  });
+
+  $('.modal-footer button.encryption-inactive').click(function() {
+    var n = noty({
+      text: 'Encryption is OFF. Anyone with this URL can read your messages. Turn encryption on in Settings.',
+      theme: 'relax',
+      type: 'error'
+    });
+  });
+
+  $('.chat .warning-sign').click(function() {
+    var n = noty({
+      text: 'Encryption is OFF. Anyone with this URL can read your messages. Turn encryption on in Settings.',
+      theme: 'relax',
+      type: 'error'
+    });
+  });
 
 });

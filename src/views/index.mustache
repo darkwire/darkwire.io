@@ -44,13 +44,13 @@
         <ul class="messages">
           <li class="log">
             <p>Welcome to FattyChat - Anonymous, Encrypted Chat</p>
-            <p>Others can join using this room using this link: <span class='room-url bold' id='welcome-room-url'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target="#welcome-room-url">Copy</button></p>
           </li>
         </ul>
       </div>
       <input class="inputMessage" placeholder="Type here..."/>
-      <span class='key-btn inactive' data-toggle="tooltip" data-placement="auto" title="Encryption is disabled"><img src="https://s3.amazonaws.com/fattychat/img/key-inactive.png"></span>
-      <span class='key-btn active' data-toggle="tooltip" data-placement="auto" title="Encryption is enabled"><img src="https://s3.amazonaws.com/fattychat/img/key-active.png"></span>
+      <div id="input-icons">
+        <span class="glyphicon glyphicon-warning-sign warning-sign"></span>        
+      </div>
     </li>
   </ul>
 
@@ -84,27 +84,80 @@
         </div>
         <div class="modal-body">
           <h4>About This Room</h4>
-          <p>Your room ID is <span class="room-id bold"></span>.</p>
-          <p>Others can join using this URL: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <p>Others can join this room using this link: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
           <br>
-          <h4>Encryption</h4>
-          <p>Encryption is <span class="encryption-status bold"></span>.&nbsp;&nbsp;
-            <button class="btn btn-primary btn-xs" id='enable-encryption'>Turn On Encryption</button>
-            <button class="btn btn-danger btn-xs" id='disable-encryption'>Turn Off Encryption</button>
-          </p>
-          <div class="encryption-settings">
-            <p>A random key has been generated for you below. Share this key with all other participants. Chat will only work if every participant uses the exact same key.</p>
-            <p>If you want to use your own key you can enter it below or &nbsp;<button class="new_key btn btn-default btn-xs">generate a new one</button></p>
-            <div class="input-group">
-              <input id="key" class="form-control" placeholder="Enter key here" type="text"></input>
-              <span class="input-group-btn">
-                <button class="btn btn-default copyable" type="button" data-clipboard-target="#key"><span class="glyphicon glyphicon-copy"></span></button>
-              </span>
-            </div>
+          <h4>Encryption Key</h4>
+          <p>If you want to use a custom key you can enter it below or &nbsp;<button class="new_key btn btn-default btn-xs">generate a new one</button></p>
+          <p>Notify all other participants when you change this key.</p>
+          <div class="input-group">
+            <input class="form-control key" placeholder="Enter key here" type="text"></input>
+            <span class="input-group-btn">
+              <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
+            </span>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
+          <button type="button" class="btn btn-danger encryption-inactive" data-dismiss="modal">Continue Without Encryption</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="first-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Welcome to FattyChat</h3>
+        </div>
+        <div class="modal-body">
+          <h4>About This Room</h4>
+          <p>Others can join this room using this link: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <br>
+          <h4>Encryption Key</h4>
+          <p>A random key has been generated for you below. Share this key with all other participants. Every participant must use the exact same key.</p>
+          <p>If you want to use a custom key you can enter it below or &nbsp;<button class="new_key btn btn-default btn-xs">generate a new one</button></p>
+          <div class="input-group">
+            <input class="form-control key" placeholder="Enter key here" type="text"></input>
+            <span class="input-group-btn">
+              <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
+            </span>
+          </div>
+          <p>You can change this key later in Settings, but be sure to share the new key with all other participants.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
+          <button type="button" class="btn btn-danger encryption-inactive" data-dismiss="modal">Continue Without Encryption</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="join-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Welcome to FattyChat</h3>
+        </div>
+        <div class="modal-body">
+          <h4>About This Room</h4>
+          <p>Others can join this room using this link: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <br>
+          <h4>Encryption Key</h4>
+          <p>If you were given an encryption key, enter it below.</p>
+          <div class="input-group">
+            <input class="form-control key" placeholder="Enter key here" type="text"></input>
+            <span class="input-group-btn">
+              <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
+            </span>
+          </div>
+          <p>You can change this key later in Settings, but be sure to share the new key with all other participants.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
+          <button type="button" class="btn btn-danger encryption-inactive" data-dismiss="modal">Continue Without Encryption</button>
         </div>
       </div>
     </div>
@@ -117,6 +170,7 @@
   <script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.5/clipboard.min.js"></script>
+  <script type="text/javascript" src="vendor/jquery.noty.packaged.min.js"></script>
   <script src="/main.js"></script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
