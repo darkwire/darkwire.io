@@ -67,7 +67,7 @@
         <div class="modal-body">
           <p>FattyChat is the simplest way to chat anonymously online. No chat history is stored on a server or database, and plain text is never transferred over the wire.</p>
 
-          <p>While basic encryption is used by default, you may choose to use a custom encryption key for extra security. Share this with all other participants in a secure manner.</p>
+          <p>While basic encryption is used by default, you may choose to use a custom encryption key for extra security. Share this key with other participants in a secure manner.</p>
 
           <p>Questions/comments? Email us at hello[at]fatty.chat</p>
         </div>
@@ -87,7 +87,7 @@
         </div>
         <div class="modal-body">
           <h4>About This Room</h4>
-          <p>Others can join this room using this link: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <p>Others can join this room using your current URL: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
           <br>
           <h4>Encryption Key</h4>
           <div class="input-group">
@@ -96,7 +96,7 @@
               <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
             </span>
           </div>
-          <p>To change your key, enter a custom key in the field above or &nbsp;<button class="new_key btn btn-default btn-xs">auto-generate a new one</button></p>
+          <p>To use a custom key, enter it above. To generate a new key, click here: &nbsp;<button class="new_key btn btn-default btn-xs">Generate Key</button></p>
           <p>Notify all other participants when you change this key.</p>
         </div>
         <div class="modal-footer">
@@ -116,17 +116,18 @@
         </div>
         <div class="modal-body">
           <h4>About This Room</h4>
-          <p>Others can join this room using this link: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <p>Others can join this room using your current URL: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
           <br>
           <h4>Encryption Key</h4>
-          <p>A random key has been generated for you below. Share this key with all other participants. Every participant must use the exact same key.</p>
+          <p>A random encryption key has been generated for you below. This key prevents anyone with this chat room's URL from reading your messages.
           <div class="input-group">
             <input class="form-control key" placeholder="Enter key here" type="text"></input>
             <span class="input-group-btn">
               <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
             </span>
           </div>
-          <p>To change your key, enter a custom key in the field above or &nbsp;<button class="new_key btn btn-default btn-xs">auto-generate a new one</button></p>
+          <p>Share this key with all other participants. They will be prompted to enter the key when they join the room.</p>
+          <p>To use a custom key, enter it above. To generate a new key, click here: &nbsp;<button class="new_key btn btn-default btn-xs">Generate Key</button></p>
           <p>You can change this key later in Settings, but be sure to share the new key with all other participants.</p>
         </div>
         <div class="modal-footer">
@@ -146,7 +147,7 @@
         </div>
         <div class="modal-body">
           <h4>About This Room</h4>
-          <p>Others can join this room using this link: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <p>Others can join this room using your current URL: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
           <br>
           <h4>Encryption Key</h4>
           <p>If you were given an encryption key, enter it below.</p>
@@ -156,7 +157,7 @@
               <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
             </span>
           </div>
-          <p>You can change this key later in Settings, but be sure to share the new key with all other participants.</p>
+          <p>You can view and change this key later in Settings.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
