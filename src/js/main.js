@@ -392,11 +392,13 @@ $(function() {
       $('.modal-footer button.encryption-inactive').show();
       $('.modal-footer button.encryption-active').hide();
       $('.chat .warning-sign').show();
+      $('.inputMessage').addClass('encryption-disabled');
     } else {
       encryptionEnabled = true;
       $('.modal-footer button.encryption-active').show();
       $('.modal-footer button.encryption-inactive').hide();
       $('.chat .warning-sign').hide();
+      $('.inputMessage').removeClass('encryption-disabled');
     }
   });
 

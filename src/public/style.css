@@ -184,3 +184,7 @@ input {
   color: red;
   font-size: 24px;
 }
+
+.inputMessage.encryption-disabled {
+  background-color: rgba(254, 6, 6, 0.15);
+}
