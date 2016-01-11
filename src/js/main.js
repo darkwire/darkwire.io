@@ -57,7 +57,7 @@ $(function() {
       headerMsg = data.numUsers + " participants";
     }
 
-    $participants.text(headerMsg);
+    $participants.text(data.numUsers);
     log(message);
   }
 

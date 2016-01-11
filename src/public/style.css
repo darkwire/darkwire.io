@@ -188,3 +188,9 @@ input {
 .inputMessage.encryption-disabled {
   background-color: rgba(254, 6, 6, 0.15);
 }
+
+.participants {
+  position: relative;
+  top: 16px;
+  text-align: center;
+}
