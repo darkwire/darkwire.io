@@ -9,6 +9,7 @@ import shortid from 'shortid';
 import _ from 'underscore';
 import Room from './room';
 import favicon from 'serve-favicon';
+import compression from 'compression';
 
 const app = express();
 const server = http.createServer(app);
@@ -31,6 +32,7 @@ io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
 
+app.use(compression());
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
