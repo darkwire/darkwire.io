@@ -49,16 +49,7 @@ $(function() {
     var message = '';
     var headerMsg = '';
 
-    if (data.numUsers === 1) {
-      message += "There's 1 participant";
-      headerMsg = "1 Participant";
-    } else {
-      message += "There are " + data.numUsers + " participants";
-      headerMsg = data.numUsers + " participants";
-    }
-
     $participants.text(data.numUsers);
-    log(message);
   }
 
   // Sets the client's username
