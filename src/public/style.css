@@ -208,7 +208,9 @@ input {
 }
 
 .navbar-brand img {
-  width: 40px;
+  width: 37px;
+}
+
 #participants-modal ul.users {
   padding: 0px;
 }
