@@ -158,6 +158,9 @@ input {
   position: absolute;
   right: 0;
   width: 100%;
+  /*Fix for inner shadow on iOS*/
+  -webkit-appearance: none;
+  border-radius: 0px;
 }
 
 #settings-modal .modal-footer button.encryption-inactive {
