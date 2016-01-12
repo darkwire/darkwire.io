@@ -114,6 +114,8 @@ $(function() {
 
   // Adds the visual chat message to the message list
   function addChatMessage (data, options) {
+    if (!data.message.trim().length) return;
+
     // Don't fade the message in if there is an 'X was typing'
     var $typingMessages = getTypingMessages(data);
     options = options || {};
@@ -126,7 +128,7 @@ $(function() {
       .text(data.username)
       .css('color', getUsernameColor(data.username));
     var $messageBodyDiv = $('<span class="messageBody">')
-      .text(data.message);
+      .html(data.message);
 
     var typingClass = data.typing ? 'typing' : '';
     var $messageDiv = $('<li class="message"/>')
@@ -185,7 +187,9 @@ $(function() {
 
   // Prevents input from having injected markup
   function cleanInput (input) {
-    return $('<div/>').text(input).text();
+    var message = $('<div/>').text(input).text();
+    message = Autolinker.link(message);
+    return message;
   }
 
   // Updates the typing event
