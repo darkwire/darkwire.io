@@ -6,6 +6,8 @@ class Room {
   constructor(io = {}, id = {}) {
     this._id = id;
     this.numUsers = 0;
+    this.users = [];
+
     EventEmitter.call(this);
 
     const thisIO = io.of(this._id);
@@ -28,17 +30,21 @@ class Room {
           socket.emit('first');
         }
 
+        this.users.push(username);
+
         // we store the username in the socket session for this client
         socket.username = username;
         ++this.numUsers;
         addedUser = true;
         socket.emit('login', {
-          numUsers: this.numUsers
+          numUsers: this.numUsers,
+          users: this.users
         });
         // echo globally (all clients) that a person has connected
         socket.broadcast.emit('user joined', {
           username: socket.username,
-          numUsers: this.numUsers
+          numUsers: this.numUsers,
+          users: this.users          
         });
       });
 
@@ -61,16 +67,21 @@ class Room {
         if (addedUser) {
           --this.numUsers;
 
+          this.users = _.without(this.users, socket.username);
+
           // echo globally that this client has left
           socket.broadcast.emit('user left', {
             username: socket.username,
-            numUsers: this.numUsers
+            numUsers: this.numUsers,
+            users: this.users
           });
 
           // remove room from rooms array
           if (this.numUsers === 0) {
             this.emit('empty');
           }
+
+          this.users = _.without(this.users, socket.username);
         }
       });
     });

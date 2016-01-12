@@ -195,6 +195,8 @@ input {
   position: relative;
   top: 16px;
   text-align: center;
+  padding: 16px;
+  cursor: pointer;
 }
 
 .navbar {
@@ -207,4 +209,16 @@ input {
 
 .navbar-brand img {
   width: 40px;
+#participants-modal ul.users {
+  padding: 0px;
+}
+
+#participants-modal ul.users li {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#participants-modal ul.users li .you {
+  color: #333;
+  font-weight: 400;
 }

@@ -29,6 +29,8 @@ $(function() {
 
   var $chatPage = $('.chat.page'); // The chatroom page
 
+  var users = [];
+
   // Prompt for setting a username
   var username;
   var connected = false;
@@ -273,6 +275,8 @@ $(function() {
     connected = true;
     addParticipantsMessage(data);
 
+    users = data.users;
+
     var key = (Math.random() * Math.random()).toString(36).substring(7);
 
     if (data.numUsers > 1) {
@@ -301,6 +305,9 @@ $(function() {
   socket.on('user joined', function (data) {
     log(data.username + ' joined');
     addParticipantsMessage(data);
+
+    users = data.users;  
+    renderParticipantsList();
   });
 
   // Whenever the server emits 'user left', log it in the chat body
@@ -308,6 +315,10 @@ $(function() {
     log(data.username + ' left');
     addParticipantsMessage(data);
     removeChatTyping(data);
+
+    users = data.users;
+
+    renderParticipantsList();
   });
 
   // Whenever the server emits 'typing', show the typing message
@@ -418,5 +429,25 @@ $(function() {
       timeout: 5000
     });
   });
+
+  $('.navbar .participants').click(function() {
+    renderParticipantsList();
+    $('#participants-modal').modal('show');
+  });
+
+  function renderParticipantsList() {
+    $('#participants-modal ul.users').empty();
+    _.each(users, function(username) {
+      var li;
+      if (username === window.username) {
+        // User is me
+        li = $("<li>" + username + " <span class='you'>(you)</span></li>").css('color', getUsernameColor(username));
+      } else {
+        li = $("<li>" + username + "</li>").css('color', getUsernameColor(username));
+      }
+      $('#participants-modal ul.users')
+        .append(li);        
+    });    
+  }
 
 });
