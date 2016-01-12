@@ -87,13 +87,13 @@
         </div>
         <div class="modal-body">
           <h4>About This Room</h4>
-          <p>Others can join this room using your current URL: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <p>Others can join this room using your current URL: <span class='room-url bold' id='settings-room-url'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target="#settings-room-url">Copy</button></p>
           <br>
           <h4>Encryption Key</h4>
           <div class="input-group">
-            <input class="form-control key" placeholder="Enter key here" type="text"></input>
+            <input class="form-control key" placeholder="Enter key here" type="text" id="settings-key"></input>
             <span class="input-group-btn">
-              <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
+              <button class="btn btn-default copyable" type="button" data-clipboard-target="#settings-key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
             </span>
           </div>
           <p>To use a custom key, enter it above. To generate a new key, click here: &nbsp;<button class="new_key btn btn-default btn-xs">Generate Key</button></p>
@@ -116,14 +116,14 @@
         </div>
         <div class="modal-body">
           <h4>About This Room</h4>
-          <p>Others can join this room using your current URL: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <p>Others can join this room using your current URL: <span class='room-url bold' id='first-room-url'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target="#first-room-url">Copy</button></p>
           <br>
           <h4>Encryption Key</h4>
           <p>A random encryption key has been generated for you below. This key prevents anyone with this chat room's URL from reading your messages.
           <div class="input-group">
-            <input class="form-control key" placeholder="Enter key here" type="text"></input>
+            <input class="form-control key" placeholder="Enter key here" type="text" id='first-key'></input>
             <span class="input-group-btn">
-              <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
+              <button class="btn btn-default copyable" type="button" data-clipboard-target="#first-key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
             </span>
           </div>
           <p>Share this key with all other participants. They will be prompted to enter the key when they join the room.</p>
@@ -147,14 +147,14 @@
         </div>
         <div class="modal-body">
           <h4>About This Room</h4>
-          <p>Others can join this room using your current URL: <span class='room-url bold'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target=".room-url">Copy</button></p>
+          <p>Others can join this room using your current URL: <span class='room-url bold' id='join-room-url'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target="#join-room-url">Copy</button></p>
           <br>
           <h4>Encryption Key</h4>
           <p>If you were given an encryption key, enter it below.</p>
           <div class="input-group">
-            <input class="form-control key" placeholder="Enter key here" type="text"></input>
+            <input class="form-control key" placeholder="Enter key here" type="text" id='join-key'></input>
             <span class="input-group-btn">
-              <button class="btn btn-default copyable" type="button" data-clipboard-target=".key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
+              <button class="btn btn-default copyable" type="button" data-clipboard-target="#join-key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
             </span>
           </div>
           <p>You can view and change this key later in Settings.</p>
