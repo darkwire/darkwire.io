@@ -149,7 +149,7 @@ input {
 
 .inputMessage{
   border: none;
-  border-top: 2px solid #ececec;
+  border-top: 1px solid #e7e7e7;
   bottom: 0;
   height: 60px;
   left: 0;
@@ -181,8 +181,7 @@ input {
 .chat .warning-sign {
   display: none;
   cursor: pointer;
-  color: red;
-  font-size: 24px;
+  width: 35px;
 }
 
 .inputMessage.encryption-disabled {
@@ -193,4 +192,16 @@ input {
   position: relative;
   top: 16px;
   text-align: center;
+}
+
+.navbar {
+  background: none;
+}
+
+.navbar-brand {
+  padding: 5px 15px;
+}
+
+.navbar-brand img {
+  width: 40px;
 }
