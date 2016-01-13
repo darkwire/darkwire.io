@@ -449,7 +449,8 @@ $(function() {
   function saveKey() {
     $('.edit-key').hide();
     $('.read-key').show();
-    updateKeyVal($('.edit-key input.key').val());    
+    var key = $('.edit-key input.key').val().trim();
+    updateKeyVal(key || encryptionKey);    
   }
 
   $('#join-modal .modal-footer button').click(function() {
