@@ -258,6 +258,12 @@ $(function() {
 
   $inputMessage.on('input', function() {
     updateTyping();
+    var message = $(this).val().trim();
+    if (message.length) {
+      $('#send-message-btn').addClass('active');
+    } else {
+      $('#send-message-btn').removeClass('active');
+    }
   });
 
   // Focus input when clicking on the message input's border
@@ -481,6 +487,12 @@ $(function() {
 
   $('#settings-modal').on('hide.bs.modal', function (e) {
     cancelSaveKey();
-  });  
+  });
+
+  $('#send-message-btn').click(function() {
+    sendMessage();
+    socket.emit('stop typing');
+    typing = false;
+  });
 
 });

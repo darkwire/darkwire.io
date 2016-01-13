@@ -167,6 +167,27 @@ input {
   border-radius: 0px;
 }
 
+.chat #input-icons {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  padding: 15px;
+  cursor: pointer;
+}
+
+html.no-touchevents .chat #input-icons {
+  display: none;
+}
+
+.chat #input-icons #send-message-btn {
+  font-size: 25px;
+  opacity: 0.3;
+}
+
+.chat #input-icons #send-message-btn.active {
+  opacity: 1.0;
+}
+
 .participants {
   position: relative;
   top: 16px;
