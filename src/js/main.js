@@ -191,7 +191,7 @@ $(function() {
 
   // Prevents input from having injected markup
   function cleanInput (input) {
-    var message = $('<div/>').text(input).text();
+    var message = $('<div/>').html(input).text();
     message = Autolinker.link(message);
     return message;
   }
