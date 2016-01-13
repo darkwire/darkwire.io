@@ -1,54 +1,54 @@
-var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+
+window.favicon = new Favico({
+  animation:'pop',
+  type : 'rectangle'
+});
 
 $(function() {
-  var isActive = false;
-  var newMessages = 0;
-  var FADE_TIME = 150; // ms
-  var TYPING_TIMER_LENGTH = 400; // ms
-  var COLORS = [
+  let beep = new Audio('beep.mp3');
+  let isActive = false;
+  let newMessages = 0;
+  let FADE_TIME = 150; // ms
+  let TYPING_TIMER_LENGTH = 400; // ms
+  let COLORS = [
     '#e21400', '#91580f', '#f8a700', '#f78b00',
     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
   ];
 
-  window.favicon = new Favico({
-    animation:'pop',
-    type : 'rectangle'
-  });
+  let $window = $(window);
+  let $usernameInput = $('.usernameInput'); // Input for username
+  let $messages = $('.messages'); // Messages area
+  let $inputMessage = $('.inputMessage'); // Input message input box
+  let $key = $('.key');
+  let $genKey = $('.new_key');
+  let $participants = $('#participants');
 
-  // Initialize variables
-  var $window = $(window);
-  var $usernameInput = $('.usernameInput'); // Input for username
-  var $messages = $('.messages'); // Messages area
-  var $inputMessage = $('.inputMessage'); // Input message input box
-  var $key = $('.key');
-  var $genKey = $('.new_key');
-  var $participants = $('#participants');
+  let $chatPage = $('.chat.page'); // The chatroom page
 
-  var $chatPage = $('.chat.page'); // The chatroom page
-
-  var users = [];
+  let users = [];
 
   // Prompt for setting a username
-  var username;
-  var connected = false;
-  var typing = false;
-  var lastTypingTime;
-  var $currentInput = $usernameInput.focus();
-  var encryptionKey;
+  let username;
+  let connected = false;
+  let typing = false;
+  let lastTypingTime;
+  let $currentInput = $usernameInput.focus();
+  let encryptionKey;
 
-  var clipboard = new Clipboard('.copyable');
+  let clipboard = new Clipboard('.copyable');
 
-  var roomId = window.location.pathname.length ? window.location.pathname : null;
+  let roomId = window.location.pathname.length ? window.location.pathname : null;
 
   if (!roomId) return;
 
-  var socket = io(roomId);
+  let socket = io(roomId);
   $('#roomIdKey').text(roomId.replace('/', ''));
 
   function addParticipantsMessage (data) {
-    var message = '';
-    var headerMsg = '';
+    let message = '';
+    let headerMsg = '';
 
     $participants.text(data.numUsers);
   }
@@ -81,7 +81,7 @@ $(function() {
     // Don't allow sending if key is empty
     if (!encryptionKey.trim().length) return;
 
-    var message = $inputMessage.val();
+    let message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
     // if there is a non-empty message and a socket connection
@@ -107,8 +107,8 @@ $(function() {
 
   // Log a message
   function log (message, options) {
-    var html = options && options.html === true || false;
-    var $el;
+    let html = options && options.html === true || false;
+    let $el;
     if (html) {
       $el = $('<li>').addClass('log').html(message);
     } else {
@@ -122,21 +122,21 @@ $(function() {
     if (!data.message.trim().length) return;
 
     // Don't fade the message in if there is an 'X was typing'
-    var $typingMessages = getTypingMessages(data);
+    let $typingMessages = getTypingMessages(data);
     options = options || {};
     if ($typingMessages.length !== 0) {
       options.fade = false;
       $typingMessages.remove();
     }
 
-    var $usernameDiv = $('<span class="username"/>')
+    let $usernameDiv = $('<span class="username"/>')
       .text(data.username)
       .css('color', getUsernameColor(data.username));
-    var $messageBodyDiv = $('<span class="messageBody">')
+    let $messageBodyDiv = $('<span class="messageBody">')
       .html(data.message);
 
-    var typingClass = data.typing ? 'typing' : '';
-    var $messageDiv = $('<li class="message"/>')
+    let typingClass = data.typing ? 'typing' : '';
+    let $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
       .addClass(typingClass)
       .append($usernameDiv, $messageBodyDiv);
@@ -164,7 +164,7 @@ $(function() {
   // options.prepend - If the element should prepend
   //   all other messages (default = false)
   function addMessageElement (el, options) {
-    var $el = $(el);
+    let $el = $(el);
 
     // Setup default options
     if (!options) {
@@ -192,7 +192,7 @@ $(function() {
 
   // Prevents input from having injected markup
   function cleanInput (input) {
-    var message = $('<div/>').html(input).text();
+    let message = $('<div/>').html(input).text();
     message = Autolinker.link(message);
     return message;
   }
@@ -207,8 +207,8 @@ $(function() {
       lastTypingTime = (new Date()).getTime();
 
       setTimeout(function () {
-        var typingTimer = (new Date()).getTime();
-        var timeDiff = typingTimer - lastTypingTime;
+        let typingTimer = (new Date()).getTime();
+        let timeDiff = typingTimer - lastTypingTime;
         if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
           socket.emit('stop typing');
           typing = false;
@@ -227,12 +227,12 @@ $(function() {
   // Gets the color of a username through our hash function
   function getUsernameColor (username) {
     // Compute hash code
-    var hash = 7;
-    for (var i = 0; i < username.length; i++) {
+    let hash = 7;
+    for (let i = 0; i < username.length; i++) {
        hash = username.charCodeAt(i) + (hash << 5) - hash;
     }
     // Calculate color
-    var index = Math.abs(hash % COLORS.length);
+    let index = Math.abs(hash % COLORS.length);
     return COLORS[index];
   }
 
@@ -259,7 +259,7 @@ $(function() {
 
   $inputMessage.on('input propertychange paste change', function() {
     updateTyping();
-    var message = $(this).val().trim();
+    let message = $(this).val().trim();
     if (message.length) {
       $('#send-message-btn').addClass('active');
     } else {
@@ -273,7 +273,7 @@ $(function() {
   });
 
   $genKey.click(function () {
-    var key = (Math.random() * Math.random()).toString(36).substring(7);
+    let key = (Math.random() * Math.random()).toString(36).substring(7);
     updateKeyVal(key);
   });
 
@@ -286,7 +286,7 @@ $(function() {
 
     users = data.users;
 
-    var key = (Math.random() * Math.random()).toString(36).substring(7);
+    let key = (Math.random() * Math.random()).toString(36).substring(7);
 
     if (data.numUsers > 1) {
       $('#join-modal').modal('show');
@@ -302,6 +302,9 @@ $(function() {
     if (!isActive) {
       newMessages++;
       favicon.badge(newMessages);
+      if (beep) {
+        beep.play();
+      }
     }
     data.message = decrypt(data.message);
     addChatMessage(data);
@@ -401,12 +404,12 @@ $(function() {
   }
 
   $('#join-modal .key').on('input propertychange paste change', function() {
-    var val = $(this).val().trim();
+    let val = $(this).val().trim();
     joinKeyInputChanged(val);
   });
 
   $('#settings-modal input.key').on('input propertychange paste change', function() {
-    var val = $(this).val().trim();
+    let val = $(this).val().trim();
     if (val !== encryptionKey && val.length) {
       $('#settings-modal #save-key-edit').removeAttr('disabled');
     } else {
@@ -422,7 +425,7 @@ $(function() {
   function renderParticipantsList() {
     $('#participants-modal ul.users').empty();
     _.each(users, function(username) {
-      var li;
+      let li;
       if (username === window.username) {
         // User is me
         li = $("<li>" + username + " <span class='you'>(you)</span></li>").css('color', getUsernameColor(username));
@@ -468,7 +471,7 @@ $(function() {
   }
 
   function saveKey() {
-    var key = $('.edit-key input.key').val().trim();
+    let key = $('.edit-key input.key').val().trim();
     if (!key.length) return;    
     $('.edit-key').hide();
     $('.read-key').show();
@@ -480,7 +483,7 @@ $(function() {
   });
 
   function checkJoinKey() {
-    var key = $('#join-modal input').val().trim();
+    let key = $('#join-modal input').val().trim();
     if (!key.length) return;
     updateKeyVal(key);
     $('#join-modal').modal('hide');
