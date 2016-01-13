@@ -41,6 +41,10 @@ p {
   font-weight: 700;
 }
 
+.italic {
+  font-style: italic;
+}
+
 /* Pages */
 
 .pages {
@@ -167,14 +171,6 @@ input {
   display: none;
 }
 
-#first-modal .modal-footer button.encryption-inactive {
-  display: none;
-}
-
-#join-modal .modal-footer button.encryption-active {
-  display: none;
-}
-
 .chat #input-icons {
   position: absolute;
   bottom: 15px;
@@ -224,3 +220,17 @@ input {
   color: #333;
   font-weight: 400;
 }
+
+.read-key {
+  cursor: pointer;
+}
+
+.read-key span.key {
+  border-bottom: 1px solid #333;
+}
+
+.edit-key {
+  display: none;
+}
+
+

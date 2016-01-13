@@ -23,8 +23,6 @@ $(function() {
   var $inputMessage = $('.inputMessage'); // Input message input box
   var $key = $('.key');
   var $genKey = $('.new_key');
-  var $removeKey = $('#remove_key');
-  var encryptionEnabled;
   var $participants = $('#participants');
 
   var $chatPage = $('.chat.page'); // The chatroom page
@@ -37,6 +35,7 @@ $(function() {
   var typing = false;
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
+  var encryptionKey;
 
   var clipboard = new Clipboard('.copyable');
 
@@ -79,6 +78,9 @@ $(function() {
 
   // Sends a chat message
   function sendMessage () {
+    // Don't allow sending if key is empty
+    if (!encryptionKey.trim().length) return;
+
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
@@ -244,8 +246,13 @@ $(function() {
     }
 
     // If enter is pressed on key input then close key modal
-    if (event.which === 13 && $('input#key').is(':focus')) {
-      $('#key-modal').modal('hide');
+    if (event.which === 13 && $('#join-modal input').is(':focus')) {
+      checkJoinKey();
+    }
+
+    // If enter is pressed on edit key input
+    if (event.which === 13 && $('#settings-modal .edit-key input.key').is(':focus')) {
+      saveKey();
     }
   });
 
@@ -260,12 +267,7 @@ $(function() {
 
   $genKey.click(function () {
     var key = (Math.random() * Math.random()).toString(36).substring(7);
-    $key.val(key);
-    keyInputChanged(key);
-  });
-
-  $removeKey.click(function() {
-    $key.val('');
+    updateKeyVal(key);
   });
 
   // Socket events
@@ -282,17 +284,14 @@ $(function() {
     if (data.numUsers > 1) {
       $('#join-modal').modal('show');
       key = '';
-      encryptionEnabled = false;
-      $('.chat .warning-sign').show();      
-    } else {
-      encryptionEnabled = true;
-      $('.chat .warning-sign').hide();
     }
-    $key.val(key);
+    updateKeyVal(key);
   });
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
+    // Don't show messages if no key
+
     if (!isActive) {
       newMessages++;
       favicon.badge(newMessages);
@@ -336,10 +335,6 @@ $(function() {
   });
 
   setUsername();
-
-  $('span.key-btn').click(function() {
-    $('#settings-modal').modal('show');
-  });
 
   window.onfocus = function () { 
     isActive = true;
@@ -390,44 +385,17 @@ $(function() {
 
   $('[data-toggle="tooltip"]').tooltip();
 
-  function keyInputChanged(val) {
+  function joinKeyInputChanged(val) {
     if (!val.trim().length) {
-      encryptionEnabled = false;
-      $('.modal-footer button.encryption-inactive').show();
-      $('.modal-footer button.encryption-active').hide();
-      $('.chat .warning-sign').show();
-      $('.inputMessage').addClass('encryption-disabled');
+      $('#join-modal .modal-footer button').attr('disabled', 'disabled');
     } else {
-      encryptionEnabled = true;
-      $('.modal-footer button.encryption-active').show();
-      $('.modal-footer button.encryption-inactive').hide();
-      $('.chat .warning-sign').hide();
-      $('.inputMessage').removeClass('encryption-disabled');
+      $('#join-modal .modal-footer button').removeAttr('disabled');
     }    
   }
 
-  $('.key').on('input propertychange paste change', function() {
+  $('#join-modal .key').on('input propertychange paste change', function() {
     var val = $(this).val();
-    $('.key').val(val);
-    keyInputChanged(val);
-  });
-
-  $('.modal-footer button.encryption-inactive').click(function() {
-    var n = noty({
-      text: 'Encryption is OFF. Anyone with this URL can read your messages. Turn on encryption in Settings.',
-      theme: 'relax',
-      type: 'error',
-      timeout: 5000      
-    });
-  });
-
-  $('.chat .warning-sign').click(function() {
-    var n = noty({
-      text: 'Encryption is OFF. Anyone with this URL can read your messages. Turn on encryption in Settings.',
-      theme: 'relax',
-      type: 'error',
-      timeout: 5000
-    });
+    joinKeyInputChanged(val);
   });
 
   $('.navbar .participants').click(function() {
@@ -448,6 +416,51 @@ $(function() {
       $('#participants-modal ul.users')
         .append(li);        
     });    
+  }
+
+  function updateKeyVal(val) {
+    $('.key').val(val);
+    $('.key').text(val);   
+    encryptionKey = val;
+  }
+
+  // Prevent closing join-modal
+  $('#join-modal').modal({
+    backdrop: 'static',
+    show: false
+  });
+
+  $('.read-key').click(function() {
+    $('.edit-key').show();
+    $('.edit-key input').focus();
+    $(this).hide();
+  });
+
+  $('.edit-key #cancel-key-edit').click(function() {
+    $('.edit-key').hide();
+    $('.read-key').show();
+    updateKeyVal(encryptionKey);
+  });
+
+  $('.edit-key #save-key-edit').click(function() {
+    saveKey();
+  });
+
+  function saveKey() {
+    $('.edit-key').hide();
+    $('.read-key').show();
+    updateKeyVal($('.edit-key input.key').val());    
+  }
+
+  $('#join-modal .modal-footer button').click(function() {
+    checkJoinKey();
+  });
+
+  function checkJoinKey() {
+    var key = $('#join-modal input').val().trim();
+    if (!key.length) return;
+    updateKeyVal(key);
+    $('#join-modal').modal('hide');
   }
 
 });

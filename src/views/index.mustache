@@ -88,18 +88,22 @@
           <h3 class="modal-title">Settings</h3>
         </div>
         <div class="modal-body">
-          <h4>About This Room</h4>
-          <p>Others can join this room using your current URL: <span class='room-url bold' id='settings-room-url'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target="#settings-room-url">Copy</button></p>
+          <h4>Invite People to This Room</h4>
+          <p id="settings-share-text">Let's chat on FattyChat at <span class='room-url bold' id='first-room-url'></span>&nbsp;using the key <span class="key bold"></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" type="button" data-clipboard-target="#settings-share-text"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button></p>
           <br>
-          <h4>Encryption Key</h4>
-          <div class="input-group">
-            <input class="form-control key" placeholder="Enter key here" type="text" id="settings-key"></input>
-            <span class="input-group-btn">
-              <button class="btn btn-default copyable" type="button" data-clipboard-target="#settings-key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
-            </span>
+          <h4>Edit Your Key</h4>
+          <div class="read-key">
+            <span class="key" id="read-key"></span>&nbsp;<span class="glyphicon glyphicon-pencil"></span>
           </div>
-          <p>To use a custom key, enter it above. To generate a new key, click here: &nbsp;<button class="new_key btn btn-default btn-xs">Generate Key</button></p>
-          <p>Notify all other participants when you change this key.</p>
+          <div class="edit-key"> 
+            <div class="input-group">
+              <input class="form-control key" placeholder="Enter key here" type="text" id="settings-key"></input>
+              <div class="input-group-btn">
+                <button class="btn btn-default" type="button" id='cancel-key-edit'>Cancel</button>
+                <button class="btn btn-primary" type="button" id='save-key-edit'>Save</button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
@@ -117,24 +121,11 @@
           <h3 class="modal-title">Welcome to FattyChat</h3>
         </div>
         <div class="modal-body">
-          <h4>About This Room</h4>
-          <p>Others can join this room using your current URL: <span class='room-url bold' id='first-room-url'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target="#first-room-url">Copy</button></p>
-          <br>
-          <h4>Encryption Key</h4>
-          <p>A random encryption key has been generated for you below. This key prevents anyone with this chat room's URL from reading your messages.
-          <div class="input-group">
-            <input class="form-control key" placeholder="Enter key here" type="text" id='first-key'></input>
-            <span class="input-group-btn">
-              <button class="btn btn-default copyable" type="button" data-clipboard-target="#first-key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
-            </span>
-          </div>
-          <p>Share this key with all other participants. They will be prompted to enter the key when they join the room.</p>
-          <p>To use a custom key, enter it above. To generate a new key, click here: &nbsp;<button class="new_key btn btn-default btn-xs">Generate Key</button></p>
-          <p>You can view and change this key later in Settings.</p>
+          <p>We've placed you in a new chat room. Invite people to join using the text below.</p>
+          <p id="share-text">Let's chat on FattyChat at <span class='room-url bold' id='first-room-url'></span>&nbsp;using the key <span class="key bold"></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" type="button" data-clipboard-target="#share-text"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
-          <button type="button" class="btn btn-danger encryption-inactive" data-dismiss="modal">Continue Without Encryption</button>
         </div>
       </div>
     </div>
@@ -144,26 +135,14 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h3 class="modal-title">Welcome to FattyChat</h3>
         </div>
         <div class="modal-body">
-          <h4>About This Room</h4>
-          <p>Others can join this room using your current URL: <span class='room-url bold' id='join-room-url'></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" data-clipboard-target="#join-room-url">Copy</button></p>
-          <br>
-          <h4>Encryption Key</h4>
-          <p>If you were given an encryption key, enter it below.</p>
-          <div class="input-group">
-            <input class="form-control key" placeholder="Enter key here" type="text" id='join-key'></input>
-            <span class="input-group-btn">
-              <button class="btn btn-default copyable" type="button" data-clipboard-target="#join-key"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button>
-            </span>
-          </div>
-          <p>You can view and change this key later in Settings.</p>
+          <h4>Enter Your Key Below</h4>
+          <input class="form-control key" placeholder="Enter key here" type="text" id='join-key'></input>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
-          <button type="button" class="btn btn-danger encryption-inactive" data-dismiss="modal">Continue Without Encryption</button>
+          <button type="button" class="btn btn-success encryption-active" disabled="disabled" data-dismiss="modal">Done</button>
         </div>
       </div>
     </div>
