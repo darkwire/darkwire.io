@@ -6,6 +6,7 @@ window.favicon = new Favico({
 });
 
 $(function() {
+  let beep = new Audio('beep.mp3');
   let isActive = false;
   let newMessages = 0;
   let FADE_TIME = 150; // ms
@@ -301,6 +302,9 @@ $(function() {
     if (!isActive) {
       newMessages++;
       favicon.badge(newMessages);
+      if (beep) {
+        beep.play();
+      }
     }
     data.message = decrypt(data.message);
     addChatMessage(data);
