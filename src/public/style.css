@@ -167,26 +167,6 @@ input {
   border-radius: 0px;
 }
 
-#settings-modal .modal-footer button.encryption-inactive {
-  display: none;
-}
-
-.chat #input-icons {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-}
-
-.chat .warning-sign {
-  display: none;
-  cursor: pointer;
-  width: 35px;
-}
-
-.inputMessage.encryption-disabled {
-  background-color: rgba(254, 6, 6, 0.15);
-}
-
 .participants {
   position: relative;
   top: 16px;

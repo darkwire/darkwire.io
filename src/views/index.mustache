@@ -53,9 +53,6 @@
         </ul>
       </div>
       <input class="inputMessage" placeholder="Type here..."/>
-      <div id="input-icons">
-      <img src="https://s3.amazonaws.com/fattychat/img/warning-icon.png" class="warning-sign">
-      </div>
     </li>
   </ul>
 
@@ -74,7 +71,7 @@
           <p>Questions/comments? Email us at hello[at]fatty.chat</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -100,14 +97,13 @@
               <input class="form-control key" placeholder="Enter key here" type="text" id="settings-key"></input>
               <div class="input-group-btn">
                 <button class="btn btn-default" type="button" id='cancel-key-edit'>Cancel</button>
-                <button class="btn btn-primary" type="button" id='save-key-edit'>Save</button>
+                <button class="btn btn-primary" type="button" id='save-key-edit' disabled="disabled">Save</button>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
-          <button type="button" class="btn btn-danger encryption-inactive" data-dismiss="modal">Continue Without Encryption</button>
+          <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -122,10 +118,10 @@
         </div>
         <div class="modal-body">
           <p>We've placed you in a new chat room. Invite people to join using the text below.</p>
-          <p id="share-text">Let's chat on FattyChat at <span class='room-url bold' id='first-room-url'></span>&nbsp;using the key <span class="key bold"></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" type="button" data-clipboard-target="#share-text"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button></p>
+          <p id="share-text">Let's chat on FattyChat at <span class='room-url bold' id='first-room-url'></span>&nbsp;using the key <span class="key bold"></span>&nbsp;&nbsp;<button class="btn btn-primary btn-xs copyable" type="button" data-clipboard-target="#share-text"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success encryption-active" data-dismiss="modal">Done</button>
+          <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Got It</button>
         </div>
       </div>
     </div>
@@ -142,7 +138,7 @@
           <input class="form-control key" placeholder="Enter key here" type="text" id='join-key'></input>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success encryption-active" disabled="disabled" data-dismiss="modal">Done</button>
+          <button type="button" class="btn btn-primary encryption-active" disabled="disabled" data-dismiss="modal">Done</button>
         </div>
       </div>
     </div>
@@ -159,7 +155,7 @@
           <ul class="users"></ul>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

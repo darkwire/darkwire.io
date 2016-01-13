@@ -394,8 +394,17 @@ $(function() {
   }
 
   $('#join-modal .key').on('input propertychange paste change', function() {
-    var val = $(this).val();
+    var val = $(this).val().trim();
     joinKeyInputChanged(val);
+  });
+
+  $('#settings-modal input.key').on('input propertychange paste change', function() {
+    var val = $(this).val().trim();
+    if (val !== encryptionKey && val.length) {
+      $('#settings-modal #save-key-edit').removeAttr('disabled');
+    } else {
+      $('#settings-modal #save-key-edit').attr('disabled', 'disabled');
+    }
   });
 
   $('.navbar .participants').click(function() {
@@ -427,7 +436,8 @@ $(function() {
   // Prevent closing join-modal
   $('#join-modal').modal({
     backdrop: 'static',
-    show: false
+    show: false,
+    keyboard: false
   });
 
   $('.read-key').click(function() {
@@ -437,19 +447,24 @@ $(function() {
   });
 
   $('.edit-key #cancel-key-edit').click(function() {
-    $('.edit-key').hide();
-    $('.read-key').show();
-    updateKeyVal(encryptionKey);
+    cancelSaveKey();
   });
 
   $('.edit-key #save-key-edit').click(function() {
     saveKey();
   });
 
-  function saveKey() {
+  function cancelSaveKey() {
     $('.edit-key').hide();
     $('.read-key').show();
+    updateKeyVal(encryptionKey);    
+  }
+
+  function saveKey() {
     var key = $('.edit-key input.key').val().trim();
+    if (!key.length) return;    
+    $('.edit-key').hide();
+    $('.read-key').show();
     updateKeyVal(key || encryptionKey);    
   }
 
@@ -463,5 +478,9 @@ $(function() {
     updateKeyVal(key);
     $('#join-modal').modal('hide');
   }
+
+  $('#settings-modal').on('hide.bs.modal', function (e) {
+    cancelSaveKey();
+  });  
 
 });
