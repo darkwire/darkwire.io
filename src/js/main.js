@@ -289,6 +289,10 @@ $(function() {
 
     if (data.numUsers > 1) {
       $('#join-modal').modal('show');
+      $('#join-modal').on('shown.bs.modal', function (e) {
+        $('#join-modal input').focus();
+      });
+
       key = '';
     }
     updateKeyVal(key);
