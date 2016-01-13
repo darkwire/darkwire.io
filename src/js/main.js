@@ -61,9 +61,8 @@ $(function() {
       console.log('no fs');
     } else {
       fs(window.TEMPORARY,
-         100,
-         log.bind(log, "WARNING: Your browser is not in incognito mode!"),
-         log.bind(log, "Your browser is in incognito mode."));
+        100,
+        log.bind(log, "WARNING: Your browser is not in incognito mode!"));
     }
 
     // If the username is valid
@@ -273,7 +272,7 @@ $(function() {
   });
 
   $genKey.click(function () {
-    let key = (Math.random() * Math.random()).toString(36).substring(7);
+    let key = generatePassword();
     updateKeyVal(key);
   });
 
@@ -286,7 +285,7 @@ $(function() {
 
     users = data.users;
 
-    let key = (Math.random() * Math.random()).toString(36).substring(7);
+    let key = generatePassword();
 
     if (data.numUsers > 1) {
       $('#join-modal').modal('show');
@@ -498,5 +497,15 @@ $(function() {
     socket.emit('stop typing');
     typing = false;
   });
+
+  function generatePassword() {
+    let length = 16;
+    const charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
+  }
 
 });
