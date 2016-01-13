@@ -87,6 +87,7 @@ $(function() {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
+      $('#send-message-btn').removeClass('active');      
       addChatMessage({
         username: username,
         message: message
@@ -256,7 +257,7 @@ $(function() {
     }
   });
 
-  $inputMessage.on('input', function() {
+  $inputMessage.on('input propertychange paste change', function() {
     updateTyping();
     var message = $(this).val().trim();
     if (message.length) {
