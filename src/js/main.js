@@ -11,11 +11,12 @@ $(function() {
   let newMessages = 0;
   let FADE_TIME = 150; // ms
   let TYPING_TIMER_LENGTH = 400; // ms
+
   let COLORS = [
-    '#e21400', '#91580f', '#f8a700', '#f78b00',
-    '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-    '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-  ];
+    '#e21400', '#ffe400', '#ff8f00',
+    '#58dc00', '#dd9cff', '#4ae8c4',
+    '#3b88eb', '#f47777', '#d300e7',
+  ];  
 
   let $window = $(window);
   let $usernameInput = $('.usernameInput'); // Input for username
@@ -276,6 +277,28 @@ $(function() {
     updateKeyVal(key);
   });
 
+  // Select message input when closing modal
+  $('.modal').on('hidden.bs.modal', function (e) {
+    $inputMessage.focus();      
+  });
+
+  // Select message input when clicking message body, unless selecting text
+  $('.messages').on('mouseup', function() {
+    if (!getSelectedText()) {
+      $inputMessage.focus();
+    }
+  });
+
+  function getSelectedText() {
+    var text = "";
+    if (typeof window.getSelection != "undefined") {
+      text = window.getSelection().toString();
+    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+      text = document.selection.createRange().text;
+    }
+    return text;
+  }
+
   // Socket events
 
   // Whenever the server emits 'login', log the login message
@@ -353,6 +376,7 @@ $(function() {
     isActive = true;
     newMessages = 0;
     favicon.reset();
+    $inputMessage.focus();
   }; 
 
   window.onblur = function () { 
@@ -393,7 +417,7 @@ $(function() {
     $('#about-modal').modal('show');
   });
 
-  $('.room-url').text('https://fatty.chat' + roomId);
+  $('.room-url').text('https://darkwire.io' + roomId);
   $('.room-id').text(roomId.replace('/', ''));
 
   $('[data-toggle="tooltip"]').tooltip();

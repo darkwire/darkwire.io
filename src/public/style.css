@@ -11,7 +11,7 @@ html {
 
 html, body, input {
   font-family:
-    "Open Sans",
+    "Source Code Pro",
     "HelveticaNeue-Light",
     "Helvetica Neue Light",
     "Helvetica Neue",
@@ -21,10 +21,36 @@ html, body, input {
     sans-serif !important;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family:
+    "Source Code Pro",
+    "HelveticaNeue-Light",
+    "Helvetica Neue Light",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Lucida Grande",
+    sans-serif !important;
+}
+
+h3 {
+  font-size: 26px;
+}
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+.modal-content {
+  border: 1px solid #666;
+}
+
+
+input {
+  background: black !important;
+  color: white !important;
 }
 
 ul {
@@ -153,7 +179,7 @@ input {
 
 .inputMessage{
   border: none;
-  border-top: 1px solid #e7e7e7;
+  border-top: 1px solid #282828;
   bottom: 0;
   height: 60px;
   left: 0;
@@ -197,7 +223,7 @@ html.no-touchevents .chat #input-icons {
 }
 
 .navbar {
-  background: white;
+  /*background: white;*/
 }
 
 .navbar-brand {
@@ -218,7 +244,7 @@ html.no-touchevents .chat #input-icons {
 }
 
 #participants-modal ul.users li .you {
-  color: #333;
+  color: #999;
   font-weight: 400;
 }
 
@@ -227,11 +253,9 @@ html.no-touchevents .chat #input-icons {
 }
 
 .read-key span.key {
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #999;
 }
 
 .edit-key {
   display: none;
 }
-
-
