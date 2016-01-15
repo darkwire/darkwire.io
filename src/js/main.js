@@ -47,6 +47,8 @@ $(function() {
   let socket = io(roomId);
   $('#roomIdKey').text(roomId.replace('/', ''));
 
+  FastClick.attach(document.body);
+
   function addParticipantsMessage (data) {
     let message = '';
     let headerMsg = '';
