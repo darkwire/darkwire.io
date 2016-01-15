@@ -267,11 +267,6 @@ $(function() {
     }
   });
 
-  // Focus input when clicking on the message input's border
-  $inputMessage.click(function () {
-    $inputMessage.focus();
-  });
-
   $genKey.click(function () {
     let key = generatePassword();
     updateKeyVal(key);
@@ -283,7 +278,7 @@ $(function() {
   });
 
   // Select message input when clicking message body, unless selecting text
-  $('.messages').on('mouseup', function() {
+  $('.messages').on('click', function() {
     if (!getSelectedText()) {
       $inputMessage.focus();
     }
