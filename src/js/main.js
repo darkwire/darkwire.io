@@ -373,7 +373,6 @@ $(function() {
     isActive = true;
     newMessages = 0;
     favicon.reset();
-    $inputMessage.focus();
   }; 
 
   window.onblur = function () { 
