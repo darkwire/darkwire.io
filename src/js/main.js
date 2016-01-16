@@ -11,6 +11,7 @@ $(function() {
   let newMessages = 0;
   let FADE_TIME = 150; // ms
   let TYPING_TIMER_LENGTH = 400; // ms
+  let soundEnabled = true;
 
   let COLORS = [
     '#e21400', '#ffe400', '#ff8f00',
@@ -330,7 +331,7 @@ $(function() {
     if (!isActive) {
       newMessages++;
       favicon.badge(newMessages);
-      if (beep) {
+      if (soundEnabled && beep) {
         beep.play();
       }
     }
@@ -550,5 +551,11 @@ $(function() {
     $(this).select();
     this.setSelectionRange(0, 9999);
   });
+
+  $('input.bs-switch').bootstrapSwitch();
+
+  $('input.bs-switch').on('switchChange.bootstrapSwitch', function(event, state) {
+    soundEnabled = state;
+  });  
 
 });

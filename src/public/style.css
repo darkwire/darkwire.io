@@ -272,3 +272,8 @@ textarea#share-text {
 .form-control[readonly] {
   color: black !important;
 }
+
+.bootstrap-switch-handle-on.bootstrap-switch-primary {  
+  background: #2a9fd6 !important;
+  border-color: #2a9fd6 !important;
+}
