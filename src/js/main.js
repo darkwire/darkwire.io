@@ -317,7 +317,10 @@ $(function() {
     }
     updateKeyVal(key);
 
-    $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId + " using the key " + encryptionKey);
+    $('.modal').on('shown.bs.modal', function (e) {
+      autosize.update($('textarea.share-text'));
+    });
+
   });
 
   // Whenever the server emits 'new message', update the chat body
@@ -466,6 +469,8 @@ $(function() {
     $('.key').val(val);
     $('.key').text(val);   
     encryptionKey = val;
+    $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId + " using the key " + encryptionKey);
+    autosize.update($('textarea.share-text'));
   }
 
   // Prevent closing join-modal
@@ -538,7 +543,7 @@ $(function() {
     $('.navbar-toggle:visible').click();
   });
 
-  autosize($('textarea'));
+  autosize($('textarea.share-text'));
 
   $('textarea.share-text').click(function() {
     $(this).focus();
