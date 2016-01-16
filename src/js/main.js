@@ -518,6 +518,7 @@ $(function() {
     if (!key.length) return;
     updateKeyVal(key);
     $('#join-modal').modal('hide');
+    socket.emit('user joined');
   }
 
   $('#settings-modal').on('hide.bs.modal', function (e) {

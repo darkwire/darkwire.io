@@ -40,12 +40,15 @@ class Room {
           numUsers: this.numUsers,
           users: this.users
         });
+      });
+
+      socket.on('user joined', () => {
         // echo globally (all clients) that a person has connected
         socket.broadcast.emit('user joined', {
           username: socket.username,
           numUsers: this.numUsers,
           users: this.users          
-        });
+        });        
       });
 
       // when the client emits 'typing', we broadcast it to others
