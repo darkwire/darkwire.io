@@ -316,6 +316,8 @@ $(function() {
       key = '';
     }
     updateKeyVal(key);
+
+    $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId + " using the key " + encryptionKey);
   });
 
   // Whenever the server emits 'new message', update the chat body
@@ -532,8 +534,16 @@ $(function() {
     return retVal;
   }
 
-    $('.navbar-collapse ul li a').click(function() {
-      $('.navbar-toggle:visible').click();
-    });
+  $('.navbar-collapse ul li a').click(function() {
+    $('.navbar-toggle:visible').click();
+  });
+
+  autosize($('textarea'));
+
+  $('textarea.share-text').click(function() {
+    $(this).focus();
+    $(this).select();
+    this.setSelectionRange(0, 9999);
+  });
 
 });

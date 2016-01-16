@@ -36,9 +36,9 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://darkwire.io/" target="_blank"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;New Room</a></li>
-          <li><a href="javascript:void(0)" id="settings-nav"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;&nbsp;Settings</a></li>
-          <li><a href="javascript:void(0)" id="about-nav"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;&nbsp;About</a></li>
+          <li><a href="https://darkwire.io/" target="_blank"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;New Room</a></li>
+          <li><a href="javascript:void(0)" id="settings-nav"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Settings</a></li>
+          <li><a href="javascript:void(0)" id="about-nav"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;About</a></li>
         </ul>
       </div>
     </div>
@@ -65,7 +65,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title">About</h3>
+          <h4 class="modal-title">About</h4>
         </div>
         <div class="modal-body">
           <p>darkwire.io is the simplest way to chat anonymously, and with encryption, online. Chat history is never stored on a server or database, and plain text messages are never transferred over the wire.</p>
@@ -86,13 +86,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title">Settings</h3>
+          <h4 class="modal-title">Settings</h4>
         </div>
         <div class="modal-body">
-          <h5>Invite People to This Room</h5>
-          <p id="settings-share-text">Let's chat on darkwire.io at <span class='room-url bold' id='first-room-url'></span>&nbsp;using the key <span class="key bold"></span>&nbsp;&nbsp;<button class="btn btn-default btn-xs copyable" type="button" data-clipboard-target="#settings-share-text"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button></p>
+          <h6>Invite People to This Room</h6>
+          <p>
+            <textarea class="form-control share-text" rows="3" readonly id="settings-share-text" onclick="this.select()"></textarea>            
+          </p>
           <br>
-          <h5>Edit Your Key</h5>
+          <h6>Edit Your Key</h6>
           <div class="read-key">
             <span class="key" id="read-key"></span>&nbsp;<span class="glyphicon glyphicon-pencil"></span>
           </div>
@@ -118,11 +120,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title">Welcome to darkwire.io</h3>
+          <h4 class="modal-title">Welcome to darkwire.io</h4>
         </div>
         <div class="modal-body">
-          <p>We've placed you in a new chat room. Invite people to join using the text below.</p>
-          <p id="share-text">Let's chat on darkwire.io at <span class='room-url bold' id='first-room-url'></span>&nbsp;using the key <span class="key bold"></span>&nbsp;&nbsp;<button class="btn btn-primary btn-xs copyable" type="button" data-clipboard-target="#share-text"><span class="glyphicon glyphicon-copy"></span>&nbsp;&nbsp;Copy</button></p>
+          <p>We've placed you in a new chat room.</p>
+          <br>
+          <h6>Invite People to This Room</h6>
+          <p>
+            <textarea class="form-control share-text" rows="3" readonly id="share-text"></textarea>
+          </p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Got It</button>
@@ -135,10 +141,10 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="modal-title">Welcome to darkwire.io</h3>
+          <h4 class="modal-title">Welcome to darkwire.io</h4>
         </div>
         <div class="modal-body">
-          <h5>Enter Your Key Below</h5>
+          <h6>Enter Your Key Below</h6>
           <input class="form-control key" placeholder="Enter key here" type="text" id='join-key'></input>
         </div>
         <div class="modal-footer">
@@ -153,7 +159,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title">Current Participants</h3>
+          <h4 class="modal-title">Current Participants</h4>
         </div>
         <div class="modal-body">
           <ul class="users"></ul>
@@ -176,6 +182,7 @@
   <script type="text/javascript" src="vendor/autolinker.min.js"></script>
   <script type="text/javascript" src="vendor/underscore.min.js"></script>
   <script type="text/javascript" src="vendor/modernizr-custom.min.js"></script>
+  <script type="text/javascript" src="vendor/autosize.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script>
   <script src="/main.js"></script>
 <script>

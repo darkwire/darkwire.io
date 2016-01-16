@@ -34,7 +34,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h3 {
-  font-size: 26px;
+  font-size: 24px;
+}
+
+h4 {
+  font-size: 22px;
 }
 
 html, body {
@@ -44,7 +48,7 @@ html, body {
 }
 
 .modal-content {
-  border: 1px solid #666;
+  border: 1px solid #444;
 }
 
 
@@ -208,6 +212,7 @@ html.no-touchevents .chat #input-icons {
 .chat #input-icons #send-message-btn {
   font-size: 25px;
   opacity: 0.3;
+  color: white;
 }
 
 .chat #input-icons #send-message-btn.active {
@@ -258,4 +263,12 @@ html.no-touchevents .chat #input-icons {
 
 .edit-key {
   display: none;
+}
+
+textarea#share-text {
+  resize: none;
+}
+
+.form-control[readonly] {
+  color: black !important;
 }
