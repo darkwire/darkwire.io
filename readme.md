@@ -1,6 +1,6 @@
-# FattyChat
+# Darkwire
 
-FattyChat is the simplest way to chat online anonymously.
+Darkwire is the simplest way to chat online anonymously.
 
 ### Installation
 
@@ -13,7 +13,7 @@ You need Gulp installed globally:
     npm install -g gulp
     gulp start
 
-FattyChat is now running on `http://localhost:3000`
+Darkwire is now running on `http://localhost:3000`
 
 ### Deployment
 
