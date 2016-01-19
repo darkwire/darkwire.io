@@ -189,7 +189,7 @@ input {
   left: 0;
   outline: none;
   padding-left: 10px;
-  position: absolute;
+  position: fixed;
   right: 0;
   width: 100%;
   /*Fix for inner shadow on iOS*/
@@ -198,7 +198,7 @@ input {
 }
 
 .chat #input-icons {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   right: 0px;
   padding: 15px;
