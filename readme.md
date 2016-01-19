@@ -1,6 +1,6 @@
 # DarkWire.io
 
-Encrypted, anonymous web chat. Powered by socket.io.
+Simple, encrypted, anonymous web chat. Powered by socket.io.
 
 ### Installation
 
