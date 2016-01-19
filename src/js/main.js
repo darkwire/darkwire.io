@@ -532,13 +532,7 @@ $(function() {
   });
 
   function generatePassword() {
-    let length = 16;
-    const charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let retVal = "";
-    for (var i = 0, n = charset.length; i < length; ++i) {
-        retVal += charset.charAt(Math.floor(Math.random() * n));
-    }
-    return retVal;
+    return uuid.v4();
   }
 
   $('.navbar-collapse ul li a').click(function() {
