@@ -470,7 +470,7 @@ $(function() {
     $('.key').val(val);
     $('.key').text(val);   
     encryptionKey = val;
-    $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId + " using the key " + encryptionKey);
+    $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId + " using the passphrase " + encryptionKey);
     autosize.update($('textarea.share-text'));
   }
 

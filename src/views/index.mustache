@@ -6,8 +6,8 @@
   <title>darkwire.io - anonymous, encrypted chat</title>
   <meta name="description" content="darkwire.io is the simplest way to chat online anonymously.">
   <link rel="shortcut icon" type="image/png" href="favicon.ico">
-  <link rel="stylesheet" href="vendor/bootstrap-switch.min.css">
-  <link rel="stylesheet" href="vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="/vendor/bootstrap-switch.min.css">
+  <link rel="stylesheet" href="/vendor/bootstrap.min.css">
   <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600,700,300' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="style.css">
   <script>
@@ -73,7 +73,7 @@
 
           <p>darkwire.io is the simplest way to chat anonymously, and with encryption, online. Chat history is never stored on a server or database, and plain text messages are never transferred over the wire.</p>
 
-          <p>Your encryption key ensures that only people you trust can decipher your messages. If you change your key, make sure to notify all other participants.</p>
+          <p>Your encryption passphrase ensures that only people you trust can decipher your messages. If you change your passphrase, make sure to notify all other participants.</p>
 
           <p>Questions/comments? Email us at hello[at]darkwire.io</p>
         </div>
@@ -97,13 +97,13 @@
             <textarea class="form-control share-text" rows="3" readonly id="settings-share-text" onclick="this.select()"></textarea>            
           </p>
           <br>
-          <h6>Edit Your Key</h6>
+          <h6>Edit Your Passphrase</h6>
           <div class="read-key">
             <span class="key" id="read-key"></span>&nbsp;<span class="glyphicon glyphicon-pencil"></span>
           </div>
           <div class="edit-key"> 
             <div class="input-group">
-              <input class="form-control key" placeholder="Enter key here" type="text" id="settings-key"></input>
+              <input class="form-control key" placeholder="Enter passphrase here" type="text" id="settings-key"></input>
               <div class="input-group-btn">
                 <button class="btn btn-default" type="button" id='cancel-key-edit'>Cancel</button>
                 <button class="btn btn-primary" type="button" id='save-key-edit' disabled="disabled">Save</button>
@@ -129,7 +129,7 @@
           <h4 class="modal-title">Welcome to darkwire.io</h4>
         </div>
         <div class="modal-body">
-          <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use.</p>
+          <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
           <p>We've placed you in a new chat room.</p>
           <br>
           <h6>Invite People to This Room</h6>
@@ -151,8 +151,8 @@
           <h4 class="modal-title">Welcome to darkwire.io</h4>
         </div>
         <div class="modal-body">
-          <h6>Enter Your Key Below</h6>
-          <input class="form-control key" placeholder="Enter key here" type="text" id='join-key'></input>
+          <h6>Enter Your Passphrase Below</h6>
+          <input class="form-control key" placeholder="Enter passphrase here" type="text" id='join-key'></input>
           <br>
           <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use.</p>          
         </div>
