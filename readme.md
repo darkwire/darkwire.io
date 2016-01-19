@@ -19,4 +19,4 @@ FattyChat is now running on `http://localhost:3000`
 
 Build source
 
-    gulp build
+    gulp bundle
