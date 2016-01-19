@@ -1,4 +1,3 @@
-// System
 import express from 'express';
 import mustacheExpress from 'mustache-express';
 import session from 'express-session';
@@ -40,8 +39,6 @@ app.set('views', __dirname + '/views');
 app.use(sessionMiddleware);
 app.use(express.static(__dirname + '/public'));
 
-// Routes
-
 function generateNewRoom(req, res, id) {
   const room = new Room(io, id);
   rooms.push(room);
@@ -59,10 +56,6 @@ app.get('/', (req, res) => {
   generateNewRoom(req, res, id);
 });
 
-app.get('/loaderio-6f94612a3fa71ff98b23eecfcca2de6c.html', (req, res) => {
-  res.send('loaderio-6f94612a3fa71ff98b23eecfcca2de6c');
-});
-
 app.get('/:roomId', (req, res) => {
   const roomId = req.params.roomId || false;
 
@@ -75,8 +68,6 @@ app.get('/:roomId', (req, res) => {
   return res.redirect('/');
 });
 
-// Events
-
 server.listen(3000, () => {
-  console.log('fatty is on.');
+  console.log('darkwire is online.');
 });

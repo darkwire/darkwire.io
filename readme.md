@@ -1,19 +1,14 @@
-# FattyChat
+# DarkWire.io
 
-FattyChat is the simplest way to chat online anonymously.
+Encrypted, anonymous web chat. Powered by socket.io.
 
 ### Installation
 
-Install dependencies
-
-    npm install
-
-You need Gulp installed globally:
-
     npm install -g gulp
+    npm install
     gulp start
 
-FattyChat is now running on `http://localhost:3000`
+Darkwire is now running on `http://localhost:3000`
 
 ### Deployment
 

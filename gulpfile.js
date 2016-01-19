@@ -6,8 +6,6 @@ var babel = require('babelify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 
-// var bundler = 
-
 gulp.task('watch', function() {
   gulp.watch('src/js/main.js', ['build']);
 });

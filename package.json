@@ -1,5 +1,5 @@
 {
-  "name": "fattychat",
+  "name": "darkwire",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -33,5 +33,5 @@
     "jsbuild": "uglifyjs src/js/main.js --compress --mangle -o src/public/main.js"
   },
   "author": "Daniel Seripap",
-  "license": "ISC"
+  "license": "MIT"
 }
