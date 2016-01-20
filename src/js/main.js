@@ -39,8 +39,6 @@ $(function() {
   let $currentInput = $usernameInput.focus();
   let encryptionKey;
 
-  let clipboard = new Clipboard('.copyable');
-
   let roomId = window.location.pathname.length ? window.location.pathname : null;
 
   if (!roomId) return;
@@ -417,31 +415,6 @@ $(function() {
   window.onblur = function () { 
     isActive = false;
   };
-
-  clipboard.on('success', function(e) {
-    $(e.trigger).tooltip({
-      title: 'Copied!',
-      trigger: 'manual',
-      placement: 'auto'
-    });
-    $(e.trigger).tooltip('show');
-    setTimeout(function() {
-      $(e.trigger).tooltip('hide');
-    }, 2000);
-    e.clearSelection();
-  });
-
-  clipboard.on('error', function(e) {
-    $(e.trigger).tooltip({
-      title: 'Press ⌘C to copy',
-      trigger: 'manual',
-      placement: 'auto'
-    });
-    $(e.trigger).tooltip('show');
-    setTimeout(function() {
-      $(e.trigger).tooltip('hide');
-    }, 2000);
-  });
 
   // Nav links
   $('a#settings-nav').click(function() {
