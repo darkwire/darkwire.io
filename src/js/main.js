@@ -45,6 +45,18 @@ $(function() {
 
   if (!roomId) return;
 
+  if ((!window.crypto && !window.msCrypto) || !window.crypto.subtle) {
+    $('#no-crypto').modal({
+      backdrop: 'static',
+      show: false,
+      keyboard: false
+    })
+    $('#no-crypto').modal('show');  
+    return;
+  }
+
+  var crypto = window.crypto;
+
   let socket = io(roomId);
   $('#roomIdKey').text(roomId.replace('/', ''));
 
@@ -82,7 +94,9 @@ $(function() {
   // Sends a chat message
   function sendMessage () {
     // Don't allow sending if key is empty
-    if (!encryptionKey.trim().length) return;
+    if (!$('.key').text().trim().length) return;
+
+    var vector = crypto.getRandomValues(new Uint8Array(16));
 
     let message = $inputMessage.val();
     // Prevent markup from being injected into the message
@@ -96,17 +110,19 @@ $(function() {
         message: message
       });
       // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', encrypt(message));
+      createKey(encryptionKey)
+      .then(function(key) {
+        return encryptData(message, key, vector);
+      })
+      .then(function(data) {
+        var encryptedData = new Uint8Array(data);
+        socket.emit('new message', {
+          message: convertArrayBufferViewtoString(encryptedData),
+          vector: convertArrayBufferViewtoString(vector)
+        });
+      });
     }
   }
-
-  function encrypt(text) {
-    return CryptoJS.AES.encrypt(text, $key.val()).toString();
-  }
-
-  function decrypt(text) {
-    return CryptoJS.AES.decrypt(text, $key.val()).toString(CryptoJS.enc.Utf8) || text;
-  }  
 
   // Log a message
   function log (message, options) {
@@ -327,7 +343,6 @@ $(function() {
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     // Don't show messages if no key
-
     if (!isActive) {
       newMessages++;
       favicon.badge(newMessages);
@@ -335,8 +350,26 @@ $(function() {
         beep.play();
       }
     }
-    data.message = decrypt(data.message);
-    addChatMessage(data);
+ 
+    var username = data.username;
+
+    createKey(encryptionKey)
+    .then(function(key) {
+      var msg = convertStringToArrayBufferView(data.message);
+      var vector = convertStringToArrayBufferView(data.vector);
+      return decryptData(msg, key, vector)
+    })
+    .then(function(data) {
+      var decryptedData = new Uint8Array(data);
+      var msg = convertArrayBufferViewtoString(decryptedData);
+      addChatMessage({
+        username: username,
+        message: msg
+      });
+    })
+    .catch(function() {
+
+    });
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
@@ -468,7 +501,8 @@ $(function() {
 
   function updateKeyVal(val) {
     $('.key').val(val);
-    $('.key').text(val);   
+    $('.key').text(val);
+
     encryptionKey = val;
     $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId + " using the passphrase " + encryptionKey);
     autosize.update($('textarea.share-text'));
@@ -551,6 +585,49 @@ $(function() {
 
   $('input.bs-switch').on('switchChange.bootstrapSwitch', function(event, state) {
     soundEnabled = state;
-  });  
+  });
+
+  function convertStringToArrayBufferView(str) {
+    var bytes = new Uint8Array(str.length);
+    for (var i = 0; i < str.length; i++) {
+      bytes[i] = str.charCodeAt(i);
+    }
+
+    return bytes;
+  }
+
+  function convertArrayBufferViewtoString(buffer) {
+    var str = "";
+    for (var i = 0; i < buffer.byteLength; i++) {
+      str += String.fromCharCode(buffer[i]);
+    }
+
+    return str;
+  }
+
+  function createKey(password) {
+    return crypto.subtle.digest({
+      name: "SHA-256"
+    }, convertStringToArrayBufferView(password))
+    .then(function(result) {
+      return window.crypto.subtle.importKey("raw", result, {
+        name: "AES-CBC"
+      }, false, ["encrypt", "decrypt"]);
+    });
+  }
+
+  function encryptData(data, key, vector) {
+    return crypto.subtle.encrypt({
+      name: "AES-CBC",
+      iv: vector
+    }, key, convertStringToArrayBufferView(data));
+  }
+
+  function decryptData(data, key, vector) {
+    return crypto.subtle.decrypt({
+      name: "AES-CBC",
+      iv: vector
+    }, key, data);
+  }
 
 });
