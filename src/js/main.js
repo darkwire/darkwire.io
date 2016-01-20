@@ -92,7 +92,7 @@ $(function() {
   // Sends a chat message
   function sendMessage () {
     // Don't allow sending if key is empty
-    if (!$('.key').text().trim().length) return;
+    if (!encryptionKey.trim().length) return;
 
     var vector = crypto.getRandomValues(new Uint8Array(16));
 
