@@ -43,7 +43,7 @@ $(function() {
 
   if (!roomId) return;
 
-  if ((!window.crypto && !window.msCrypto) || !window.crypto.subtle) {
+  if (!window.crypto || (!window.crypto.subtle && !window.crypto.webkitSubtle)) {
     $('#no-crypto').modal({
       backdrop: 'static',
       show: false,
@@ -54,6 +54,7 @@ $(function() {
   }
 
   var crypto = window.crypto;
+  var cryptoSubtle = window.crypto.subtle || window.crypto.webkitSubtle;
 
   let socket = io(roomId);
   $('#roomIdKey').text(roomId.replace('/', ''));
@@ -579,25 +580,25 @@ $(function() {
   }
 
   function createKey(password) {
-    return crypto.subtle.digest({
+    return cryptoSubtle.digest({
       name: "SHA-256"
     }, convertStringToArrayBufferView(password))
     .then(function(result) {
-      return window.crypto.subtle.importKey("raw", result, {
+      return cryptoSubtle.importKey("raw", result, {
         name: "AES-CBC"
       }, false, ["encrypt", "decrypt"]);
     });
   }
 
   function encryptData(data, key, vector) {
-    return crypto.subtle.encrypt({
+    return cryptoSubtle.encrypt({
       name: "AES-CBC",
       iv: vector
     }, key, convertStringToArrayBufferView(data));
   }
 
   function decryptData(data, key, vector) {
-    return crypto.subtle.decrypt({
+    return cryptoSubtle.decrypt({
       name: "AES-CBC",
       iv: vector
     }, key, data);
