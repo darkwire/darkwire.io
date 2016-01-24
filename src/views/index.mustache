@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>darkwire.io - anonymous, encrypted chat</title>
-  <meta name="description" content="darkwire.io is the simplest way to chat online anonymously.">
+  <title>darkwire.io - encrypted web chat</title>
+  <meta name="description" content="darkwire.io is the simplest way to chat with encryption online.">
   <link rel="shortcut icon" type="image/png" href="favicon.ico">
   <link rel="stylesheet" href="/vendor/bootstrap-switch.min.css">
   <link rel="stylesheet" href="/vendor/bootstrap.min.css">
@@ -50,7 +50,7 @@
       <div class="chatArea">
         <ul class="messages">
           <li class="log">
-            <p>Welcome to darkwire.io - anonymous, encrypted chat</p>
+            <p>Welcome to darkwire.io - encrypted chat</p>
           </li>
         </ul>
       </div>
@@ -69,11 +69,9 @@
           <h4 class="modal-title">About</h4>
         </div>
         <div class="modal-body">
-          <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use.</p>
+          <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
 
-          <p>darkwire.io is the simplest way to chat anonymously, and with encryption, online. Chat history is never stored on a server or database, and plain text messages are never transferred over the wire.</p>
-
-          <p>Your encryption passphrase ensures that only people you trust can decipher your messages. If you change your passphrase, make sure to notify all other participants.</p>
+          <p>darkwire.io is the simplest way to chat with encryption online. Chat history is never stored on a server or database, and plain text messages are never transferred over the wire.</p>
 
           <p>Questions/comments? Email us at hello[at]darkwire.io</p>
         </div>
@@ -97,20 +95,6 @@
             <textarea class="form-control share-text" rows="3" readonly id="settings-share-text" onclick="this.select()"></textarea>            
           </p>
           <br>
-          <h6>Edit Your Passphrase</h6>
-          <div class="read-key">
-            <span class="key" id="read-key"></span>&nbsp;<span class="glyphicon glyphicon-pencil"></span>
-          </div>
-          <div class="edit-key"> 
-            <div class="input-group">
-              <input class="form-control key" placeholder="Enter passphrase here" type="text" id="settings-key"></input>
-              <div class="input-group-btn">
-                <button class="btn btn-default" type="button" id='cancel-key-edit'>Cancel</button>
-                <button class="btn btn-primary" type="button" id='save-key-edit' disabled="disabled">Save</button>
-              </div>
-            </div>
-          </div>
-          <br>
           <h6>Sound</h6>
           <input type="checkbox" name="my-checkbox" class="form-control bs-switch" checked>
         </div>
@@ -129,8 +113,8 @@
           <h4 class="modal-title">Welcome to darkwire.io</h4>
         </div>
         <div class="modal-body">
+          <h6>We've placed you in a new chat room</h6>
           <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
-          <p>We've placed you in a new chat room.</p>
           <br>
           <h6>Invite People to This Room</h6>
           <p>
@@ -139,25 +123,6 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Got It</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="join-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Welcome to darkwire.io</h4>
-        </div>
-        <div class="modal-body">
-          <h6>Enter Your Passphrase Below</h6>
-          <input class="form-control key" placeholder="Enter passphrase here" type="text" id='join-key'></input>
-          <br>
-          <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use.</p>          
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary encryption-active" disabled="disabled" data-dismiss="modal">Done</button>
         </div>
       </div>
     </div>

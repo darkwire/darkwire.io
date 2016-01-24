@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import {EventEmitter} from 'events';
 import util from 'util';
+import uuid from 'uuid';
 
 class Room {
   constructor(io = {}, id = {}) {
@@ -19,37 +20,32 @@ class Room {
         // we tell the client to execute 'new message'
         socket.broadcast.emit('new message', {
           username: socket.username,
+          id: socket.user.id,
           message: data.message,
-          vector: data.vector
+          vector: data.vector,
+          secretKeys: data.secretKeys,
+          signature: data.signature
         });
       });
 
-      socket.on('add user', (username) => {
+      socket.on('add user', (data) => {
         if (addedUser) return;
 
-        if (this.numUsers === 0) {
-          socket.emit('first');
-        }
-
-        this.users.push(username);
+        data.id = uuid.v4();
+        this.users.push(data);
 
         // we store the username in the socket session for this client
-        socket.username = username;
+        socket.username = data.username;
+        socket.user = data;
         ++this.numUsers;
         addedUser = true;
-        socket.emit('login', {
+
+        // Broadcast to ALL sockets, including this one
+        thisIO.emit('user joined', {
+          username: socket.username,
           numUsers: this.numUsers,
           users: this.users
         });
-      });
-
-      socket.on('user joined', () => {
-        // echo globally (all clients) that a person has connected
-        socket.broadcast.emit('user joined', {
-          username: socket.username,
-          numUsers: this.numUsers,
-          users: this.users          
-        });        
       });
 
       // when the client emits 'typing', we broadcast it to others
@@ -70,22 +66,20 @@ class Room {
       socket.on('disconnect', () => {
         if (addedUser) {
           --this.numUsers;
-
-          this.users = _.without(this.users, socket.username);
+          this.users = _.without(this.users, socket.user);
 
           // echo globally that this client has left
           socket.broadcast.emit('user left', {
             username: socket.username,
             numUsers: this.numUsers,
-            users: this.users
+            users: this.users,
+            id: socket.user.id
           });
 
           // remove room from rooms array
           if (this.numUsers === 0) {
             this.emit('empty');
           }
-
-          this.users = _.without(this.users, socket.username);
         }
       });
     });

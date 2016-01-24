@@ -20,7 +20,6 @@ $(function() {
   ];  
 
   let $window = $(window);
-  let $usernameInput = $('.usernameInput'); // Input for username
   let $messages = $('.messages'); // Messages area
   let $inputMessage = $('.inputMessage'); // Input message input box
   let $key = $('.key');
@@ -33,13 +32,14 @@ $(function() {
 
   // Prompt for setting a username
   let username;
+  let myUserId;
   let connected = false;
   let typing = false;
   let lastTypingTime;
-  let $currentInput = $usernameInput.focus();
-  let encryptionKey;
 
   let roomId = window.location.pathname.length ? window.location.pathname : null;
+
+  let keys = {};
 
   if (!roomId) return;
 
@@ -53,11 +53,18 @@ $(function() {
     return;
   }
 
+  $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId);  
+
+  $('textarea.share-text').click(function() {
+    $(this).focus();
+    $(this).select();
+    this.setSelectionRange(0, 9999);
+  });
+
   var crypto = window.crypto;
   var cryptoSubtle = window.crypto.subtle || window.crypto.webkitSubtle;
 
   let socket = io(roomId);
-  $('#roomIdKey').text(roomId.replace('/', ''));
 
   FastClick.attach(document.body);
 
@@ -69,7 +76,7 @@ $(function() {
   }
 
   // Sets the client's username
-  function setUsername () {
+  function initChat () {
     username = window.username;
     // warn not incognitor
     if (!fs) {
@@ -83,19 +90,41 @@ $(function() {
     // If the username is valid
     if (username) {
       $chatPage.show();
-      $currentInput = $inputMessage.focus();
+      $inputMessage.focus();
 
-      // Tell the server your username
-      socket.emit('add user', username);
+      Promise.all([
+        createPrimaryKeys(),
+        createSigningKeys()
+      ])
+      .then(function(data) {
+        keys.primary = {
+          public: data[0].publicKey,
+          private: data[0].privateKey
+        };
+        keys.signing = {
+          public: data[1].publicKey,
+          private: data[1].privateKey
+        };
+        return Promise.all([
+          exportKey(data[0].publicKey),
+          exportKey(data[1].publicKey),
+        ]);
+      })
+      .then(function(exportedKeys) {
+        // Tell the server your username and send public keys
+        socket.emit('add user', {
+          username: username,
+          publicPrimaryKey: exportedKeys[0],
+          publicSigningKey: exportedKeys[1]
+        });
+      });
     }
   }
 
   // Sends a chat message
   function sendMessage () {
-    // Don't allow sending if key is empty
-    if (!encryptionKey.trim().length) return;
-
-    var vector = crypto.getRandomValues(new Uint8Array(16));
+    // Don't send unless other users exist
+    if (users.length <= 1) return;
 
     let message = $inputMessage.val();
     // Prevent markup from being injected into the message
@@ -108,16 +137,63 @@ $(function() {
         username: username,
         message: message
       });
-      // tell server to execute 'new message' and send along one parameter
-      createKey(encryptionKey)
+      let vector = crypto.getRandomValues(new Uint8Array(16));
+
+      let secretKey;
+      let secretKeys;
+      let messageData;
+      let signature;
+
+      // Generate new secret key and vector for each message
+      createSecretKey()
       .then(function(key) {
-        return encryptData(message, key, vector);
+        secretKey = key;
+        // Generate secretKey and encrypt with each user's public key
+        let promises = [];
+        _.each(users, function(user) {
+          // It not me
+          if (user.username !== window.username) {
+            let promise = new Promise(function(resolve, reject) {
+              let thisUser = user;
+
+              let exportedSecretKey;
+              exportKey(key, "raw")
+              .then(function(data) {
+                exportedSecretKey = data;
+                return encryptSecretKey(data, thisUser.publicPrimaryKey);
+              })
+              .then(function(encryptedSecretKey) {
+                var encData = new Uint8Array(encryptedSecretKey);
+                var str = convertArrayBufferViewToString(encData);
+                resolve({
+                  id: thisUser.id,
+                  secretKey: str
+                });
+              });
+            });
+            promises.push(promise);
+          }
+        });
+        return Promise.all(promises);
       })
       .then(function(data) {
-        var encryptedData = new Uint8Array(data);
+        secretKeys = data;
+        messageData = convertStringToArrayBufferView(message);
+        return signKey(messageData, keys.signing.private)
+      })
+      .then(function(data) {
+        signature = data;
+        return encryptMessage(messageData, secretKey, vector)
+      })
+      .then(function(encryptedData) {
+        let msg = convertArrayBufferViewToString(new Uint8Array(encryptedData));
+        let vct = convertArrayBufferViewToString(new Uint8Array(vector));
+        let sig = convertArrayBufferViewToString(new Uint8Array(signature));
         socket.emit('new message', {
-          message: convertArrayBufferViewtoString(encryptedData),
-          vector: convertArrayBufferViewtoString(vector)
+          message: msg,
+          vector: vct,
+          secretKeys: secretKeys,
+          signature: sig
         });
       });
     }
@@ -264,15 +340,6 @@ $(function() {
       typing = false;
     }
 
-    // If enter is pressed on key input then close key modal
-    if (event.which === 13 && $('#join-modal input').is(':focus')) {
-      checkJoinKey();
-    }
-
-    // If enter is pressed on edit key input
-    if (event.which === 13 && $('#settings-modal .edit-key input.key').is(':focus')) {
-      saveKey();
-    }
   });
 
   $inputMessage.on('input propertychange paste change', function() {
@@ -283,11 +350,6 @@ $(function() {
     } else {
       $('#send-message-btn').removeClass('active');
     }
-  });
-
-  $genKey.click(function () {
-    let key = generatePassword();
-    updateKeyVal(key);
   });
 
   // Select message input when closing modal
@@ -312,30 +374,57 @@ $(function() {
     return text;
   }
 
-  // Socket events
-
   // Whenever the server emits 'login', log the login message
-  socket.on('login', function (data) {
+  socket.on('user joined', function (data) {
     connected = true;
     addParticipantsMessage(data);
 
-    users = data.users;
+    let importKeysPromises = [];
+    
+    // Import all user keys if not already there
+    _.each(data.users, function(user) {
+      if (!_.findWhere(users, {id: user.id})) {
+        let promise = new Promise(function(resolve, reject) {
+          let currentUser = user;
+          Promise.all([
+            importPrimaryKey(currentUser.publicPrimaryKey),
+            importSigningKey(currentUser.publicSigningKey)
+          ])
+          .then(function(keys) {
+            users.push({
+              id: currentUser.id,
+              username: currentUser.username,
+              publicPrimaryKey: keys[0],
+              publicSigningKey: keys[1]
+            });
+            resolve();
+          });
+        });
+        importKeysPromises.push(promise);
+      }
+    });
 
-    let key = generatePassword();
+    if (!myUserId) {
+      // Set my id if not already set
+      let me = _.findWhere(data.users, {username: username});
+      myUserId = me.id;
+    }
 
-    if (data.numUsers > 1) {
-      $('#join-modal').modal('show');
-      $('#join-modal').on('shown.bs.modal', function (e) {
-        $('#join-modal input').focus();
+    Promise.all(importKeysPromises)
+    .then(function() {
+      // All users' keys have been imported
+      if (data.numUsers === 1) {
+        $('#first-modal').modal('show');
+      }
+
+      $('.modal').on('shown.bs.modal', function (e) {
+        autosize.update($('textarea.share-text'));
       });
 
-      key = '';
-    }
-    updateKeyVal(key);
+      log(data.username + ' joined');
 
-    $('.modal').on('shown.bs.modal', function (e) {
-      autosize.update($('textarea.share-text'));
-    });
+      renderParticipantsList();
+    });      
 
   });
 
@@ -349,35 +438,55 @@ $(function() {
         beep.play();
       }
     }
- 
-    var username = data.username;
 
-    createKey(encryptionKey)
-    .then(function(key) {
-      var msg = convertStringToArrayBufferView(data.message);
-      var vector = convertStringToArrayBufferView(data.vector);
-      return decryptData(msg, key, vector)
+    let message = data.message;
+    let messageData = convertStringToArrayBufferView(message);
+    let username = data.username; 
+    let senderId = data.id
+    let vector = data.vector;
+    let vectorData = convertStringToArrayBufferView(vector);
+    let secretKeys = data.secretKeys;
+    let decryptedMessageData;
+    let decryptedMessage;
+
+    let mySecretKey = _.find(secretKeys, function(key) {
+      return key.id === myUserId;
+    });
+    let signature = data.signature;
+    let signatureData = convertStringToArrayBufferView(signature);
+    let secretKeyArrayBuffer = convertStringToArrayBufferView(mySecretKey.secretKey);
+
+    decryptSecretKey(secretKeyArrayBuffer, keys.primary.private)
+    .then(function(data) {
+      return new Uint8Array(data);
     })
     .then(function(data) {
-      var decryptedData = new Uint8Array(data);
-      var msg = convertArrayBufferViewtoString(decryptedData);
-      addChatMessage({
-        username: username,
-        message: msg
-      });
+      return importSecretKey(data, "raw");
     })
-    .catch(function() {
-
+    .then(function(data) {
+      let secretKey = data;
+      return decryptMessage(messageData, secretKey, vectorData);
+    })
+    .then(function(data) {
+      decryptedMessageData = data;
+      decryptedMessage = convertArrayBufferViewToString(new Uint8Array(data))
+    })
+    .then(function() {
+      // Find who sent msg (senderId), get their public key and verifyKey() with it and signature
+      let sender = _.find(users, function(user) {
+        return user.id === senderId;
+      });
+      let senderPublicVerifyKey = sender.publicSigningKey;
+      return verifyKey(signatureData, decryptedMessageData, senderPublicVerifyKey)
+    })
+    .then(function(bool) {
+      if (bool) {
+        addChatMessage({
+          username: username,
+          message: decryptedMessage
+        });          
+      }
     });
-  });
-
-  // Whenever the server emits 'user joined', log it in the chat body
-  socket.on('user joined', function (data) {
-    log(data.username + ' joined');
-    addParticipantsMessage(data);
-
-    users = data.users;  
-    renderParticipantsList();
   });
 
   // Whenever the server emits 'user left', log it in the chat body
@@ -386,7 +495,7 @@ $(function() {
     addParticipantsMessage(data);
     removeChatTyping(data);
 
-    users = data.users;
+    users = _.without(users, _.findWhere(users, {id: data.id}));
 
     renderParticipantsList();
   });
@@ -401,11 +510,7 @@ $(function() {
     removeChatTyping(data);
   });
 
-  socket.on('first', function() {
-    $('#first-modal').modal('show');
-  });
-
-  setUsername();
+  initChat();
 
   window.onfocus = function () { 
     isActive = true;
@@ -426,32 +531,7 @@ $(function() {
     $('#about-modal').modal('show');
   });
 
-  $('.room-url').text('https://darkwire.io' + roomId);
-  $('.room-id').text(roomId.replace('/', ''));
-
   $('[data-toggle="tooltip"]').tooltip();
-
-  function joinKeyInputChanged(val) {
-    if (!val.trim().length) {
-      $('#join-modal .modal-footer button').attr('disabled', 'disabled');
-    } else {
-      $('#join-modal .modal-footer button').removeAttr('disabled');
-    }    
-  }
-
-  $('#join-modal .key').on('input propertychange paste change', function() {
-    let val = $(this).val().trim();
-    joinKeyInputChanged(val);
-  });
-
-  $('#settings-modal input.key').on('input propertychange paste change', function() {
-    let val = $(this).val().trim();
-    if (val !== encryptionKey && val.length) {
-      $('#settings-modal #save-key-edit').removeAttr('disabled');
-    } else {
-      $('#settings-modal #save-key-edit').attr('disabled', 'disabled');
-    }
-  });
 
   $('.navbar .participants').click(function() {
     renderParticipantsList();
@@ -460,78 +540,18 @@ $(function() {
 
   function renderParticipantsList() {
     $('#participants-modal ul.users').empty();
-    _.each(users, function(username) {
+    _.each(users, function(user) {
       let li;
-      if (username === window.username) {
+      if (user.username === window.username) {
         // User is me
-        li = $("<li>" + username + " <span class='you'>(you)</span></li>").css('color', getUsernameColor(username));
+        li = $("<li>" + user.username + " <span class='you'>(you)</span></li>").css('color', getUsernameColor(user.username));
       } else {
-        li = $("<li>" + username + "</li>").css('color', getUsernameColor(username));
+        li = $("<li>" + user.username + "</li>").css('color', getUsernameColor(user.username));
       }
       $('#participants-modal ul.users')
         .append(li);        
     });    
   }
-
-  function updateKeyVal(val) {
-    $('.key').val(val);
-    $('.key').text(val);
-
-    encryptionKey = val;
-    $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId + " using the passphrase " + encryptionKey);
-    autosize.update($('textarea.share-text'));
-  }
-
-  // Prevent closing join-modal
-  $('#join-modal').modal({
-    backdrop: 'static',
-    show: false,
-    keyboard: false
-  });
-
-  $('.read-key').click(function() {
-    $('.edit-key').show();
-    $('.edit-key input').focus();
-    $(this).hide();
-  });
-
-  $('.edit-key #cancel-key-edit').click(function() {
-    cancelSaveKey();
-  });
-
-  $('.edit-key #save-key-edit').click(function() {
-    saveKey();
-  });
-
-  function cancelSaveKey() {
-    $('.edit-key').hide();
-    $('.read-key').show();
-    updateKeyVal(encryptionKey);    
-  }
-
-  function saveKey() {
-    let key = $('.edit-key input.key').val().trim();
-    if (!key.length) return;    
-    $('.edit-key').hide();
-    $('.read-key').show();
-    updateKeyVal(key || encryptionKey);    
-  }
-
-  $('#join-modal .modal-footer button').click(function() {
-    checkJoinKey();
-  });
-
-  function checkJoinKey() {
-    let key = $('#join-modal input').val().trim();
-    if (!key.length) return;
-    updateKeyVal(key);
-    $('#join-modal').modal('hide');
-    socket.emit('user joined');
-  }
-
-  $('#settings-modal').on('hide.bs.modal', function (e) {
-    cancelSaveKey();
-  });
 
   $('#send-message-btn').click(function() {
     sendMessage();
@@ -539,20 +559,8 @@ $(function() {
     typing = false;
   });
 
-  function generatePassword() {
-    return uuid.v4();
-  }
-
   $('.navbar-collapse ul li a').click(function() {
     $('.navbar-toggle:visible').click();
-  });
-
-  autosize($('textarea.share-text'));
-
-  $('textarea.share-text').click(function() {
-    $(this).focus();
-    $(this).select();
-    this.setSelectionRange(0, 9999);
   });
 
   $('input.bs-switch').bootstrapSwitch();
@@ -570,7 +578,7 @@ $(function() {
     return bytes;
   }
 
-  function convertArrayBufferViewtoString(buffer) {
+  function convertArrayBufferViewToString(buffer) {
     var str = "";
     for (var i = 0; i < buffer.byteLength; i++) {
       str += String.fromCharCode(buffer[i]);
@@ -579,29 +587,161 @@ $(function() {
     return str;
   }
 
-  function createKey(password) {
-    return cryptoSubtle.digest({
-      name: "SHA-256"
-    }, convertStringToArrayBufferView(password))
-    .then(function(result) {
-      return cryptoSubtle.importKey("raw", result, {
-        name: "AES-CBC"
-      }, false, ["encrypt", "decrypt"]);
-    });
+  function createSigningKeys() {    
+    return crypto.subtle.generateKey(
+      {
+        name: "RSASSA-PKCS1-v1_5",
+        modulusLength: 2048, //can be 1024, 2048, or 4096
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+      },
+      true, //whether the key is extractable (i.e. can be used in exportKey)
+      ["sign", "verify"] //can be any combination of "sign" and "verify"
+    );
   }
 
-  function encryptData(data, key, vector) {
-    return cryptoSubtle.encrypt({
-      name: "AES-CBC",
-      iv: vector
-    }, key, convertStringToArrayBufferView(data));
+  function createPrimaryKeys() {
+    return crypto.subtle.generateKey(
+      {
+        name: "RSA-OAEP",
+        modulusLength: 2048, //can be 1024, 2048, or 4096
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+      },
+      true, //whether the key is extractable (i.e. can be used in exportKey)
+      ["encrypt", "decrypt"] //must be ["encrypt", "decrypt"] or ["wrapKey", "unwrapKey"]
+    );
   }
 
-  function decryptData(data, key, vector) {
-    return cryptoSubtle.decrypt({
-      name: "AES-CBC",
-      iv: vector
-    }, key, data);
+  function createSecretKey() {
+    return crypto.subtle.generateKey(
+      {
+        name: "AES-CBC",
+        length: 256, //can be  128, 192, or 256
+      },
+      true, //whether the key is extractable (i.e. can be used in exportKey)
+      ["encrypt", "decrypt", "wrapKey", "unwrapKey"] //can be "encrypt", "decrypt", "wrapKey", or "unwrapKey"
+    );
+  }
+
+  function encryptSecretKey(data, secretKey) {
+    // Secret key will be recipient's public key
+    return crypto.subtle.encrypt(
+      {
+        name: "RSA-OAEP"
+      },
+      secretKey,
+      data //ArrayBuffer of data you want to encrypt
+    );
+  } 
+
+  function decryptSecretKey(data, key) {
+    // key will be my private key
+    return crypto.subtle.decrypt(
+      {
+        name: "RSA-OAEP",
+        //label: Uint8Array([...]) //optional
+      },
+      key,
+      data //ArrayBuffer of the data
+    );
+  }
+
+  function encryptMessage(data, secretKey, iv) {
+    return crypto.subtle.encrypt(
+      {
+        name: "AES-CBC",
+        //Don't re-use initialization vectors!
+        //Always generate a new iv every time your encrypt!
+        iv: iv,
+      },
+      secretKey, //from generateKey or importKey above
+      data //ArrayBuffer of data you want to encrypt
+    );
+  }
+
+  function decryptMessage(data, secretKey, iv) {
+    return crypto.subtle.decrypt(
+      {
+        name: "AES-CBC",
+        iv: iv, //The initialization vector you used to encrypt
+      },
+      secretKey, //from generateKey or importKey above
+      data //ArrayBuffer of the data
+    );    
+  }
+
+  function importSecretKey(jwkData, format) {
+    return crypto.subtle.importKey(
+      format || "jwk", //can be "jwk" or "raw"
+      //this is an example jwk key, "raw" would be an ArrayBuffer
+      jwkData,
+      {   //this is the algorithm options
+        name: "AES-CBC",
+      },
+      true, //whether the key is extractable (i.e. can be used in exportKey)
+      ["encrypt", "decrypt"] //can be "encrypt", "decrypt", "wrapKey", or "unwrapKey"
+    );
+  }
+
+  function importPrimaryKey(jwkData) {
+    // Will be someone's public key
+    return crypto.subtle.importKey(
+      "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
+      jwkData,
+      {   //these are the algorithm options
+        name: "RSA-OAEP",
+        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+      },
+      true, //whether the key is extractable (i.e. can be used in exportKey)
+      ["encrypt"] //"encrypt" or "wrapKey" for public key import or
+                  //"decrypt" or "unwrapKey" for private key imports
+    );
+  }
+
+  function exportKey(key, format) {
+    // Will be public primary key or public signing key
+    return crypto.subtle.exportKey(
+      format || "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
+      key //can be a publicKey or privateKey, as long as extractable was true
+    );   
+  }
+
+  function importSigningKey(jwkData) {
+    return crypto.subtle.importKey(
+      "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
+      //this is an example jwk key, other key types are Uint8Array objects
+      jwkData,
+      {   //these are the algorithm options
+        name: "RSASSA-PKCS1-v1_5",
+        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+      },
+      true, //whether the key is extractable (i.e. can be used in exportKey)
+      ["verify"] //"verify" for public key import, "sign" for private key imports
+    );
+  }
+
+  function signKey(data, keyToSignWith) {
+    // Will use my private key
+    return crypto.subtle.sign(
+      {
+        name: "RSASSA-PKCS1-v1_5"
+      },
+      keyToSignWith, //from generateKey or importKey above
+      data //ArrayBuffer of data you want to sign
+    );    
+  }
+
+  function verifyKey(signature, data, keyToVerifyWith) {
+    // Will verify with sender's public key
+    return crypto.subtle.verify(
+      {
+        name: "RSASSA-PKCS1-v1_5"
+      },
+      keyToVerifyWith, //from generateKey or importKey above
+      signature, //ArrayBuffer of the signature
+      data //ArrayBuffer of the data
+    );  
   }
 
 });
