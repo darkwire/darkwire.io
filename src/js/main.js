@@ -107,7 +107,7 @@ $(function() {
         };
         return Promise.all([
           exportKey(data[0].publicKey),
-          exportKey(data[1].publicKey),
+          exportKey(data[1].publicKey)
         ]);
       })
       .then(function(exportedKeys) {
@@ -588,7 +588,7 @@ $(function() {
   }
 
   function createSigningKeys() {    
-    return crypto.subtle.generateKey(
+    return cryptoSubtle.generateKey(
       {
         name: "RSASSA-PKCS1-v1_5",
         modulusLength: 2048, //can be 1024, 2048, or 4096
@@ -601,7 +601,7 @@ $(function() {
   }
 
   function createPrimaryKeys() {
-    return crypto.subtle.generateKey(
+    return cryptoSubtle.generateKey(
       {
         name: "RSA-OAEP",
         modulusLength: 2048, //can be 1024, 2048, or 4096
@@ -614,7 +614,7 @@ $(function() {
   }
 
   function createSecretKey() {
-    return crypto.subtle.generateKey(
+    return cryptoSubtle.generateKey(
       {
         name: "AES-CBC",
         length: 256, //can be  128, 192, or 256
@@ -626,7 +626,7 @@ $(function() {
 
   function encryptSecretKey(data, secretKey) {
     // Secret key will be recipient's public key
-    return crypto.subtle.encrypt(
+    return cryptoSubtle.encrypt(
       {
         name: "RSA-OAEP"
       },
@@ -637,7 +637,7 @@ $(function() {
 
   function decryptSecretKey(data, key) {
     // key will be my private key
-    return crypto.subtle.decrypt(
+    return cryptoSubtle.decrypt(
       {
         name: "RSA-OAEP",
         //label: Uint8Array([...]) //optional
@@ -648,7 +648,7 @@ $(function() {
   }
 
   function encryptMessage(data, secretKey, iv) {
-    return crypto.subtle.encrypt(
+    return cryptoSubtle.encrypt(
       {
         name: "AES-CBC",
         //Don't re-use initialization vectors!
@@ -661,7 +661,7 @@ $(function() {
   }
 
   function decryptMessage(data, secretKey, iv) {
-    return crypto.subtle.decrypt(
+    return cryptoSubtle.decrypt(
       {
         name: "AES-CBC",
         iv: iv, //The initialization vector you used to encrypt
@@ -672,7 +672,7 @@ $(function() {
   }
 
   function importSecretKey(jwkData, format) {
-    return crypto.subtle.importKey(
+    return cryptoSubtle.importKey(
       format || "jwk", //can be "jwk" or "raw"
       //this is an example jwk key, "raw" would be an ArrayBuffer
       jwkData,
@@ -686,7 +686,7 @@ $(function() {
 
   function importPrimaryKey(jwkData) {
     // Will be someone's public key
-    return crypto.subtle.importKey(
+    return cryptoSubtle.importKey(
       "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
       jwkData,
       {   //these are the algorithm options
@@ -701,14 +701,14 @@ $(function() {
 
   function exportKey(key, format) {
     // Will be public primary key or public signing key
-    return crypto.subtle.exportKey(
+    return cryptoSubtle.exportKey(
       format || "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
       key //can be a publicKey or privateKey, as long as extractable was true
     );   
   }
 
   function importSigningKey(jwkData) {
-    return crypto.subtle.importKey(
+    return cryptoSubtle.importKey(
       "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
       //this is an example jwk key, other key types are Uint8Array objects
       jwkData,
@@ -723,7 +723,7 @@ $(function() {
 
   function signKey(data, keyToSignWith) {
     // Will use my private key
-    return crypto.subtle.sign(
+    return cryptoSubtle.sign(
       {
         name: "RSASSA-PKCS1-v1_5"
       },
@@ -734,7 +734,7 @@ $(function() {
 
   function verifyKey(signature, data, keyToVerifyWith) {
     // Will verify with sender's public key
-    return crypto.subtle.verify(
+    return cryptoSubtle.verify(
       {
         name: "RSASSA-PKCS1-v1_5"
       },
