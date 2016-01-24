@@ -53,7 +53,7 @@ $(function() {
     return;
   }
 
-  $('textarea.share-text').val("Let's chat on darkwire.io at https://darkwire.io" + roomId);  
+  $('textarea.share-text').val("https://darkwire.io" + roomId);  
 
   $('textarea.share-text').click(function() {
     $(this).focus();
