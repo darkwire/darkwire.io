@@ -90,7 +90,7 @@ $(function() {
       $inputMessage.focus();
 
       Promise.all([
-        createPrimaryKeys();
+        createPrimaryKeys()
       ])
       .then(function(data) {
         keys = {
