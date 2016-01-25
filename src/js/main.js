@@ -53,9 +53,9 @@ $(function() {
     return;
   }
 
-  $('textarea.share-text').val("https://darkwire.io" + roomId);  
+  $('input.share-text').val("https://darkwire.io" + roomId);  
 
-  $('textarea.share-text').click(function() {
+  $('input.share-text').click(function() {
     $(this).focus();
     $(this).select();
     this.setSelectionRange(0, 9999);

@@ -51,12 +51,6 @@ html, body {
   border: 1px solid #444;
 }
 
-
-input {
-  background: black !important;
-  color: white !important;
-}
-
 ul {
   list-style: none;
   word-wrap: break-word;
@@ -182,6 +176,8 @@ input {
 /* Input */
 
 .inputMessage{
+  background: black !important;
+  color: white !important;
   border: none;
   border-top: 1px solid #282828;
   bottom: 0;
@@ -220,8 +216,9 @@ html.no-touchevents .chat #input-icons {
 }
 
 .participants {
-  position: relative;
-  top: 16px;
+  /*position: relative;*/
+  /*top: 16px;*/
+  float: left;
   text-align: center;
   padding: 16px;
   cursor: pointer;
@@ -263,10 +260,6 @@ html.no-touchevents .chat #input-icons {
 
 .edit-key {
   display: none;
-}
-
-textarea#share-text {
-  resize: none;
 }
 
 .form-control[readonly] {
