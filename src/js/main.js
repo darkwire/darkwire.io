@@ -61,9 +61,6 @@ $(function() {
     this.setSelectionRange(0, 9999);
   });
 
-  var crypto = window.crypto;
-  var cryptoSubtle = window.crypto.subtle || window.crypto.webkitSubtle;
-
   let socket = io(roomId);
 
   FastClick.attach(document.body);
@@ -93,107 +90,22 @@ $(function() {
       $inputMessage.focus();
 
       Promise.all([
-        createPrimaryKeys(),
-        createSigningKeys()
+        createPrimaryKeys();
       ])
       .then(function(data) {
-        keys.primary = {
+        keys = {
           public: data[0].publicKey,
           private: data[0].privateKey
         };
-        keys.signing = {
-          public: data[1].publicKey,
-          private: data[1].privateKey
-        };
         return Promise.all([
-          exportKey(data[0].publicKey),
-          exportKey(data[1].publicKey)
+          exportKey(data[0].publicKey, "spki")
         ]);
       })
       .then(function(exportedKeys) {
         // Tell the server your username and send public keys
         socket.emit('add user', {
           username: username,
-          publicPrimaryKey: exportedKeys[0],
-          publicSigningKey: exportedKeys[1]
-        });
-      });
-    }
-  }
-
-  // Sends a chat message
-  function sendMessage () {
-    // Don't send unless other users exist
-    if (users.length <= 1) return;
-
-    let message = $inputMessage.val();
-    // Prevent markup from being injected into the message
-    message = cleanInput(message);
-    // if there is a non-empty message and a socket connection
-    if (message && connected) {
-      $inputMessage.val('');
-      $('#send-message-btn').removeClass('active');      
-      addChatMessage({
-        username: username,
-        message: message
-      });
-      let vector = crypto.getRandomValues(new Uint8Array(16));
-
-      let secretKey;
-      let secretKeys;
-      let messageData;
-      let signature;
-
-      // Generate new secret key and vector for each message
-      createSecretKey()
-      .then(function(key) {
-        secretKey = key;
-        // Generate secretKey and encrypt with each user's public key
-        let promises = [];
-        _.each(users, function(user) {
-          // It not me
-          if (user.username !== window.username) {
-            let promise = new Promise(function(resolve, reject) {
-              let thisUser = user;
-
-              let exportedSecretKey;
-              exportKey(key, "raw")
-              .then(function(data) {
-                exportedSecretKey = data;
-                return encryptSecretKey(data, thisUser.publicPrimaryKey);
-              })
-              .then(function(encryptedSecretKey) {
-                var encData = new Uint8Array(encryptedSecretKey);
-                var str = convertArrayBufferViewToString(encData);
-                resolve({
-                  id: thisUser.id,
-                  secretKey: str
-                });
-              });
-            });
-            promises.push(promise);
-          }
-        });
-        return Promise.all(promises);
-      })
-      .then(function(data) {
-        secretKeys = data;
-        messageData = convertStringToArrayBufferView(message);
-        return signKey(messageData, keys.signing.private)
-      })
-      .then(function(data) {
-        signature = data;
-        return encryptMessage(messageData, secretKey, vector)
-      })
-      .then(function(encryptedData) {
-        let msg = convertArrayBufferViewToString(new Uint8Array(encryptedData));
-        let vct = convertArrayBufferViewToString(new Uint8Array(vector));
-        let sig = convertArrayBufferViewToString(new Uint8Array(signature));
-        socket.emit('new message', {
-          message: msg,
-          vector: vct,
-          secretKeys: secretKeys,
-          signature: sig
+          publicKey: exportedKeys[0]
         });
       });
     }
@@ -387,15 +299,13 @@ $(function() {
         let promise = new Promise(function(resolve, reject) {
           let currentUser = user;
           Promise.all([
-            importPrimaryKey(currentUser.publicPrimaryKey),
-            importSigningKey(currentUser.publicSigningKey)
+            importPrimaryKey(currentUser.publicKey, "spki")
           ])
           .then(function(keys) {
             users.push({
               id: currentUser.id,
               username: currentUser.username,
-              publicPrimaryKey: keys[0],
-              publicSigningKey: keys[1]
+              publicKey: keys[0]
             });
             resolve();
           });
@@ -417,16 +327,109 @@ $(function() {
         $('#first-modal').modal('show');
       }
 
-      $('.modal').on('shown.bs.modal', function (e) {
-        autosize.update($('textarea.share-text'));
-      });
-
       log(data.username + ' joined');
 
       renderParticipantsList();
     });      
 
   });
+
+  // Sends a chat message
+  function sendMessage () {
+    // Don't send unless other users exist
+    if (users.length <= 1) return;
+
+    let message = $inputMessage.val();
+    // Prevent markup from being injected into the message
+    message = cleanInput(message);
+    // if there is a non-empty message and a socket connection
+    if (message && connected) {
+      $inputMessage.val('');
+      $('#send-message-btn').removeClass('active');      
+      addChatMessage({
+        username: username,
+        message: message
+      });
+      let vector = crypto.getRandomValues(new Uint8Array(16));
+
+      let secretKey;
+      let secretKeys;
+      let messageData;
+      let signature;
+      let signingKey;
+      let encryptedMessageData;
+
+      // Generate new secret key and vector for each message
+      createSecretKey()
+      .then(function(key) {
+        secretKey = key;
+        return createSigningKey();
+      })
+      .then(function(key) {
+        signingKey = key;
+        // Generate secretKey and encrypt with each user's public key
+        let promises = [];
+        _.each(users, function(user) {
+          // If not me
+          if (user.username !== window.username) {
+            let promise = new Promise(function(resolve, reject) {
+              let thisUser = user;
+
+              let secretKeyStr;
+
+              // Export secret key
+              exportKey(secretKey, "raw")
+              .then(function(data) {
+                return encryptSecretKey(data, thisUser.publicKey);
+              })
+              .then(function(encryptedSecretKey) {
+                let encData = new Uint8Array(encryptedSecretKey);
+                secretKeyStr = convertArrayBufferViewToString(encData);
+                // Export HMAC signing key
+                return exportKey(signingKey, "raw");
+              })
+              .then(function(data) {
+                // Encrypt signing key with user's public key
+                return encryptSigningKey(data, thisUser.publicKey);
+              })
+              .then(function(encryptedSigningKey) {
+                let encData = new Uint8Array(encryptedSigningKey);
+                var str = convertArrayBufferViewToString(encData);
+                resolve({
+                  id: thisUser.id,
+                  secretKey: secretKeyStr,
+                  encryptedSigningKey: str
+                });
+              });
+            });
+            promises.push(promise);
+          }
+        });
+        return Promise.all(promises);
+      })
+      .then(function(data) {
+        secretKeys = data;
+        messageData = convertStringToArrayBufferView(message);
+        return signKey(messageData, signingKey);
+      })
+      .then(function(data) {
+        signature = data;
+        return encryptMessage(messageData, secretKey, vector);
+      })
+      .then(function(data) {
+        encryptedMessageData = data;
+        let msg = convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
+        let vct = convertArrayBufferViewToString(new Uint8Array(vector));
+        let sig = convertArrayBufferViewToString(new Uint8Array(signature));
+        socket.emit('new message', {
+          message: msg,
+          vector: vct,
+          secretKeys: secretKeys,
+          signature: sig
+        });
+      });
+    }
+  }
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
@@ -447,7 +450,7 @@ $(function() {
     let vectorData = convertStringToArrayBufferView(vector);
     let secretKeys = data.secretKeys;
     let decryptedMessageData;
-    let decryptedMessage;
+    let decryptedMessage;   
 
     let mySecretKey = _.find(secretKeys, function(key) {
       return key.id === myUserId;
@@ -455,13 +458,11 @@ $(function() {
     let signature = data.signature;
     let signatureData = convertStringToArrayBufferView(signature);
     let secretKeyArrayBuffer = convertStringToArrayBufferView(mySecretKey.secretKey);
+    let signingKeyArrayBuffer = convertStringToArrayBufferView(mySecretKey.encryptedSigningKey);
 
-    decryptSecretKey(secretKeyArrayBuffer, keys.primary.private)
+    decryptSecretKey(secretKeyArrayBuffer, keys.private)
     .then(function(data) {
-      return new Uint8Array(data);
-    })
-    .then(function(data) {
-      return importSecretKey(data, "raw");
+      return importSecretKey(new Uint8Array(data), "raw");
     })
     .then(function(data) {
       let secretKey = data;
@@ -470,14 +471,14 @@ $(function() {
     .then(function(data) {
       decryptedMessageData = data;
       decryptedMessage = convertArrayBufferViewToString(new Uint8Array(data))
+      return decryptSigningKey(signingKeyArrayBuffer, keys.private)
     })
-    .then(function() {
-      // Find who sent msg (senderId), get their public key and verifyKey() with it and signature
-      let sender = _.find(users, function(user) {
-        return user.id === senderId;
-      });
-      let senderPublicVerifyKey = sender.publicSigningKey;
-      return verifyKey(signatureData, decryptedMessageData, senderPublicVerifyKey)
+    .then(function(data) {
+      return importSigningKey(new Uint8Array(data), "raw");
+    })
+    .then(function(data) {
+      let signingKey = data;
+      return verifyKey(signatureData, decryptedMessageData, signingKey);
     })
     .then(function(bool) {
       if (bool) {
@@ -587,13 +588,12 @@ $(function() {
     return str;
   }
 
-  function createSigningKeys() {    
-    return cryptoSubtle.generateKey(
+  function createSigningKey() {    
+    return window.crypto.subtle.generateKey(
       {
-        name: "RSASSA-PKCS1-v1_5",
-        modulusLength: 2048, //can be 1024, 2048, or 4096
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        name: "HMAC",
         hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+        //length: 256, //optional, if you want your key length to differ from the hash function's block length
       },
       true, //whether the key is extractable (i.e. can be used in exportKey)
       ["sign", "verify"] //can be any combination of "sign" and "verify"
@@ -601,7 +601,7 @@ $(function() {
   }
 
   function createPrimaryKeys() {
-    return cryptoSubtle.generateKey(
+    return window.crypto.subtle.generateKey(
       {
         name: "RSA-OAEP",
         modulusLength: 2048, //can be 1024, 2048, or 4096
@@ -614,21 +614,24 @@ $(function() {
   }
 
   function createSecretKey() {
-    return cryptoSubtle.generateKey(
+    return window.crypto.subtle.generateKey(
       {
         name: "AES-CBC",
         length: 256, //can be  128, 192, or 256
       },
       true, //whether the key is extractable (i.e. can be used in exportKey)
-      ["encrypt", "decrypt", "wrapKey", "unwrapKey"] //can be "encrypt", "decrypt", "wrapKey", or "unwrapKey"
+      ["encrypt", "decrypt"] //can be "encrypt", "decrypt", "wrapKey", or "unwrapKey"
     );
   }
 
   function encryptSecretKey(data, secretKey) {
     // Secret key will be recipient's public key
-    return cryptoSubtle.encrypt(
+    return window.crypto.subtle.encrypt(
       {
-        name: "RSA-OAEP"
+        name: "RSA-OAEP",
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"}
       },
       secretKey,
       data //ArrayBuffer of data you want to encrypt
@@ -637,9 +640,41 @@ $(function() {
 
   function decryptSecretKey(data, key) {
     // key will be my private key
-    return cryptoSubtle.decrypt(
+    return window.crypto.subtle.decrypt(
       {
         name: "RSA-OAEP",
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"} 
+        //label: Uint8Array([...]) //optional
+      },
+      key,
+      data //ArrayBuffer of the data
+    );
+  }
+
+  function encryptSigningKey(data, signingKey) {
+    // Secret key will be recipient's public key
+    return window.crypto.subtle.encrypt(
+      {
+        name: "RSA-OAEP",
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"} 
+      },
+      signingKey,
+      data //ArrayBuffer of data you want to encrypt
+    );
+  } 
+
+  function decryptSigningKey(data, key) {
+    // key will be my private key
+    return window.crypto.subtle.decrypt(
+      {
+        name: "RSA-OAEP",
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"} 
         //label: Uint8Array([...]) //optional
       },
       key,
@@ -648,7 +683,7 @@ $(function() {
   }
 
   function encryptMessage(data, secretKey, iv) {
-    return cryptoSubtle.encrypt(
+    return window.crypto.subtle.encrypt(
       {
         name: "AES-CBC",
         //Don't re-use initialization vectors!
@@ -661,7 +696,7 @@ $(function() {
   }
 
   function decryptMessage(data, secretKey, iv) {
-    return cryptoSubtle.decrypt(
+    return window.crypto.subtle.decrypt(
       {
         name: "AES-CBC",
         iv: iv, //The initialization vector you used to encrypt
@@ -672,7 +707,7 @@ $(function() {
   }
 
   function importSecretKey(jwkData, format) {
-    return cryptoSubtle.importKey(
+    return window.crypto.subtle.importKey(
       format || "jwk", //can be "jwk" or "raw"
       //this is an example jwk key, "raw" would be an ArrayBuffer
       jwkData,
@@ -684,15 +719,18 @@ $(function() {
     );
   }
 
-  function importPrimaryKey(jwkData) {
+  function importPrimaryKey(jwkData, format) {
     // Will be someone's public key
-    return cryptoSubtle.importKey(
-      "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
+    let hashObj = {
+      name: "RSA-OAEP"
+    };
+    if (!window.crypto.webkitSubtle) {
+      hashObj.hash = {name: "SHA-256"};
+    }
+    return window.crypto.subtle.importKey(
+      format || "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
       jwkData,
-      {   //these are the algorithm options
-        name: "RSA-OAEP",
-        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
-      },
+      hashObj,
       true, //whether the key is extractable (i.e. can be used in exportKey)
       ["encrypt"] //"encrypt" or "wrapKey" for public key import or
                   //"decrypt" or "unwrapKey" for private key imports
@@ -701,20 +739,21 @@ $(function() {
 
   function exportKey(key, format) {
     // Will be public primary key or public signing key
-    return cryptoSubtle.exportKey(
+    return window.crypto.subtle.exportKey(
       format || "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
       key //can be a publicKey or privateKey, as long as extractable was true
     );   
   }
 
   function importSigningKey(jwkData) {
-    return cryptoSubtle.importKey(
-      "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
+    return window.crypto.subtle.importKey(
+      "raw", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
       //this is an example jwk key, other key types are Uint8Array objects
       jwkData,
       {   //these are the algorithm options
-        name: "RSASSA-PKCS1-v1_5",
+        name: "HMAC",
         hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+        //length: 256, //optional, if you want your key length to differ from the hash function's block length
       },
       true, //whether the key is extractable (i.e. can be used in exportKey)
       ["verify"] //"verify" for public key import, "sign" for private key imports
@@ -723,9 +762,10 @@ $(function() {
 
   function signKey(data, keyToSignWith) {
     // Will use my private key
-    return cryptoSubtle.sign(
+    return window.crypto.subtle.sign(
       {
-        name: "RSASSA-PKCS1-v1_5"
+        name: "HMAC",
+        hash: {name: "SHA-256"}
       },
       keyToSignWith, //from generateKey or importKey above
       data //ArrayBuffer of data you want to sign
@@ -734,9 +774,10 @@ $(function() {
 
   function verifyKey(signature, data, keyToVerifyWith) {
     // Will verify with sender's public key
-    return cryptoSubtle.verify(
+    return window.crypto.subtle.verify(
       {
-        name: "RSASSA-PKCS1-v1_5"
+        name: "HMAC",
+        hash: {name: "SHA-256"}
       },
       keyToVerifyWith, //from generateKey or importKey above
       signature, //ArrayBuffer of the signature
