@@ -11,7 +11,7 @@ html {
 
 html, body, input {
   font-family:
-    "Source Code Pro",
+    "SourceCodePro-Regular",
     "HelveticaNeue-Light",
     "Helvetica Neue Light",
     "Helvetica Neue",
@@ -23,7 +23,7 @@ html, body, input {
 
 h1, h2, h3, h4, h5, h6 {
   font-family:
-    "Source Code Pro",
+    "SourceCodePro-Regular",
     "HelveticaNeue-Light",
     "Helvetica Neue Light",
     "Helvetica Neue",
@@ -47,6 +47,20 @@ html, body {
   padding: 0;
 }
 
+@font-face {
+  font-family: 'SourceCodePro-Regular';
+  src: url('fonts/SourceCodePro-Regular.eot?#iefix') format('embedded-opentype'),  url('fonts/SourceCodePro-Regular.woff') format('woff'), url('fonts/SourceCodePro-Regular.ttf')  format('truetype'), url('fonts/SourceCodePro-Regular.svg#SourceCodePro-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SourceCodePro-Bold';
+  src: url('fonts/SourceCodePro-Bold.eot?#iefix') format('embedded-opentype'),  url('fonts/SourceCodePro-Bold.woff') format('woff'), url('fonts/SourceCodePro-Bold.ttf')  format('truetype'), url('fonts/SourceCodePro-Bold.svg#SourceCodePro-Bold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .modal-content {
   border: 1px solid #444;
 }
@@ -62,7 +76,14 @@ p {
 
 /* Typography */
 .bold {
-  font-weight: 700;
+  font-family: "SourceCodePro-Bold",
+    "HelveticaNeue-Light",
+    "Helvetica Neue Light",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Lucida Grande",
+    sans-serif !important;  
 }
 
 .italic {

@@ -1,186 +1,174 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>darkwire.io - encrypted web chat</title>
-  <meta name="description" content="darkwire.io is the simplest way to chat with encryption online.">
-  <link rel="shortcut icon" type="image/png" href="favicon.ico">
-  <link rel="stylesheet" href="/vendor/bootstrap-switch.min.css">
-  <link rel="stylesheet" href="/vendor/bootstrap.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600,700,300' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="style.css">
-  <script>
-  window.username = '{{username}}';
-  </script>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>darkwire.io - encrypted web chat</title>
+    <meta name="description" content="darkwire.io is the simplest way to chat with encryption online.">
+    <link rel="shortcut icon" type="image/png" href="favicon.ico">
+    <link rel="stylesheet" href="/vendor/bootstrap-switch.min.css">
+    <link rel="stylesheet" href="/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script>
+      window.username = '{{username}}';
+    </script>
+  </head>
+  <body>
 
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="javascript:void(0)">
-          <img src="https://s3.amazonaws.com/fattychat/img/logo_dw.png">
-        </a>
-        <span class="participants">
-          <span class="glyphicon glyphicon-user"></span>&nbsp;<span id="participants"></span>
-        </span>
-      </div>
-
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://darkwire.io/" target="_blank"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;New Room</a></li>
-          <li><a href="javascript:void(0)" id="settings-nav"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Settings</a></li>
-          <li><a href="javascript:void(0)" id="about-nav"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;About</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <ul class="pages">
-    <li class="chat page">
-      <div class="chatArea">
-        <ul class="messages">
-          <li class="log">
-            <p>Welcome to darkwire.io - encrypted chat</p>
-          </li>
-        </ul>
-      </div>
-      <input class="inputMessage" placeholder="Type here..."/>
-      <div id="input-icons">
-        <span class="glyphicon glyphicon-send" id="send-message-btn" aria-hidden="true"></span>
-      </div>
-    </li>
-  </ul>
-
-  <div class="modal fade" id="about-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">About</h4>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="javascript:void(0)">
+            <img src="/logo.png">
+          </a>
+          <span class="participants">
+            <span class="glyphicon glyphicon-user"></span>&nbsp;<span id="participants"></span>
+          </span>
         </div>
-        <div class="modal-body">
-          <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
 
-          <p>darkwire.io is the simplest way to chat with encryption online. Chat history is never stored on a server or database, and plain text messages are never transferred over the wire.</p>
-
-          <p>Questions/comments? Email us at hello[at]darkwire.io</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://darkwire.io/" target="_blank"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;New Room</a></li>
+            <li><a href="javascript:void(0)" id="settings-nav"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Settings</a></li>
+            <li><a href="javascript:void(0)" id="about-nav"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;About</a></li>
+          </ul>
         </div>
       </div>
-    </div>
-  </div>
+    </nav>
 
-  <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Settings</h4>
+    <ul class="pages">
+      <li class="chat page">
+        <div class="chatArea">
+          <ul class="messages">
+            <li class="log">
+              <p>Welcome to darkwire.io - encrypted chat</p>
+            </li>
+          </ul>
         </div>
-        <div class="modal-body">
-          <h6>Invite People to This Room</h6>
-          <p>
-            <input type="text" class="form-control share-text" readonly>
-          </p>
-          <br>
-          <h6>Sound</h6>
-          <input type="checkbox" name="my-checkbox" class="form-control bs-switch" checked>
+        <input class="inputMessage" placeholder="Type here..."/>
+        <div id="input-icons">
+          <span class="glyphicon glyphicon-send" id="send-message-btn" aria-hidden="true"></span>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Close</button>
+      </li>
+    </ul>
+
+    <div class="modal fade" id="about-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">About</h4>
+          </div>
+          <div class="modal-body">
+            <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
+
+            <p>darkwire.io is the simplest way to chat with encryption online. Chat history is never stored on a server or database, and plain text messages are never transferred over the wire.</p>
+
+            <p>Questions/comments? Email us at hello[at]darkwire.io</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal fade" id="first-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Welcome to darkwire.io</h4>
-        </div>
-        <div class="modal-body">
-          <h6>We've placed you in a new chat room</h6>
-          <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
-          <br>
-          <h6>Invite People to This Room</h6>
-          <p>
-            <input type="text" class="form-control share-text" readonly>            
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Got It</button>
+    <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Settings</h4>
+          </div>
+          <div class="modal-body">
+            <h6>Invite People to This Room</h6>
+            <p>
+              <input type="text" class="form-control share-text" readonly>
+            </p>
+            <br>
+            <h6>Sound</h6>
+            <input type="checkbox" name="my-checkbox" class="form-control bs-switch" checked>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal fade" id="participants-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Current Participants</h4>
-        </div>
-        <div class="modal-body">
-          <ul class="users"></ul>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="no-crypto" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Browser Not Supported</h4>
-        </div>
-        <div class="modal-body">
-          <p>Your browser does not support the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto" target="_blank">Crypto Web API</a>.</p>
-          <p>Try using the lastest version of Chrome, Firefox or Safari.</p>
+    <div class="modal fade" id="first-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Welcome to darkwire.io</h4>
+          </div>
+          <div class="modal-body">
+            <h6>We've placed you in a new chat room</h6>
+            <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
+            <br>
+            <h6>Invite People to This Room</h6>
+            <p>
+              <input type="text" class="form-control share-text" readonly>            
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Got It</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-  <script src="https://cdn.socket.io/socket.io-1.4.3.js"></script>
-  <script src="/favicon.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  <script src="/vendor/uuid.js"></script>
-  <script src="/vendor/autolinker.min.js"></script>
-  <script src="/vendor/underscore.min.js"></script>
-  <script src="/vendor/modernizr-custom.min.js"></script>
-  <script src="/vendor/autosize.min.js"></script>
-  <script src="/vendor/bootstrap-switch.min.js"></script>
-  <script src="/vendor/web-crypto-shim.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script>
-  <script src="/main.js"></script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <div class="modal fade" id="participants-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Current Participants</h4>
+          </div>
+          <div class="modal-body">
+            <ul class="users"></ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  ga('create', 'UA-72169154-1', 'auto');
-  ga('send', 'pageview');
+    <div class="modal fade" id="no-crypto" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Browser Not Supported</h4>
+          </div>
+          <div class="modal-body">
+            <p>Your browser does not support the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto" target="_blank">Crypto Web API</a>.</p>
+            <p>Try using the lastest version of Chrome, Firefox or Safari.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-</script>
-</body>
+    <script src="/vendor/jquery-1.10.2.min.js"></script>
+    {{!-- socket.io automatically servers the client lib from the server at this path --}}
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/favicon.js"></script>
+    <script src="/vendor/bootstrap-3.3.6.min.js"></script>
+    <script src="/vendor/autolinker.min.js"></script>
+    <script src="/vendor/underscore.min.js"></script>
+    <script src="/vendor/modernizr-custom.min.js"></script>
+    <script src="/vendor/bootstrap-switch.min.js"></script>
+    <script src="/vendor/web-crypto-shim.js"></script>
+    <script src="/vendor/fastclick-1.0.6.min.js"></script>
+    <script src="/main.js"></script>
+  </body>
 </html>

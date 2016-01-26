@@ -6,18 +6,6 @@ var babel = require('babelify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 
-gulp.task('watch', function() {
-  gulp.watch('src/js/main.js', ['build']);
-});
-
-gulp.task('build', ['uglify']);
-
-gulp.task('uglify', function() {
-  gulp.src('src/public/main.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('src/public'));
-});
-
 gulp.task('bundle', function() {
   return browserify('src/js/main.js', { debug: true }).transform(babel.configure({
         presets: ["es2015"]
@@ -26,7 +14,6 @@ gulp.task('bundle', function() {
     .pipe(buffer())
     .pipe(uglify())
     .pipe(gulp.dest('src/public'))
-
 });
 
 gulp.task('start', function() {
