@@ -9,6 +9,7 @@ import _ from 'underscore';
 import Room from './room';
 import favicon from 'serve-favicon';
 import compression from 'compression';
+import fs from 'fs';
 
 const app = express();
 const server = http.createServer(app);
@@ -20,7 +21,7 @@ const sessionMiddleware = session({
     port: 6379,
     db: 2
   }),
-  secret: 'hay',
+  secret: fs.readFileSync(__dirname + '/.secret', 'UTF-8'),
   resave: true,
   saveUninitialized: true
 });

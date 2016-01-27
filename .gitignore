@@ -1,2 +1,3 @@
 node_modules
 src/public/main.js
+src/.secret
