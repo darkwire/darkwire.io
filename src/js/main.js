@@ -90,31 +90,22 @@ $(function() {
       $inputMessage.focus();
 
       Promise.all([
-        createPrimaryKeys(),
-        createSigningKeys()
+        createPrimaryKeys()
       ])
       .then(function(data) {
         keys = {
-          primary: {
-            public: data[0].publicKey,
-            private: data[0].privateKey
-          },
-          signing: {
-            public: data[1].publicKey,
-            private: data[1].privateKey
-          }
+          public: data[0].publicKey,
+          private: data[0].privateKey
         };
         return Promise.all([
-          exportKey(data[0].publicKey, "spki"),
-          exportKey(data[1].publicKey, "jwk")
+          exportKey(data[0].publicKey, "spki")
         ]);
       })
       .then(function(exportedKeys) {
         // Tell the server your username and send public keys
         socket.emit('add user', {
           username: username,
-          primaryPublicKey: exportedKeys[0],
-          signingPublicKey: exportedKeys[1],
+          publicKey: exportedKeys[0]
         });
       });
     }
@@ -308,15 +299,13 @@ $(function() {
         let promise = new Promise(function(resolve, reject) {
           let currentUser = user;
           Promise.all([
-            importPrimaryKey(currentUser.primaryPublicKey, "spki"),
-            importSigningKey(currentUser.signingPublicKey)
+            importPrimaryKey(currentUser.publicKey, "spki")
           ])
           .then(function(keys) {
             users.push({
               id: currentUser.id,
               username: currentUser.username,
-              primaryPublicKey: keys[0],
-              signingPublicKey: keys[1]
+              publicKey: keys[0]
             });
             resolve();
           });
@@ -367,12 +356,17 @@ $(function() {
       let secretKeys;
       let messageData;
       let signature;
+      let signingKey;
       let encryptedMessageData;
 
       // Generate new secret key and vector for each message
       createSecretKey()
       .then(function(key) {
         secretKey = key;
+        return createSigningKey();
+      })
+      .then(function(key) {
+        signingKey = key;
         // Generate secretKey and encrypt with each user's public key
         let promises = [];
         _.each(users, function(user) {
@@ -386,14 +380,25 @@ $(function() {
               // Export secret key
               exportKey(secretKey, "raw")
               .then(function(data) {
-                return encryptSecretKey(data, thisUser.primaryPublicKey);
+                return encryptSecretKey(data, thisUser.publicKey);
               })
               .then(function(encryptedSecretKey) {
                 let encData = new Uint8Array(encryptedSecretKey);
                 secretKeyStr = convertArrayBufferViewToString(encData);
+                // Export HMAC signing key
+                return exportKey(signingKey, "raw");
+              })
+              .then(function(data) {
+                // Encrypt signing key with user's public key
+                return encryptSigningKey(data, thisUser.publicKey);
+              })
+              .then(function(encryptedSigningKey) {
+                let encData = new Uint8Array(encryptedSigningKey);
+                var str = convertArrayBufferViewToString(encData);
                 resolve({
                   id: thisUser.id,
-                  secretKey: secretKeyStr
+                  secretKey: secretKeyStr,
+                  encryptedSigningKey: str
                 });
               });
             });
@@ -405,7 +410,7 @@ $(function() {
       .then(function(data) {
         secretKeys = data;
         messageData = convertStringToArrayBufferView(message);
-        return signKey(messageData, keys.signing.private);
+        return signKey(messageData, signingKey);
       })
       .then(function(data) {
         signature = data;
@@ -440,7 +445,7 @@ $(function() {
     let message = data.message;
     let messageData = convertStringToArrayBufferView(message);
     let username = data.username; 
-    let senderId = data.id;
+    let senderId = data.id
     let vector = data.vector;
     let vectorData = convertStringToArrayBufferView(vector);
     let secretKeys = data.secretKeys;
@@ -453,10 +458,9 @@ $(function() {
     let signature = data.signature;
     let signatureData = convertStringToArrayBufferView(signature);
     let secretKeyArrayBuffer = convertStringToArrayBufferView(mySecretKey.secretKey);
+    let signingKeyArrayBuffer = convertStringToArrayBufferView(mySecretKey.encryptedSigningKey);
 
-    let sender = _.findWhere(users, {id: senderId});
-
-    decryptSecretKey(secretKeyArrayBuffer, keys.primary.private)
+    decryptSecretKey(secretKeyArrayBuffer, keys.private)
     .then(function(data) {
       return importSecretKey(new Uint8Array(data), "raw");
     })
@@ -466,8 +470,15 @@ $(function() {
     })
     .then(function(data) {
       decryptedMessageData = data;
-      decryptedMessage = convertArrayBufferViewToString(new Uint8Array(data));
-      return verifyKey(signatureData, decryptedMessageData, sender.signingPublicKey);
+      decryptedMessage = convertArrayBufferViewToString(new Uint8Array(data))
+      return decryptSigningKey(signingKeyArrayBuffer, keys.private)
+    })
+    .then(function(data) {
+      return importSigningKey(new Uint8Array(data), "raw");
+    })
+    .then(function(data) {
+      let signingKey = data;
+      return verifyKey(signatureData, decryptedMessageData, signingKey);
     })
     .then(function(bool) {
       if (bool) {
@@ -577,13 +588,12 @@ $(function() {
     return str;
   }
 
-  function createSigningKeys() {    
+  function createSigningKey() {    
     return window.crypto.subtle.generateKey(
       {
-        name: "RSASSA-PKCS1-v1_5",
-        modulusLength: 2048, //can be 1024, 2048, or 4096
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        name: "HMAC",
         hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+        //length: 256, //optional, if you want your key length to differ from the hash function's block length
       },
       true, //whether the key is extractable (i.e. can be used in exportKey)
       ["sign", "verify"] //can be any combination of "sign" and "verify"
@@ -737,13 +747,15 @@ $(function() {
 
   function importSigningKey(jwkData) {
     return window.crypto.subtle.importKey(
-      "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
+      "raw", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
+      //this is an example jwk key, other key types are Uint8Array objects
       jwkData,
       {   //these are the algorithm options
-        name: "RSASSA-PKCS1-v1_5",
+        name: "HMAC",
         hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+        //length: 256, //optional, if you want your key length to differ from the hash function's block length
       },
-      false, //whether the key is extractable (i.e. can be used in exportKey)
+      true, //whether the key is extractable (i.e. can be used in exportKey)
       ["verify"] //"verify" for public key import, "sign" for private key imports
     );
   }
@@ -752,29 +764,25 @@ $(function() {
     // Will use my private key
     return window.crypto.subtle.sign(
       {
-        name: "RSASSA-PKCS1-v1_5",
-        modulusLength: 2048, //can be 1024, 2048, or 4096
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+        name: "HMAC",
+        hash: {name: "SHA-256"}
       },
       keyToSignWith, //from generateKey or importKey above
       data //ArrayBuffer of data you want to sign
-    );  
+    );    
   }
 
   function verifyKey(signature, data, keyToVerifyWith) {
     // Will verify with sender's public key
     return window.crypto.subtle.verify(
       {
-        name: "RSASSA-PKCS1-v1_5",
-        modulusLength: 2048, //can be 1024, 2048, or 4096
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+        name: "HMAC",
+        hash: {name: "SHA-256"}
       },
       keyToVerifyWith, //from generateKey or importKey above
       signature, //ArrayBuffer of the signature
       data //ArrayBuffer of the data
-    ); 
+    );  
   }
 
 });
