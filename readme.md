@@ -8,6 +8,8 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web
     npm install
     gulp start
 
+Create a **.secret** file in **/src** folder with a your session secret. It doesn't matter what it is- just keep it private.
+
 Darkwire is now running on `http://localhost:3000`
 
 ### Deployment
