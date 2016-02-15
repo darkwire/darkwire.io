@@ -34,9 +34,7 @@ Group chats work the same way because in step 5 we encrypt keys with everyone's 
 
 ### [Man-in-the-middle attacks](https://en.wikipedia.org/wiki/Man-in-the-middle_attack)
 
-Darkwire does not provide any guarantee that the person you're communicating with is who you think they are (authentication). 
-
-A good idea is to ask the recipient a question, the answer to which only they should know. Or, ask them to enter a pass phrase you've agreed upon in advance. This functionality may be incorporated In future versions.
+Darkwire does not provide any guarantee that the person you're communicating with is who you think they are. Authentication functionality may be incorporated in future versions.
 
 ### Sockets & Server
 
