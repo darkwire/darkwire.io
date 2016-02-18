@@ -1,6 +1,6 @@
 export default class AudoHandler {
   constructor() {
-    this.beep = new Audio('beep.mp3');
+    this._beep = window.Audio && new window.Audio('beep.mp3') || false;
     this._soundEnabled = true;
   }
 
@@ -9,13 +9,14 @@ export default class AudoHandler {
   }
 
   set soundEnabled(state) {
-    if (state) {
-      this._soundEnabled = state;
-    }
+    this._soundEnabled = state;
     return this;
   }
 
   play() {
-    this.beep.play();
+    if (this._beep && this.soundEnabled) {
+      this._beep.play();
+    }
+    return this;
   }
 }

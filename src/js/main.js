@@ -1,4 +1,5 @@
 import AudioHandler from './audio';
+import CryptoUtil from './crypto';
 
 let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
@@ -9,6 +10,7 @@ window.favicon = new Favico({
 
 $(function() {
   const audio = new AudioHandler();
+  const cryptoUtil = new CryptoUtil();
 
   let isActive = false;
   let newMessages = 0;
@@ -44,16 +46,6 @@ $(function() {
   let keys = {};
 
   if (!roomId) return;
-
-  if (!window.crypto || (!window.crypto.subtle && !window.crypto.webkitSubtle)) {
-    $('#no-crypto').modal({
-      backdrop: 'static',
-      show: false,
-      keyboard: false
-    })
-    $('#no-crypto').modal('show');  
-    return;
-  }
 
   $('input.share-text').val("https://darkwire.io" + roomId);  
 
@@ -92,7 +84,7 @@ $(function() {
       $inputMessage.focus();
 
       Promise.all([
-        createPrimaryKeys()
+        cryptoUtil.createPrimaryKeys()
       ])
       .then(function(data) {
         keys = {
@@ -100,7 +92,7 @@ $(function() {
           private: data[0].privateKey
         };
         return Promise.all([
-          exportKey(data[0].publicKey, "spki")
+          cryptoUtil.exportKey(data[0].publicKey, "spki")
         ]);
       })
       .then(function(exportedKeys) {
@@ -301,7 +293,7 @@ $(function() {
         let promise = new Promise(function(resolve, reject) {
           let currentUser = user;
           Promise.all([
-            importPrimaryKey(currentUser.publicKey, "spki")
+            cryptoUtil.importPrimaryKey(currentUser.publicKey, "spki")
           ])
           .then(function(keys) {
             users.push({
@@ -352,7 +344,7 @@ $(function() {
         username: username,
         message: message
       });
-      let vector = crypto.getRandomValues(new Uint8Array(16));
+      let vector = cryptoUtil.crypto.getRandomValues(new Uint8Array(16));
 
       let secretKey;
       let secretKeys;
@@ -362,10 +354,10 @@ $(function() {
       let encryptedMessageData;
 
       // Generate new secret key and vector for each message
-      createSecretKey()
+      cryptoUtil.createSecretKey()
       .then(function(key) {
         secretKey = key;
-        return createSigningKey();
+        return cryptoUtil.createSigningKey();
       })
       .then(function(key) {
         signingKey = key;
@@ -380,23 +372,23 @@ $(function() {
               let secretKeyStr;
 
               // Export secret key
-              exportKey(secretKey, "raw")
+              cryptoUtil.exportKey(secretKey, "raw")
               .then(function(data) {
-                return encryptSecretKey(data, thisUser.publicKey);
+                return cryptoUtil.encryptSecretKey(data, thisUser.publicKey);
               })
               .then(function(encryptedSecretKey) {
                 let encData = new Uint8Array(encryptedSecretKey);
-                secretKeyStr = convertArrayBufferViewToString(encData);
+                secretKeyStr = cryptoUtil.convertArrayBufferViewToString(encData);
                 // Export HMAC signing key
-                return exportKey(signingKey, "raw");
+                return cryptoUtil.exportKey(signingKey, "raw");
               })
               .then(function(data) {
                 // Encrypt signing key with user's public key
-                return encryptSigningKey(data, thisUser.publicKey);
+                return cryptoUtil.encryptSigningKey(data, thisUser.publicKey);
               })
               .then(function(encryptedSigningKey) {
                 let encData = new Uint8Array(encryptedSigningKey);
-                var str = convertArrayBufferViewToString(encData);
+                var str = cryptoUtil.convertArrayBufferViewToString(encData);
                 resolve({
                   id: thisUser.id,
                   secretKey: secretKeyStr,
@@ -411,18 +403,18 @@ $(function() {
       })
       .then(function(data) {
         secretKeys = data;
-        messageData = convertStringToArrayBufferView(message);
-        return signKey(messageData, signingKey);
+        messageData = cryptoUtil.convertStringToArrayBufferView(message);
+        return cryptoUtil.signKey(messageData, signingKey);
       })
       .then(function(data) {
         signature = data;
-        return encryptMessage(messageData, secretKey, vector);
+        return cryptoUtil.encryptMessage(messageData, secretKey, vector);
       })
       .then(function(data) {
         encryptedMessageData = data;
-        let msg = convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
-        let vct = convertArrayBufferViewToString(new Uint8Array(vector));
-        let sig = convertArrayBufferViewToString(new Uint8Array(signature));
+        let msg = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
+        let vct = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(vector));
+        let sig = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(signature));
         socket.emit('new message', {
           message: msg,
           vector: vct,
@@ -439,17 +431,15 @@ $(function() {
     if (!isActive) {
       newMessages++;
       favicon.badge(newMessages);
-      if (audio.soundEnabled && beep) {
-        audio.play();
-      }
+      audio.play();
     }
 
     let message = data.message;
-    let messageData = convertStringToArrayBufferView(message);
+    let messageData = cryptoUtil.convertStringToArrayBufferView(message);
     let username = data.username; 
     let senderId = data.id
     let vector = data.vector;
-    let vectorData = convertStringToArrayBufferView(vector);
+    let vectorData = cryptoUtil.convertStringToArrayBufferView(vector);
     let secretKeys = data.secretKeys;
     let decryptedMessageData;
     let decryptedMessage;   
@@ -458,29 +448,29 @@ $(function() {
       return key.id === myUserId;
     });
     let signature = data.signature;
-    let signatureData = convertStringToArrayBufferView(signature);
-    let secretKeyArrayBuffer = convertStringToArrayBufferView(mySecretKey.secretKey);
-    let signingKeyArrayBuffer = convertStringToArrayBufferView(mySecretKey.encryptedSigningKey);
+    let signatureData = cryptoUtil.convertStringToArrayBufferView(signature);
+    let secretKeyArrayBuffer = cryptoUtil.convertStringToArrayBufferView(mySecretKey.secretKey);
+    let signingKeyArrayBuffer = cryptoUtil.convertStringToArrayBufferView(mySecretKey.encryptedSigningKey);
 
-    decryptSecretKey(secretKeyArrayBuffer, keys.private)
+    cryptoUtil.decryptSecretKey(secretKeyArrayBuffer, keys.private)
     .then(function(data) {
-      return importSecretKey(new Uint8Array(data), "raw");
+      return cryptoUtil.importSecretKey(new Uint8Array(data), "raw");
     })
     .then(function(data) {
       let secretKey = data;
-      return decryptMessage(messageData, secretKey, vectorData);
+      return cryptoUtil.decryptMessage(messageData, secretKey, vectorData);
     })
     .then(function(data) {
       decryptedMessageData = data;
-      decryptedMessage = convertArrayBufferViewToString(new Uint8Array(data))
-      return decryptSigningKey(signingKeyArrayBuffer, keys.private)
+      decryptedMessage = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(data))
+      return cryptoUtil.decryptSigningKey(signingKeyArrayBuffer, keys.private)
     })
     .then(function(data) {
-      return importSigningKey(new Uint8Array(data), "raw");
+      return cryptoUtil.importSigningKey(new Uint8Array(data), "raw");
     })
     .then(function(data) {
       let signingKey = data;
-      return verifyKey(signatureData, decryptedMessageData, signingKey);
+      return cryptoUtil.verifyKey(signatureData, decryptedMessageData, signingKey);
     })
     .then(function(bool) {
       if (bool) {
@@ -566,225 +556,10 @@ $(function() {
     $('.navbar-toggle:visible').click();
   });
 
-  $('input.bs-switch').bootstrapSwitch();
+  let audioSwitch = $('input.bs-switch').bootstrapSwitch();
 
-  $('input.bs-switch').on('switchChange.bootstrapSwitch', function(event, state) {
-    audio.setSoundEnabled(state);
+  audioSwitch.on('switchChange.bootstrapSwitch', function(event, state) {
+    audio.soundEnabled = state;
   });
-
-  function convertStringToArrayBufferView(str) {
-    var bytes = new Uint8Array(str.length);
-    for (var i = 0; i < str.length; i++) {
-      bytes[i] = str.charCodeAt(i);
-    }
-
-    return bytes;
-  }
-
-  function convertArrayBufferViewToString(buffer) {
-    var str = "";
-    for (var i = 0; i < buffer.byteLength; i++) {
-      str += String.fromCharCode(buffer[i]);
-    }
-
-    return str;
-  }
-
-  function createSigningKey() {    
-    return window.crypto.subtle.generateKey(
-      {
-        name: "HMAC",
-        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
-        //length: 256, //optional, if you want your key length to differ from the hash function's block length
-      },
-      true, //whether the key is extractable (i.e. can be used in exportKey)
-      ["sign", "verify"] //can be any combination of "sign" and "verify"
-    );
-  }
-
-  function createPrimaryKeys() {
-    return window.crypto.subtle.generateKey(
-      {
-        name: "RSA-OAEP",
-        modulusLength: 2048, //can be 1024, 2048, or 4096
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
-      },
-      true, //whether the key is extractable (i.e. can be used in exportKey)
-      ["encrypt", "decrypt"] //must be ["encrypt", "decrypt"] or ["wrapKey", "unwrapKey"]
-    );
-  }
-
-  function createSecretKey() {
-    return window.crypto.subtle.generateKey(
-      {
-        name: "AES-CBC",
-        length: 256, //can be  128, 192, or 256
-      },
-      true, //whether the key is extractable (i.e. can be used in exportKey)
-      ["encrypt", "decrypt"] //can be "encrypt", "decrypt", "wrapKey", or "unwrapKey"
-    );
-  }
-
-  function encryptSecretKey(data, secretKey) {
-    // Secret key will be recipient's public key
-    return window.crypto.subtle.encrypt(
-      {
-        name: "RSA-OAEP",
-        modulusLength: 2048,
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-        hash: {name: "SHA-256"}
-      },
-      secretKey,
-      data //ArrayBuffer of data you want to encrypt
-    );
-  } 
-
-  function decryptSecretKey(data, key) {
-    // key will be my private key
-    return window.crypto.subtle.decrypt(
-      {
-        name: "RSA-OAEP",
-        modulusLength: 2048,
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-        hash: {name: "SHA-256"} 
-        //label: Uint8Array([...]) //optional
-      },
-      key,
-      data //ArrayBuffer of the data
-    );
-  }
-
-  function encryptSigningKey(data, signingKey) {
-    // Secret key will be recipient's public key
-    return window.crypto.subtle.encrypt(
-      {
-        name: "RSA-OAEP",
-        modulusLength: 2048,
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-        hash: {name: "SHA-256"} 
-      },
-      signingKey,
-      data //ArrayBuffer of data you want to encrypt
-    );
-  } 
-
-  function decryptSigningKey(data, key) {
-    // key will be my private key
-    return window.crypto.subtle.decrypt(
-      {
-        name: "RSA-OAEP",
-        modulusLength: 2048,
-        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-        hash: {name: "SHA-256"} 
-        //label: Uint8Array([...]) //optional
-      },
-      key,
-      data //ArrayBuffer of the data
-    );
-  }
-
-  function encryptMessage(data, secretKey, iv) {
-    return window.crypto.subtle.encrypt(
-      {
-        name: "AES-CBC",
-        //Don't re-use initialization vectors!
-        //Always generate a new iv every time your encrypt!
-        iv: iv,
-      },
-      secretKey, //from generateKey or importKey above
-      data //ArrayBuffer of data you want to encrypt
-    );
-  }
-
-  function decryptMessage(data, secretKey, iv) {
-    return window.crypto.subtle.decrypt(
-      {
-        name: "AES-CBC",
-        iv: iv, //The initialization vector you used to encrypt
-      },
-      secretKey, //from generateKey or importKey above
-      data //ArrayBuffer of the data
-    );    
-  }
-
-  function importSecretKey(jwkData, format) {
-    return window.crypto.subtle.importKey(
-      format || "jwk", //can be "jwk" or "raw"
-      //this is an example jwk key, "raw" would be an ArrayBuffer
-      jwkData,
-      {   //this is the algorithm options
-        name: "AES-CBC",
-      },
-      true, //whether the key is extractable (i.e. can be used in exportKey)
-      ["encrypt", "decrypt"] //can be "encrypt", "decrypt", "wrapKey", or "unwrapKey"
-    );
-  }
-
-  function importPrimaryKey(jwkData, format) {
-    // Will be someone's public key
-    let hashObj = {
-      name: "RSA-OAEP"
-    };
-    if (!window.crypto.webkitSubtle) {
-      hashObj.hash = {name: "SHA-256"};
-    }
-    return window.crypto.subtle.importKey(
-      format || "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
-      jwkData,
-      hashObj,
-      true, //whether the key is extractable (i.e. can be used in exportKey)
-      ["encrypt"] //"encrypt" or "wrapKey" for public key import or
-                  //"decrypt" or "unwrapKey" for private key imports
-    );
-  }
-
-  function exportKey(key, format) {
-    // Will be public primary key or public signing key
-    return window.crypto.subtle.exportKey(
-      format || "jwk", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
-      key //can be a publicKey or privateKey, as long as extractable was true
-    );   
-  }
-
-  function importSigningKey(jwkData) {
-    return window.crypto.subtle.importKey(
-      "raw", //can be "jwk" (public or private), "spki" (public only), or "pkcs8" (private only)
-      //this is an example jwk key, other key types are Uint8Array objects
-      jwkData,
-      {   //these are the algorithm options
-        name: "HMAC",
-        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
-        //length: 256, //optional, if you want your key length to differ from the hash function's block length
-      },
-      true, //whether the key is extractable (i.e. can be used in exportKey)
-      ["verify"] //"verify" for public key import, "sign" for private key imports
-    );
-  }
-
-  function signKey(data, keyToSignWith) {
-    // Will use my private key
-    return window.crypto.subtle.sign(
-      {
-        name: "HMAC",
-        hash: {name: "SHA-256"}
-      },
-      keyToSignWith, //from generateKey or importKey above
-      data //ArrayBuffer of data you want to sign
-    );    
-  }
-
-  function verifyKey(signature, data, keyToVerifyWith) {
-    // Will verify with sender's public key
-    return window.crypto.subtle.verify(
-      {
-        name: "HMAC",
-        hash: {name: "SHA-256"}
-      },
-      keyToVerifyWith, //from generateKey or importKey above
-      signature, //ArrayBuffer of the signature
-      data //ArrayBuffer of the data
-    );  
-  }
 
 });
