@@ -1,18 +1,14 @@
 import AudioHandler from './audio';
 import CryptoUtil from './crypto';
+import WindowHandler from './window';
 
 let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
-
-window.favicon = new Favico({
-  animation:'pop',
-  type : 'rectangle'
-});
 
 $(function() {
   const audio = new AudioHandler();
   const cryptoUtil = new CryptoUtil();
+  const windowHandler = new WindowHandler();
 
-  let isActive = false;
   let newMessages = 0;
   let FADE_TIME = 150; // ms
   let TYPING_TIMER_LENGTH = 400; // ms
@@ -428,9 +424,8 @@ $(function() {
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     // Don't show messages if no key
-    if (!isActive) {
-      newMessages++;
-      favicon.badge(newMessages);
+    if (!windowHandler.isActive) {
+      windowHandler.notifyFavicon();
       audio.play();
     }
 
@@ -504,16 +499,6 @@ $(function() {
   });
 
   initChat();
-
-  window.onfocus = function () { 
-    isActive = true;
-    newMessages = 0;
-    favicon.reset();
-  }; 
-
-  window.onblur = function () { 
-    isActive = false;
-  };
 
   // Nav links
   $('a#settings-nav').click(function() {
