@@ -1,3 +1,5 @@
+import AudioHandler from './audio';
+
 let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
 window.favicon = new Favico({
@@ -6,12 +8,12 @@ window.favicon = new Favico({
 });
 
 $(function() {
-  let beep = new Audio('beep.mp3');
+  const audio = new AudioHandler();
+
   let isActive = false;
   let newMessages = 0;
   let FADE_TIME = 150; // ms
   let TYPING_TIMER_LENGTH = 400; // ms
-  let soundEnabled = true;
 
   let COLORS = [
     '#e21400', '#ffe400', '#ff8f00',
@@ -437,8 +439,8 @@ $(function() {
     if (!isActive) {
       newMessages++;
       favicon.badge(newMessages);
-      if (soundEnabled && beep) {
-        beep.play();
+      if (audio.soundEnabled && beep) {
+        audio.play();
       }
     }
 
@@ -567,7 +569,7 @@ $(function() {
   $('input.bs-switch').bootstrapSwitch();
 
   $('input.bs-switch').on('switchChange.bootstrapSwitch', function(event, state) {
-    soundEnabled = state;
+    audio.setSoundEnabled(state);
   });
 
   function convertStringToArrayBufferView(str) {

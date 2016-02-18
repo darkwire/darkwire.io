@@ -28,10 +28,6 @@
     "compression": "^1.6.0",
     "gulp-nodemon": "^2.0.6"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "jsbuild": "uglifyjs src/js/main.js --compress --mangle -o src/public/main.js"
-  },
   "author": "Daniel Seripap",
   "license": "MIT"
 }
