@@ -232,7 +232,12 @@ $(function() {
     // When the client hits ENTER on their keyboard and chat message input is focused
     if (event.which === 13 && $('.inputMessage').is(':focus')) {
       let message = cleanInput($inputMessage.val());
-      darkwire.sendMessage(message, 'chat');
+      darkwire.encodeMessage(message, 'chat').then( (message) => {
+        $inputMessage.val('');
+        socket.emit('new message', message);
+      }).catch( (err) => {
+        console.log(err);
+      });
       socket.emit('stop typing');
       typing = false;
     }
@@ -309,7 +314,7 @@ $(function() {
     addParticipantsMessage(data);
     removeChatTyping(data);
 
-    users = _.without(users, _.findWhere(users, {id: data.id}));
+    darkwire.removeUser(data);
 
     renderParticipantsList();
   });
@@ -358,10 +363,14 @@ $(function() {
   }
 
   $('#send-message-btn').click(function() {
-    let message = $inputMessage.val();
+    let message = cleanInput($inputMessage.val());
     // Prevent markup from being injected into the message
-    message = cleanInput(message);
-    darkwire.sendMessage(message, 'chat');
+    darkwire.encodeMessage(message, 'chat').then( (message) => {
+      $inputMessage.val('');
+      socket.emit('new message', message);
+    }).catch( (err) => {
+      console.log(err);
+    });
     socket.emit('stop typing');
     typing = false;
   });

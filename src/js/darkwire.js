@@ -52,99 +52,108 @@ export default class Darkwire {
     return importKeysPromises;
   }
 
-  sendMessage(message, messageType) {
+  removeUser(data) {
+    this._users = _.without(this._users, _.findWhere(this._users, {id: data.id}));
+    return this._users;
+  }
+
+  encodeMessage(message, messageType) {
     // Don't send unless other users exist
-    console.log(this._users);
-    if (this._users.length <= 1) return;
+    return new Promise( (resolve, reject) => {
+      if (this._users.length <= 1) {
+        reject();
+        return;
+      };
 
-    // if there is a non-empty message and a socket connection
-    if (message && this._connected) {
-      $inputMessage.val('');
-      $('#send-message-btn').removeClass('active');
-      addChatMessage({
-        username: username,
-        message: message
-      });
-      let vector = this._cryptoUtil.crypto.getRandomValues(new Uint8Array(16));
-
-      let secretKey;
-      let secretKeys;
-      let messageData;
-      let signature;
-      let signingKey;
-      let encryptedMessageData;
-
-      // Generate new secret key and vector for each message
-      this._cryptoUtil.createSecretKey()
-        .then(function(key) {
-          secretKey = key;
-          return this._cryptoUtil.createSigningKey();
-        })
-        .then(function(key) {
-          signingKey = key;
-          // Generate secretKey and encrypt with each user's public key
-          let promises = [];
-          _.each(this._users, function(user) {
-            // If not me
-            if (user.username !== window.username) {
-              let promise = new Promise(function(resolve, reject) {
-                let thisUser = user;
-
-                let secretKeyStr;
-
-                // Export secret key
-                this._cryptoUtil.exportKey(secretKey, "raw")
-                  .then(function(data) {
-                    return this._cryptoUtil.encryptSecretKey(data, thisUser.publicKey);
-                  })
-                  .then(function(encryptedSecretKey) {
-                    let encData = new Uint8Array(encryptedSecretKey);
-                    secretKeyStr = this._cryptoUtil.convertArrayBufferViewToString(encData);
-                    // Export HMAC signing key
-                    return this._cryptoUtil.exportKey(signingKey, "raw");
-                  })
-                  .then(function(data) {
-                    // Encrypt signing key with user's public key
-                    return this._cryptoUtil.encryptSigningKey(data, thisUser.publicKey);
-                  })
-                  .then(function(encryptedSigningKey) {
-                    let encData = new Uint8Array(encryptedSigningKey);
-                    var str = this._cryptoUtil.convertArrayBufferViewToString(encData);
-                    resolve({
-                      id: thisUser.id,
-                      secretKey: secretKeyStr,
-                      encryptedSigningKey: str
-                    });
-                  });
-              });
-              promises.push(promise);
-            }
-          });
-          return Promise.all(promises);
-        })
-        .then(function(data) {
-          secretKeys = data;
-          messageData = this._cryptoUtil.convertStringToArrayBufferView(message);
-          return this._cryptoUtil.signKey(messageData, signingKey);
-        })
-        .then(function(data) {
-          signature = data;
-          return this._cryptoUtil.encryptMessage(messageData, secretKey, vector);
-        })
-        .then(function(data) {
-          encryptedMessageData = data;
-          let msg = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
-          let vct = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(vector));
-          let sig = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(signature));
-          socket.emit('new message', {
-            message: msg,
-            vector: vct,
-            messageType: type,
-            secretKeys: secretKeys,
-            signature: sig
-          });
+      // if there is a non-empty message and a socket connection
+      if (message && this._connected) {
+        $('#send-message-btn').removeClass('active');
+        addChatMessage({
+          username: username,
+          message: message
         });
-    }
+        let vector = this._cryptoUtil.crypto.getRandomValues(new Uint8Array(16));
+
+        let secretKey;
+        let secretKeys;
+        let messageData;
+        let signature;
+        let signingKey;
+        let encryptedMessageData;
+
+        // Generate new secret key and vector for each message
+        this._cryptoUtil.createSecretKey()
+          .then(function(key) {
+            secretKey = key;
+            return this._cryptoUtil.createSigningKey();
+          })
+          .then(function(key) {
+            signingKey = key;
+            // Generate secretKey and encrypt with each user's public key
+            let promises = [];
+            _.each(this._users, (user) => {
+              // If not me
+              if (user.username !== window.username) {
+                let promise = new Promise((res, rej) => {
+                  let thisUser = user;
+
+                  let secretKeyStr;
+
+                  // Export secret key
+                  this._cryptoUtil.exportKey(secretKey, "raw")
+                    .then(function(data) {
+                      return this._cryptoUtil.encryptSecretKey(data, thisUser.publicKey);
+                    })
+                    .then(function(encryptedSecretKey) {
+                      let encData = new Uint8Array(encryptedSecretKey);
+                      secretKeyStr = this._cryptoUtil.convertArrayBufferViewToString(encData);
+                      // Export HMAC signing key
+                      return this._cryptoUtil.exportKey(signingKey, "raw");
+                    })
+                    .then(function(data) {
+                      // Encrypt signing key with user's public key
+                      return this._cryptoUtil.encryptSigningKey(data, thisUser.publicKey);
+                    })
+                    .then(function(encryptedSigningKey) {
+                      let encData = new Uint8Array(encryptedSigningKey);
+                      var str = this._cryptoUtil.convertArrayBufferViewToString(encData);
+                      res({
+                        id: thisUser.id,
+                        secretKey: secretKeyStr,
+                        encryptedSigningKey: str
+                      });
+                    });
+                });
+                promises.push(promise);
+              }
+            });
+            return Promise.all(promises);
+          })
+          .then(function(data) {
+            secretKeys = data;
+            messageData = this._cryptoUtil.convertStringToArrayBufferView(message);
+            return this._cryptoUtil.signKey(messageData, signingKey);
+          })
+          .then(function(data) {
+            signature = data;
+            return this._cryptoUtil.encryptMessage(messageData, secretKey, vector);
+          })
+          .then(function(data) {
+            encryptedMessageData = data;
+            let msg = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
+            let vct = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(vector));
+            let sig = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(signature));
+            resolve({
+              message: msg,
+              vector: vct,
+              messageType: type,
+              secretKeys: secretKeys,
+              signature: sig
+            });
+          });
+      }
+
+    });
   }
 
   decodeMessage(data) {
