@@ -222,11 +222,12 @@ input {
   cursor: pointer;
 }
 
+/*
 html.no-touchevents .chat #input-icons {
   display: none;
-}
+}*/
 
-.chat #input-icons #send-message-btn {
+.chat #input-icons #send-message-btn, .chat #input-icons #send-file {
   font-size: 25px;
   opacity: 0.3;
   color: white;
@@ -290,4 +291,8 @@ html.no-touchevents .chat #input-icons {
 .bootstrap-switch-handle-on.bootstrap-switch-primary {  
   background: #2a9fd6 !important;
   border-color: #2a9fd6 !important;
+}
+
+#fileSendForm {
+  display: none;
 }
