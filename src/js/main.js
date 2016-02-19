@@ -33,8 +33,6 @@ $(function() {
 
   let roomId = window.location.pathname.length ? window.location.pathname : null;
 
-  let keys = {};
-
   if (!roomId) return;
 
   $('input.share-text').val(document.location.protocol + "//" + document.location.host + roomId);  
@@ -77,7 +75,7 @@ $(function() {
         cryptoUtil.createPrimaryKeys()
       ])
       .then(function(data) {
-        keys = {
+        darkwire.keys = {
           public: data[0].publicKey,
           private: data[0].privateKey
         };
@@ -231,13 +229,7 @@ $(function() {
   $window.keydown(function (event) {
     // When the client hits ENTER on their keyboard and chat message input is focused
     if (event.which === 13 && $('.inputMessage').is(':focus')) {
-      let message = cleanInput($inputMessage.val());
-      darkwire.encodeMessage(message, 'chat').then( (message) => {
-        $inputMessage.val('');
-        socket.emit('new message', message);
-      }).catch( (err) => {
-        console.log(err);
-      });
+      handleMessageSending();
       socket.emit('stop typing');
       typing = false;
     }
@@ -296,16 +288,14 @@ $(function() {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
-    // Don't show messages if no key
-    if (!windowHandler.isActive) {
-      windowHandler.notifyFavicon();
-      darkwire.audio.play();
-    }
+    darkwire.decodeMessage(data).then( (data) => {
+      if (!windowHandler.isActive) {
+        windowHandler.notifyFavicon();
+        darkwire.audio.play();
+      }
+      addChatMessage(data);
+    });
 
-    let decoded = darkwire.decode(data);
-    decoded.then( (data) => {
-      console.log(data);
-    })
   });
 
   // Whenever the server emits 'user left', log it in the chat body
@@ -363,14 +353,7 @@ $(function() {
   }
 
   $('#send-message-btn').click(function() {
-    let message = cleanInput($inputMessage.val());
-    // Prevent markup from being injected into the message
-    darkwire.encodeMessage(message, 'chat').then( (message) => {
-      $inputMessage.val('');
-      socket.emit('new message', message);
-    }).catch( (err) => {
-      console.log(err);
-    });
+    handleMessageSending();
     socket.emit('stop typing');
     typing = false;
   });
@@ -384,5 +367,22 @@ $(function() {
   audioSwitch.on('switchChange.bootstrapSwitch', function(event, state) {
     darkwire.audio.soundEnabled = state;
   });
+
+  function handleMessageSending() {
+    let message = $inputMessage;
+    let cleanedMessage = cleanInput(message.val());
+    // Prevent markup from being injected into the message
+    darkwire.encodeMessage(cleanedMessage, 'chat').then( (socketData) => {
+      message.val('');
+      $('#send-message-btn').removeClass('active');
+      addChatMessage({
+        username: username,
+        message: cleanedMessage
+      });
+      socket.emit('new message', socketData);
+    }).catch( (err) => {
+      console.log(err);
+    });
+  }
 
 });

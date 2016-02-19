@@ -39,7 +39,7 @@ export default class FileHandler {
 
       reader.readAsBinaryString(file);
 
-      return base64;
+      return encodedFile;
     }
 
     return false;

@@ -9,6 +9,25 @@ export default class Darkwire {
     this._myUserId = false;
     this._connected = false;
     this._users = [];
+    this._keys = {};
+  }
+
+  get keys() {
+    return this._keys;
+  }
+
+  set keys(keys) {
+    this._keys = keys;
+    return this._keys;
+  }
+
+  get connected() {
+    return this._connected;
+  }
+
+  set connected(state) {
+    this._connected = state;
+    return this._connected;
   }
 
   get users() {
@@ -60,18 +79,14 @@ export default class Darkwire {
   encodeMessage(message, messageType) {
     // Don't send unless other users exist
     return new Promise( (resolve, reject) => {
-      if (this._users.length <= 1) {
-        reject();
-        return;
-      };
-
+      // if (this._users.length <= 1) {
+      //   console.log('rejected:' + this._users);
+      //   reject();
+      //   return;
+      // };
+      
       // if there is a non-empty message and a socket connection
       if (message && this._connected) {
-        $('#send-message-btn').removeClass('active');
-        addChatMessage({
-          username: username,
-          message: message
-        });
         let vector = this._cryptoUtil.crypto.getRandomValues(new Uint8Array(16));
 
         let secretKey;
@@ -80,14 +95,13 @@ export default class Darkwire {
         let signature;
         let signingKey;
         let encryptedMessageData;
-
         // Generate new secret key and vector for each message
         this._cryptoUtil.createSecretKey()
-          .then(function(key) {
+          .then((key) => {
             secretKey = key;
             return this._cryptoUtil.createSigningKey();
           })
-          .then(function(key) {
+          .then((key) => {
             signingKey = key;
             // Generate secretKey and encrypt with each user's public key
             let promises = [];
@@ -101,20 +115,20 @@ export default class Darkwire {
 
                   // Export secret key
                   this._cryptoUtil.exportKey(secretKey, "raw")
-                    .then(function(data) {
+                    .then((data) => {
                       return this._cryptoUtil.encryptSecretKey(data, thisUser.publicKey);
                     })
-                    .then(function(encryptedSecretKey) {
+                    .then((encryptedSecretKey) => {
                       let encData = new Uint8Array(encryptedSecretKey);
                       secretKeyStr = this._cryptoUtil.convertArrayBufferViewToString(encData);
                       // Export HMAC signing key
                       return this._cryptoUtil.exportKey(signingKey, "raw");
                     })
-                    .then(function(data) {
+                    .then((data) => {
                       // Encrypt signing key with user's public key
                       return this._cryptoUtil.encryptSigningKey(data, thisUser.publicKey);
                     })
-                    .then(function(encryptedSigningKey) {
+                    .then((encryptedSigningKey) => {
                       let encData = new Uint8Array(encryptedSigningKey);
                       var str = this._cryptoUtil.convertArrayBufferViewToString(encData);
                       res({
@@ -129,16 +143,16 @@ export default class Darkwire {
             });
             return Promise.all(promises);
           })
-          .then(function(data) {
+          .then((data) => {
             secretKeys = data;
             messageData = this._cryptoUtil.convertStringToArrayBufferView(message);
             return this._cryptoUtil.signKey(messageData, signingKey);
           })
-          .then(function(data) {
+          .then((data) => {
             signature = data;
             return this._cryptoUtil.encryptMessage(messageData, secretKey, vector);
           })
-          .then(function(data) {
+          .then((data) => {
             encryptedMessageData = data;
             let msg = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
             let vct = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(vector));
@@ -146,7 +160,7 @@ export default class Darkwire {
             resolve({
               message: msg,
               vector: vct,
-              messageType: type,
+              messageType: messageType,
               secretKeys: secretKeys,
               signature: sig
             });
@@ -176,7 +190,7 @@ export default class Darkwire {
       let secretKeyArrayBuffer = this._cryptoUtil.convertStringToArrayBufferView(mySecretKey.secretKey);
       let signingKeyArrayBuffer = this._cryptoUtil.convertStringToArrayBufferView(mySecretKey.encryptedSigningKey);
 
-      this._cryptoUtil.decryptSecretKey(secretKeyArrayBuffer, keys.private)
+      this._cryptoUtil.decryptSecretKey(secretKeyArrayBuffer, this._keys.private)
       .then((data) => {
         return this._cryptoUtil.importSecretKey(new Uint8Array(data), "raw");
       })
@@ -187,7 +201,7 @@ export default class Darkwire {
       .then((data) => {
         decryptedMessageData = data;
         decryptedMessage = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(data))
-        return this._cryptoUtil.decryptSigningKey(signingKeyArrayBuffer, keys.private)
+        return this._cryptoUtil.decryptSigningKey(signingKeyArrayBuffer, this._keys.private)
       })
       .then((data) => {
         return this._cryptoUtil.importSigningKey(new Uint8Array(data), "raw");

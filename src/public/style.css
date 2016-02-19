@@ -293,6 +293,6 @@ html.no-touchevents .chat #input-icons {
   border-color: #2a9fd6 !important;
 }
 
-#fileSendForm {
+#fileInput {
   display: none;
 }
