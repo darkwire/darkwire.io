@@ -53,7 +53,7 @@ export default class FileHandler {
 
   listen() {
     // browser API
-    document.getElementById('fileInput').addEventListener('change', jQuery.proxy(this.encodeFile, this), false);
+    document.getElementById('fileInput').addEventListener('change', this.encodeFile.bind(this), false);
 
     // darkwire
     
