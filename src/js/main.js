@@ -44,6 +44,7 @@ $(function() {
   });
 
   let socket = io(roomId);
+  windowHandler.socket = socket;
 
   FastClick.attach(document.body);
 

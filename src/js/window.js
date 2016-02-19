@@ -2,6 +2,7 @@ import FileHandler from './fileHandler';
 
 export default class WindowHandler {
   constructor() {
+    this._socket = null;
     this._isActive = false;
     this.fileHandler = new FileHandler();
 
@@ -22,6 +23,10 @@ export default class WindowHandler {
   set isActive(active) {
     this._isActive = active;
     return this;
+  }
+
+  set socket(socket) {
+    this._socket = socket;
   }
 
   notifyFavicon() {
