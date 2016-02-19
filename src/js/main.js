@@ -43,7 +43,7 @@ $(function() {
 
   if (!roomId) return;
 
-  $('input.share-text').val(document.location.protocol + "//" + document.location.hostname + roomId);  
+  $('input.share-text').val(document.location.protocol + "//" + document.location.host + roomId);  
 
   $('input.share-text').click(function() {
     $(this).focus();

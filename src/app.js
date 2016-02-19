@@ -1,7 +1,5 @@
 import express from 'express';
 import mustacheExpress from 'mustache-express';
-import session from 'express-session';
-import Redis from 'connect-redis';
 import Io from 'socket.io';
 import http from 'http';
 import shortid from 'shortid';
@@ -14,30 +12,14 @@ import fs from 'fs';
 const app = express();
 const server = http.createServer(app);
 const io = Io(server);
-const RedisStore = Redis(session);
-const sessionMiddleware = session({
-  store: new RedisStore({
-    host: 'localhost',
-    port: 6379,
-    db: 2
-  }),
-  secret: fs.readFileSync(__dirname + '/.secret', 'UTF-8'),
-  resave: true,
-  saveUninitialized: true
-});
 
 let rooms = [];
-
-io.use(function(socket, next) {
-  sessionMiddleware(socket.request, socket.request.res, next);
-});
 
 app.use(compression());
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
 app.set('views', __dirname + '/views');
-app.use(sessionMiddleware);
 app.use(express.static(__dirname + '/public'));
 
 function generateNewRoom(req, res, id) {

@@ -4,9 +4,13 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web
 
 ### Installation
 
-    npm install -g gulp
     npm install
-    gulp start
+    
+    # Bundle JS files
+    npm run bundle
+
+    # Start a local instance of darkwire
+    npm start
 
 Create a **.secret** file in **/src** folder with a your session secret. It doesn't matter what it is- just keep it private.
 
