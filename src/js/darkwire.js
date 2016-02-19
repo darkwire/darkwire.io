@@ -89,12 +89,13 @@ export default class Darkwire {
       if (message && this._connected) {
         let vector = this._cryptoUtil.crypto.getRandomValues(new Uint8Array(16));
 
-        let secretKey;
-        let secretKeys;
-        let messageData;
-        let signature;
-        let signingKey;
-        let encryptedMessageData;
+        let secretKey = null;
+        let secretKeys = null;
+        let messageData = null;
+        let signature = null;
+        let signingKey = null;
+        let encryptedMessageData = null;
+
         // Generate new secret key and vector for each message
         this._cryptoUtil.createSecretKey()
           .then((key) => {
@@ -154,9 +155,10 @@ export default class Darkwire {
           })
           .then((data) => {
             encryptedMessageData = data;
-            let msg = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
             let vct = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(vector));
             let sig = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(signature));
+            let msg = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
+
             resolve({
               message: msg,
               vector: vct,

@@ -7,7 +7,6 @@ let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 $(function() {
   const darkwire = new Darkwire();
   const cryptoUtil = new CryptoUtil();
-  const windowHandler = new WindowHandler();
 
   let FADE_TIME = 150; // ms
   let TYPING_TIMER_LENGTH = 400; // ms
@@ -44,7 +43,7 @@ $(function() {
   });
 
   let socket = io(roomId);
-  windowHandler.socket = socket;
+  const windowHandler = new WindowHandler(darkwire, socket);
 
   FastClick.attach(document.body);
 

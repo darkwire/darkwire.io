@@ -1,7 +1,9 @@
 export default class FileHandler {
-  constructor() {
+  constructor(darkwire, socket) {
     if (window.File && window.FileReader && window.FileList && window.Blob && window.btoa) {
       this._isSupported = true;
+      this.darkwire = darkwire;
+      this.socket = socket;
       this.listen();
     } else {
       this._isSupported = false;
@@ -17,11 +19,11 @@ export default class FileHandler {
 
     if (file) {
 
-      let encodedFile = {
-        fileName: file.name,
-        fileSize: file.fileSize,
-        base64: null
-      };
+      // let encodedFile = {
+      //   fileName: file.name,
+      //   fileSize: file.fileSize,
+      //   base64: null
+      // };
 
       // Support for only 1MB
       if (file.size > 1000000) {
@@ -34,12 +36,12 @@ export default class FileHandler {
 
       reader.onload = (readerEvent) => {
         const base64 = window.btoa(readerEvent.target.result);
-        encodedFile.base64 = base64;
+        this.darkwire.encodeMessage(base64, 'file').then( (socketData) => {
+          this.socket.emit('new message', socketData);
+        });
       }
 
       reader.readAsBinaryString(file);
-
-      return encodedFile;
     }
 
     return false;
@@ -47,7 +49,7 @@ export default class FileHandler {
 
   listen() {
     // browser API
-    document.getElementById('fileInput').addEventListener('change', this.encodeFile, false);
+    document.getElementById('fileInput').addEventListener('change', jQuery.proxy(this.encodeFile, this), false);
 
     // darkwire
     

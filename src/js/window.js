@@ -1,10 +1,9 @@
 import FileHandler from './fileHandler';
 
 export default class WindowHandler {
-  constructor() {
-    this._socket = null;
+  constructor(darkwire, socket) {
     this._isActive = false;
-    this.fileHandler = new FileHandler();
+    this.fileHandler = new FileHandler(darkwire, socket);
 
     this.newMessages = 0;
     this.favicon = new Favico({
@@ -23,10 +22,6 @@ export default class WindowHandler {
   set isActive(active) {
     this._isActive = active;
     return this;
-  }
-
-  set socket(socket) {
-    this._socket = socket;
   }
 
   notifyFavicon() {
