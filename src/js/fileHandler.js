@@ -1,6 +1,6 @@
 export default class FileHandler {
   constructor(darkwire, socket) {
-    if (window.File && window.FileReader && window.FileList && window.Blob && window.btoa) {
+    if (window.File && window.FileReader && window.FileList && window.Blob && window.btoa && window.atob) {
       this._isSupported = true;
       this.darkwire = darkwire;
       this.socket = socket;
@@ -45,6 +45,10 @@ export default class FileHandler {
     }
 
     return false;
+  }
+
+  decodeFile(base64) {
+    return window.atob(base64);
   }
 
   listen() {

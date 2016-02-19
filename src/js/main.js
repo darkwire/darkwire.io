@@ -120,10 +120,19 @@ $(function() {
     let $usernameDiv = $('<span class="username"/>')
       .text(data.username)
       .css('color', getUsernameColor(data.username));
-    let $messageBodyDiv = $('<span class="messageBody">')
-      .html(data.message);
+    let $messageBodyDiv = $('<span class="messageBody">');
+
+    if (options.file) {
+      let image = new Image();
+      image.src = `data:image/png;base64,${data.message}`;
+      $messageBodyDiv.html(image);
+    } else {
+      $messageBodyDiv.html(data.message);
+    }
 
     let typingClass = data.typing ? 'typing' : '';
+
+
     let $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
       .addClass(typingClass)
@@ -293,7 +302,16 @@ $(function() {
         windowHandler.notifyFavicon();
         darkwire.audio.play();
       }
-      addChatMessage(data);
+      if (data.messageType === 'file') {
+        // let file = windowHandler.fileHandler.decodeFile(data.message);
+        // let chatMessage = {
+        //   username: data.username,
+        //   message: file
+        // }
+        addChatMessage(data, {file: true})
+      } else {      
+        addChatMessage(data);
+      }
     });
 
   });

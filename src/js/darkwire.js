@@ -216,7 +216,8 @@ export default class Darkwire {
         if (bool) {
           resolve({
             username: username,
-            message: decryptedMessage
+            message: decryptedMessage,
+            messageType: data.messageType
           });    
         }
       });
