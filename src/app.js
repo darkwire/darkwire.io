@@ -1,13 +1,16 @@
+import _ from 'underscore';
 import express from 'express';
 import mustacheExpress from 'mustache-express';
 import Io from 'socket.io';
 import http from 'http';
 import shortid from 'shortid';
-import _ from 'underscore';
-import Room from './room';
 import favicon from 'serve-favicon';
 import compression from 'compression';
 import fs from 'fs';
+
+import Room from './room';
+
+const $PORT = 3000;
 
 const app = express();
 const server = http.createServer(app);
@@ -51,6 +54,6 @@ app.get('/:roomId', (req, res) => {
   return res.redirect('/');
 });
 
-server.listen(3000, () => {
-  console.log('darkwire is online.');
+server.listen($PORT, () => {
+  console.log(`darkwire is online on port ${$PORT}.`);
 });
