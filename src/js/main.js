@@ -106,7 +106,7 @@ $(function() {
   }
 
   // Adds the visual chat message to the message list
-  function addChatMessage (data, options) {
+  function addChatMessage (data, options, dataType) {
     if (!data.message.trim().length) return;
 
     // Don't fade the message in if there is an 'X was typing'
@@ -121,8 +121,10 @@ $(function() {
       .text(data.username)
       .css('color', getUsernameColor(data.username));
     let $messageBodyDiv = $('<span class="messageBody">');
-
-    if (options.file) {
+    // TODO: Ask client if accept/reject attachment
+    // If reject, destroy object in memory
+    // If accept, render image or content dispose
+    if (dataType.file) {
       let image = new Image();
       image.src = `data:image/png;base64,${data.message}`;
       $messageBodyDiv.html(image);
@@ -308,7 +310,7 @@ $(function() {
         //   username: data.username,
         //   message: file
         // }
-        addChatMessage(data, {file: true})
+        addChatMessage(data, false, {file: true})
       } else {      
         addChatMessage(data);
       }

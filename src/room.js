@@ -23,6 +23,7 @@ class Room {
           id: socket.user.id,
           message: data.message,
           messageType: data.messageType,
+          data: data.data,
           vector: data.vector,
           secretKeys: data.secretKeys,
           signature: data.signature
