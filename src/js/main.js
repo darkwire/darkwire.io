@@ -1,15 +1,13 @@
-import AudioHandler from './audio';
-import CryptoUtil from './crypto';
+import Darkwire from './darkwire';
 import WindowHandler from './window';
+import CryptoUtil from './crypto';
 
 let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
 $(function() {
-  const audio = new AudioHandler();
+  const darkwire = new Darkwire();
   const cryptoUtil = new CryptoUtil();
-  const windowHandler = new WindowHandler();
 
-  let newMessages = 0;
   let FADE_TIME = 150; // ms
   let TYPING_TIMER_LENGTH = 400; // ms
 
@@ -28,18 +26,11 @@ $(function() {
 
   let $chatPage = $('.chat.page'); // The chatroom page
 
-  let users = [];
-
-  // Prompt for setting a username
   let username;
-  let myUserId;
-  let connected = false;
   let typing = false;
   let lastTypingTime;
 
   let roomId = window.location.pathname.length ? window.location.pathname : null;
-
-  let keys = {};
 
   if (!roomId) { return; }
 
@@ -52,6 +43,7 @@ $(function() {
   });
 
   let socket = io(roomId);
+  const windowHandler = new WindowHandler(darkwire, socket);
 
   FastClick.attach(document.body);
 
@@ -83,7 +75,7 @@ $(function() {
         cryptoUtil.createPrimaryKeys()
       ])
       .then(function(data) {
-        keys = {
+        darkwire.keys = {
           public: data[0].publicKey,
           private: data[0].privateKey
         };
@@ -130,10 +122,20 @@ $(function() {
     let $usernameDiv = $('<span class="username"/>')
       .text(data.username)
       .css('color', getUsernameColor(data.username));
-    let $messageBodyDiv = $('<span class="messageBody">')
-      .html(data.message);
+    let $messageBodyDiv = $('<span class="messageBody">');
+    // TODO: Ask client if accept/reject attachment
+    // If reject, destroy object in memory
+    // If accept, render image or content dispose
+    if (dataType.file) {
+      let image = new Image();
+      image.src = `data:image/png;base64,${data.message}`;
+      $messageBodyDiv.html(image);
+    } else {
+      $messageBodyDiv.html(data.message);
+    }
 
     let typingClass = data.typing ? 'typing' : '';
+
     let $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
       .addClass(typingClass)
@@ -197,7 +199,7 @@ $(function() {
 
   // Updates the typing event
   function updateTyping() {
-    if (connected) {
+    if (darkwire.connected) {
       if (!typing) {
         typing = true;
         socket.emit('typing');
@@ -239,7 +241,7 @@ $(function() {
   $window.keydown(function(event) {
     // When the client hits ENTER on their keyboard and chat message input is focused
     if (event.which === 13 && $('.inputMessage').is(':focus')) {
-      sendMessage();
+      handleMessageSending();
       socket.emit('stop typing');
       typing = false;
     }
@@ -280,47 +282,16 @@ $(function() {
 
   // Whenever the server emits 'login', log the login message
   socket.on('user joined', function(data) {
-    connected = true;
+    darkwire.connected = true;
     addParticipantsMessage(data);
-
-    let importKeysPromises = [];
-
-    // Import all user keys if not already there
-    _.each(data.users, function(user) {
-      if (!_.findWhere(users, {id: user.id})) {
-        let promise = new Promise(function(resolve, reject) {
-          let currentUser = user;
-          Promise.all([
-            cryptoUtil.importPrimaryKey(currentUser.publicKey, 'spki')
-          ])
-          .then(function(keys) {
-            users.push({
-              id: currentUser.id,
-              username: currentUser.username,
-              publicKey: keys[0]
-            });
-            resolve();
-          });
-        });
-        importKeysPromises.push(promise);
-      }
-    });
-
-    if (!myUserId) {
-      // Set my id if not already set
-      let me = _.findWhere(data.users, {username: username});
-      myUserId = me.id;
-    }
-
-    Promise.all(importKeysPromises)
-    .then(function() {
+    let importKeysPromises = darkwire.addUser(data);
+    Promise.all(importKeysPromises).then(() => {
       // All users' keys have been imported
       if (data.numUsers === 1) {
         $('#first-modal').modal('show');
       }
 
       log(data.username + ' joined');
-
       renderParticipantsList();
     });
 
@@ -479,6 +450,28 @@ $(function() {
         });
       }
     });
+
+  });
+
+  // Whenever the server emits 'new message', update the chat body
+  socket.on('new message', function(data) {
+    darkwire.decodeMessage(data).then((data) => {
+      if (!windowHandler.isActive) {
+        windowHandler.notifyFavicon();
+        darkwire.audio.play();
+      }
+      if (data.messageType === 'file') {
+        // let file = windowHandler.fileHandler.decodeFile(data.message);
+        // let chatMessage = {
+        //   username: data.username,
+        //   message: file
+        // }
+        addChatMessage(data, false, {file: true});
+      } else {
+        addChatMessage(data);
+      }
+    });
+
   });
 
   // Whenever the server emits 'user left', log it in the chat body
@@ -487,7 +480,7 @@ $(function() {
     addParticipantsMessage(data);
     removeChatTyping(data);
 
-    users = _.without(users, _.findWhere(users, {id: data.id}));
+    darkwire.removeUser(data);
 
     renderParticipantsList();
   });
@@ -522,7 +515,7 @@ $(function() {
 
   function renderParticipantsList() {
     $('#participants-modal ul.users').empty();
-    _.each(users, function(user) {
+    _.each(darkwire.users, function(user) {
       let li;
       if (user.username === window.username) {
         // User is me
@@ -536,7 +529,7 @@ $(function() {
   }
 
   $('#send-message-btn').click(function() {
-    sendMessage();
+    handleMessageSending();
     socket.emit('stop typing');
     typing = false;
   });
@@ -548,7 +541,24 @@ $(function() {
   let audioSwitch = $('input.bs-switch').bootstrapSwitch();
 
   audioSwitch.on('switchChange.bootstrapSwitch', function(event, state) {
-    audio.soundEnabled = state;
+    darkwire.audio.soundEnabled = state;
   });
+
+  function handleMessageSending() {
+    let message = $inputMessage;
+    let cleanedMessage = cleanInput(message.val());
+    // Prevent markup from being injected into the message
+    darkwire.encodeMessage(cleanedMessage, 'chat').then((socketData) => {
+      message.val('');
+      $('#send-message-btn').removeClass('active');
+      addChatMessage({
+        username: username,
+        message: cleanedMessage
+      });
+      socket.emit('new message', socketData);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
 
 });

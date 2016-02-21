@@ -10,7 +10,9 @@ import fs from 'fs';
 
 import Room from './room';
 
-const $PORT = 3000;
+const $CONFIG = {
+  port: process.env.port || 3000
+};
 
 const app = express();
 const server = http.createServer(app);
@@ -54,6 +56,6 @@ app.get('/:roomId', (req, res) => {
   return res.redirect('/');
 });
 
-server.listen($PORT, () => {
-  console.log(`darkwire is online on port ${$PORT}.`);
+server.listen($CONFIG.port, () => {
+  console.log(`darkwire is online on port ${$CONFIG.port}.`);
 });

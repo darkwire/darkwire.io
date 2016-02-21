@@ -46,7 +46,15 @@ Group chats work the same way because in step 5 we encrypt keys with everyone's 
 
 Darkwire does not provide any guarantee that the person you're communicating with is who you think they are. Authentication functionality may be incorporated in future versions.
 
-### Sockets & Server
+## File Transfer
+
+Files are not transferred over the wire-only the file name and extension. Darkwire encodes documents into base64 using [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa) and is encrypted the same way chat messages are. 
+
+1. When a file is "uploaded", the document is encoded on the client and the server recieves the encrypted base64 string.
+2. The server sends the encrypted base64 string to clients in the same chat room.
+3. Clients recieving the encrypted base64 string then decrypts the string, then decodes the base64 string using [atob](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/atob).
+
+## Sockets & Server
 
 Darkwire uses [socket.io](http://socket.io) to transmit encrypted information using secure [WebSockets](https://en.wikipedia.org/wiki/WebSocket) (WSS).
 

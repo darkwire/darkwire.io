@@ -1,3 +1,4 @@
 node_modules
+npm-debug.log
 src/public/main.js
 src/.secret
