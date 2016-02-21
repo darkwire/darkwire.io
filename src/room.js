@@ -29,7 +29,7 @@ class Room {
       });
 
       socket.on('add user', (data) => {
-        if (addedUser) return;
+        if (addedUser) { return; }
 
         data.id = uuid.v4();
         this.users.push(data);

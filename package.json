@@ -19,16 +19,18 @@
     "uuid": "^2.0.1"
   },
   "devDependencies": {
+    "babel-core": "^6.5.2",
     "babel-preset-es2015": "^6.3.13",
+    "babel-register": "^6.5.2",
     "compression": "^1.6.0",
     "gulp": "^3.9.1",
     "gulp-nodemon": "^2.0.6",
+    "jscs": "^2.10.1",
+    "jshint": "^2.9.1",
+    "mocha-jscs": "^4.2.0",
+    "mocha-jshint": "^2.3.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
-  },
-  "scripts": {
-    "start": "gulp start",
-    "bundle": "gulp bundle"
   },
   "author": "Daniel Seripap",
   "license": "MIT"

@@ -17,7 +17,7 @@ $(function() {
     '#e21400', '#ffe400', '#ff8f00',
     '#58dc00', '#dd9cff', '#4ae8c4',
     '#3b88eb', '#f47777', '#d300e7',
-  ];  
+  ];
 
   let $window = $(window);
   let $messages = $('.messages'); // Messages area
@@ -41,9 +41,9 @@ $(function() {
 
   let keys = {};
 
-  if (!roomId) return;
+  if (!roomId) { return; }
 
-  $('input.share-text').val(document.location.protocol + "//" + document.location.host + roomId);  
+  $('input.share-text').val(document.location.protocol + '//' + document.location.host + roomId);
 
   $('input.share-text').click(function() {
     $(this).focus();
@@ -55,7 +55,7 @@ $(function() {
 
   FastClick.attach(document.body);
 
-  function addParticipantsMessage (data) {
+  function addParticipantsMessage(data) {
     let message = '';
     let headerMsg = '';
 
@@ -63,7 +63,7 @@ $(function() {
   }
 
   // Sets the client's username
-  function initChat () {
+  function initChat() {
     username = window.username;
     // warn not incognitor
     if (!fs) {
@@ -71,7 +71,7 @@ $(function() {
     } else {
       fs(window.TEMPORARY,
         100,
-        log.bind(log, "WARNING: Your browser is not in incognito mode!"));
+        log.bind(log, 'WARNING: Your browser is not in incognito mode!'));
     }
 
     // If the username is valid
@@ -88,7 +88,7 @@ $(function() {
           private: data[0].privateKey
         };
         return Promise.all([
-          cryptoUtil.exportKey(data[0].publicKey, "spki")
+          cryptoUtil.exportKey(data[0].publicKey, 'spki')
         ]);
       })
       .then(function(exportedKeys) {
@@ -102,7 +102,7 @@ $(function() {
   }
 
   // Log a message
-  function log (message, options) {
+  function log(message, options) {
     let html = options && options.html === true || false;
     let $el;
     if (html) {
@@ -114,8 +114,10 @@ $(function() {
   }
 
   // Adds the visual chat message to the message list
-  function addChatMessage (data, options) {
-    if (!data.message.trim().length) return;
+  function addChatMessage(data, options) {
+    if (!data.message.trim().length) {
+      return;
+    }
 
     // Don't fade the message in if there is an 'X was typing'
     let $typingMessages = getTypingMessages(data);
@@ -141,15 +143,15 @@ $(function() {
   }
 
   // Adds the visual chat typing message
-  function addChatTyping (data) {
+  function addChatTyping(data) {
     data.typing = true;
     data.message = 'is typing';
     addChatMessage(data);
   }
 
   // Removes the visual chat typing message
-  function removeChatTyping (data) {
-    getTypingMessages(data).fadeOut(function () {
+  function removeChatTyping(data) {
+    getTypingMessages(data).fadeOut(function() {
       $(this).remove();
     });
   }
@@ -159,7 +161,7 @@ $(function() {
   // options.fade - If the element should fade-in (default = true)
   // options.prepend - If the element should prepend
   //   all other messages (default = false)
-  function addMessageElement (el, options) {
+  function addMessageElement(el, options) {
     let $el = $(el);
 
     // Setup default options
@@ -187,14 +189,14 @@ $(function() {
   }
 
   // Prevents input from having injected markup
-  function cleanInput (input) {
+  function cleanInput(input) {
     let message = $('<div/>').html(input).text();
     message = Autolinker.link(message);
     return message;
   }
 
   // Updates the typing event
-  function updateTyping () {
+  function updateTyping() {
     if (connected) {
       if (!typing) {
         typing = true;
@@ -202,7 +204,7 @@ $(function() {
       }
       lastTypingTime = (new Date()).getTime();
 
-      setTimeout(function () {
+      setTimeout(function() {
         let typingTimer = (new Date()).getTime();
         let timeDiff = typingTimer - lastTypingTime;
         if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
@@ -214,18 +216,18 @@ $(function() {
   }
 
   // Gets the 'X is typing' messages of a user
-  function getTypingMessages (data) {
-    return $('.typing.message').filter(function (i) {
+  function getTypingMessages(data) {
+    return $('.typing.message').filter(function(i) {
       return $(this).data('username') === data.username;
     });
   }
 
   // Gets the color of a username through our hash function
-  function getUsernameColor (username) {
+  function getUsernameColor(username) {
     // Compute hash code
     let hash = 7;
     for (let i = 0; i < username.length; i++) {
-       hash = username.charCodeAt(i) + (hash << 5) - hash;
+      hash = username.charCodeAt(i) + (hash << 5) - hash;
     }
     // Calculate color
     let index = Math.abs(hash % COLORS.length);
@@ -234,7 +236,7 @@ $(function() {
 
   // Keyboard events
 
-  $window.keydown(function (event) {
+  $window.keydown(function(event) {
     // When the client hits ENTER on their keyboard and chat message input is focused
     if (event.which === 13 && $('.inputMessage').is(':focus')) {
       sendMessage();
@@ -255,8 +257,8 @@ $(function() {
   });
 
   // Select message input when closing modal
-  $('.modal').on('hidden.bs.modal', function (e) {
-    $inputMessage.focus();      
+  $('.modal').on('hidden.bs.modal', function(e) {
+    $inputMessage.focus();
   });
 
   // Select message input when clicking message body, unless selecting text
@@ -267,29 +269,29 @@ $(function() {
   });
 
   function getSelectedText() {
-    var text = "";
-    if (typeof window.getSelection != "undefined") {
+    var text = '';
+    if (typeof window.getSelection != 'undefined') {
       text = window.getSelection().toString();
-    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+    } else if (typeof document.selection != 'undefined' && document.selection.type == 'Text') {
       text = document.selection.createRange().text;
     }
     return text;
   }
 
   // Whenever the server emits 'login', log the login message
-  socket.on('user joined', function (data) {
+  socket.on('user joined', function(data) {
     connected = true;
     addParticipantsMessage(data);
 
     let importKeysPromises = [];
-    
+
     // Import all user keys if not already there
     _.each(data.users, function(user) {
       if (!_.findWhere(users, {id: user.id})) {
         let promise = new Promise(function(resolve, reject) {
           let currentUser = user;
           Promise.all([
-            cryptoUtil.importPrimaryKey(currentUser.publicKey, "spki")
+            cryptoUtil.importPrimaryKey(currentUser.publicKey, 'spki')
           ])
           .then(function(keys) {
             users.push({
@@ -320,14 +322,16 @@ $(function() {
       log(data.username + ' joined');
 
       renderParticipantsList();
-    });      
+    });
 
   });
 
   // Sends a chat message
-  function sendMessage () {
+  function sendMessage() {
     // Don't send unless other users exist
-    if (users.length <= 1) return;
+    if (users.length <= 1) {
+      return;
+    }
 
     let message = $inputMessage.val();
     // Prevent markup from being injected into the message
@@ -335,7 +339,7 @@ $(function() {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
-      $('#send-message-btn').removeClass('active');      
+      $('#send-message-btn').removeClass('active');
       addChatMessage({
         username: username,
         message: message
@@ -368,7 +372,7 @@ $(function() {
               let secretKeyStr;
 
               // Export secret key
-              cryptoUtil.exportKey(secretKey, "raw")
+              cryptoUtil.exportKey(secretKey, 'raw')
               .then(function(data) {
                 return cryptoUtil.encryptSecretKey(data, thisUser.publicKey);
               })
@@ -376,7 +380,7 @@ $(function() {
                 let encData = new Uint8Array(encryptedSecretKey);
                 secretKeyStr = cryptoUtil.convertArrayBufferViewToString(encData);
                 // Export HMAC signing key
-                return cryptoUtil.exportKey(signingKey, "raw");
+                return cryptoUtil.exportKey(signingKey, 'raw');
               })
               .then(function(data) {
                 // Encrypt signing key with user's public key
@@ -422,7 +426,7 @@ $(function() {
   }
 
   // Whenever the server emits 'new message', update the chat body
-  socket.on('new message', function (data) {
+  socket.on('new message', function(data) {
     // Don't show messages if no key
     if (!windowHandler.isActive) {
       windowHandler.notifyFavicon();
@@ -431,13 +435,13 @@ $(function() {
 
     let message = data.message;
     let messageData = cryptoUtil.convertStringToArrayBufferView(message);
-    let username = data.username; 
-    let senderId = data.id
+    let username = data.username;
+    let senderId = data.id;
     let vector = data.vector;
     let vectorData = cryptoUtil.convertStringToArrayBufferView(vector);
     let secretKeys = data.secretKeys;
     let decryptedMessageData;
-    let decryptedMessage;   
+    let decryptedMessage;
 
     let mySecretKey = _.find(secretKeys, function(key) {
       return key.id === myUserId;
@@ -449,7 +453,7 @@ $(function() {
 
     cryptoUtil.decryptSecretKey(secretKeyArrayBuffer, keys.private)
     .then(function(data) {
-      return cryptoUtil.importSecretKey(new Uint8Array(data), "raw");
+      return cryptoUtil.importSecretKey(new Uint8Array(data), 'raw');
     })
     .then(function(data) {
       let secretKey = data;
@@ -457,11 +461,11 @@ $(function() {
     })
     .then(function(data) {
       decryptedMessageData = data;
-      decryptedMessage = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(data))
-      return cryptoUtil.decryptSigningKey(signingKeyArrayBuffer, keys.private)
+      decryptedMessage = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(data));
+      return cryptoUtil.decryptSigningKey(signingKeyArrayBuffer, keys.private);
     })
     .then(function(data) {
-      return cryptoUtil.importSigningKey(new Uint8Array(data), "raw");
+      return cryptoUtil.importSigningKey(new Uint8Array(data), 'raw');
     })
     .then(function(data) {
       let signingKey = data;
@@ -472,13 +476,13 @@ $(function() {
         addChatMessage({
           username: username,
           message: decryptedMessage
-        });          
+        });
       }
     });
   });
 
   // Whenever the server emits 'user left', log it in the chat body
-  socket.on('user left', function (data) {
+  socket.on('user left', function(data) {
     log(data.username + ' left');
     addParticipantsMessage(data);
     removeChatTyping(data);
@@ -489,12 +493,12 @@ $(function() {
   });
 
   // Whenever the server emits 'typing', show the typing message
-  socket.on('typing', function (data) {
+  socket.on('typing', function(data) {
     addChatTyping(data);
   });
 
   // Whenever the server emits 'stop typing', kill the typing message
-  socket.on('stop typing', function (data) {
+  socket.on('stop typing', function(data) {
     removeChatTyping(data);
   });
 
@@ -522,13 +526,13 @@ $(function() {
       let li;
       if (user.username === window.username) {
         // User is me
-        li = $("<li>" + user.username + " <span class='you'>(you)</span></li>").css('color', getUsernameColor(user.username));
+        li = $('<li>' + user.username + ' <span class="you">(you)</span></li>').css('color', getUsernameColor(user.username));
       } else {
-        li = $("<li>" + user.username + "</li>").css('color', getUsernameColor(user.username));
+        li = $('<li>' + user.username + '</li>').css('color', getUsernameColor(user.username));
       }
       $('#participants-modal ul.users')
-        .append(li);        
-    });    
+        .append(li);
+    });
   }
 
   $('#send-message-btn').click(function() {

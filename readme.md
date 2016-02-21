@@ -3,6 +3,10 @@
 Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
 
 ### Installation
+    
+    # For es6 compatability, be sure you have the latest stable version of Node JS installed
+    npm install -g n
+    n stable
 
     npm install
     

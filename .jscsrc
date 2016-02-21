@@ -1,0 +1,8 @@
+{
+  "preset": "google",
+  "esnext": true,
+  "requireCamelCaseOrUpperCaseIdentifiers": {"ignoreProperties": true},
+  "maxErrors": null,
+  "maximumLineLength": null,
+  "excludeFiles": ["src/public"]
+}

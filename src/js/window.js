@@ -4,8 +4,8 @@ export default class WindowHandler {
 
     this.newMessages = 0;
     this.favicon = new Favico({
-      animation:'pop',
-      type : 'rectangle'
+      animation: 'pop',
+      type: 'rectangle'
     });
 
     this.bindEvents();
@@ -26,13 +26,13 @@ export default class WindowHandler {
   }
 
   bindEvents() {
-    window.onfocus = () => { 
+    window.onfocus = () => {
       this._isActive = true;
       this.newMessages = 0;
       this.favicon.reset();
-    }; 
+    };
 
-    window.onblur = () => { 
+    window.onblur = () => {
       this._isActive = false;
     };
   }
