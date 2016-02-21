@@ -111,6 +111,8 @@ $(function() {
       return;
     }
 
+    let messageType = data.messageType || 'text';
+
     // Don't fade the message in if there is an 'X was typing'
     let $typingMessages = getTypingMessages(data);
     options = options || {};
@@ -126,7 +128,7 @@ $(function() {
     // TODO: Ask client if accept/reject attachment
     // If reject, destroy object in memory
     // If accept, render image or content dispose
-    if (dataType.file) {
+    if (messageType === 'file') {
       let image = new Image();
       image.src = `data:image/png;base64,${data.message}`;
       $messageBodyDiv.html(image);
@@ -297,162 +299,6 @@ $(function() {
 
   });
 
-  // Sends a chat message
-  function sendMessage() {
-    // Don't send unless other users exist
-    if (users.length <= 1) {
-      return;
-    }
-
-    let message = $inputMessage.val();
-    // Prevent markup from being injected into the message
-    message = cleanInput(message);
-    // if there is a non-empty message and a socket connection
-    if (message && connected) {
-      $inputMessage.val('');
-      $('#send-message-btn').removeClass('active');
-      addChatMessage({
-        username: username,
-        message: message
-      });
-      let vector = cryptoUtil.crypto.getRandomValues(new Uint8Array(16));
-
-      let secretKey;
-      let secretKeys;
-      let messageData;
-      let signature;
-      let signingKey;
-      let encryptedMessageData;
-
-      // Generate new secret key and vector for each message
-      cryptoUtil.createSecretKey()
-      .then(function(key) {
-        secretKey = key;
-        return cryptoUtil.createSigningKey();
-      })
-      .then(function(key) {
-        signingKey = key;
-        // Generate secretKey and encrypt with each user's public key
-        let promises = [];
-        _.each(users, function(user) {
-          // If not me
-          if (user.username !== window.username) {
-            let promise = new Promise(function(resolve, reject) {
-              let thisUser = user;
-
-              let secretKeyStr;
-
-              // Export secret key
-              cryptoUtil.exportKey(secretKey, 'raw')
-              .then(function(data) {
-                return cryptoUtil.encryptSecretKey(data, thisUser.publicKey);
-              })
-              .then(function(encryptedSecretKey) {
-                let encData = new Uint8Array(encryptedSecretKey);
-                secretKeyStr = cryptoUtil.convertArrayBufferViewToString(encData);
-                // Export HMAC signing key
-                return cryptoUtil.exportKey(signingKey, 'raw');
-              })
-              .then(function(data) {
-                // Encrypt signing key with user's public key
-                return cryptoUtil.encryptSigningKey(data, thisUser.publicKey);
-              })
-              .then(function(encryptedSigningKey) {
-                let encData = new Uint8Array(encryptedSigningKey);
-                var str = cryptoUtil.convertArrayBufferViewToString(encData);
-                resolve({
-                  id: thisUser.id,
-                  secretKey: secretKeyStr,
-                  encryptedSigningKey: str
-                });
-              });
-            });
-            promises.push(promise);
-          }
-        });
-        return Promise.all(promises);
-      })
-      .then(function(data) {
-        secretKeys = data;
-        messageData = cryptoUtil.convertStringToArrayBufferView(message);
-        return cryptoUtil.signKey(messageData, signingKey);
-      })
-      .then(function(data) {
-        signature = data;
-        return cryptoUtil.encryptMessage(messageData, secretKey, vector);
-      })
-      .then(function(data) {
-        encryptedMessageData = data;
-        let msg = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(encryptedMessageData));
-        let vct = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(vector));
-        let sig = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(signature));
-        socket.emit('new message', {
-          message: msg,
-          vector: vct,
-          secretKeys: secretKeys,
-          signature: sig
-        });
-      });
-    }
-  }
-
-  // Whenever the server emits 'new message', update the chat body
-  socket.on('new message', function(data) {
-    // Don't show messages if no key
-    if (!windowHandler.isActive) {
-      windowHandler.notifyFavicon();
-      audio.play();
-    }
-
-    let message = data.message;
-    let messageData = cryptoUtil.convertStringToArrayBufferView(message);
-    let username = data.username;
-    let senderId = data.id;
-    let vector = data.vector;
-    let vectorData = cryptoUtil.convertStringToArrayBufferView(vector);
-    let secretKeys = data.secretKeys;
-    let decryptedMessageData;
-    let decryptedMessage;
-
-    let mySecretKey = _.find(secretKeys, function(key) {
-      return key.id === myUserId;
-    });
-    let signature = data.signature;
-    let signatureData = cryptoUtil.convertStringToArrayBufferView(signature);
-    let secretKeyArrayBuffer = cryptoUtil.convertStringToArrayBufferView(mySecretKey.secretKey);
-    let signingKeyArrayBuffer = cryptoUtil.convertStringToArrayBufferView(mySecretKey.encryptedSigningKey);
-
-    cryptoUtil.decryptSecretKey(secretKeyArrayBuffer, keys.private)
-    .then(function(data) {
-      return cryptoUtil.importSecretKey(new Uint8Array(data), 'raw');
-    })
-    .then(function(data) {
-      let secretKey = data;
-      return cryptoUtil.decryptMessage(messageData, secretKey, vectorData);
-    })
-    .then(function(data) {
-      decryptedMessageData = data;
-      decryptedMessage = cryptoUtil.convertArrayBufferViewToString(new Uint8Array(data));
-      return cryptoUtil.decryptSigningKey(signingKeyArrayBuffer, keys.private);
-    })
-    .then(function(data) {
-      return cryptoUtil.importSigningKey(new Uint8Array(data), 'raw');
-    })
-    .then(function(data) {
-      let signingKey = data;
-      return cryptoUtil.verifyKey(signatureData, decryptedMessageData, signingKey);
-    })
-    .then(function(bool) {
-      if (bool) {
-        addChatMessage({
-          username: username,
-          message: decryptedMessage
-        });
-      }
-    });
-
-  });
-
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function(data) {
     darkwire.decodeMessage(data).then((data) => {
@@ -466,7 +312,7 @@ $(function() {
         //   username: data.username,
         //   message: file
         // }
-        addChatMessage(data, false, {file: true});
+        addChatMessage(data, {messageType: 'file'});
       } else {
         addChatMessage(data);
       }
@@ -548,7 +394,7 @@ $(function() {
     let message = $inputMessage;
     let cleanedMessage = cleanInput(message.val());
     // Prevent markup from being injected into the message
-    darkwire.encodeMessage(cleanedMessage, 'chat').then((socketData) => {
+    darkwire.encodeMessage(cleanedMessage, 'text').then((socketData) => {
       message.val('');
       $('#send-message-btn').removeClass('active');
       addChatMessage({
