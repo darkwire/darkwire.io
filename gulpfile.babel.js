@@ -21,6 +21,17 @@ gulp.task('bundle', function() {
   .pipe(gulp.dest('src/public'));
 });
 
+gulp.task('dev', function() {
+  return browserify('src/js/main.js', {
+    debug: true
+  }).transform(babel.configure({
+    presets: ['es2015']
+  })).bundle()
+  .pipe(source('main.js'))
+  .pipe(buffer())
+  .pipe(gulp.dest('src/public'));
+});
+
 gulp.task('start', function() {
   nodemon({
     script: 'index.js',
@@ -29,7 +40,7 @@ gulp.task('start', function() {
     env: {
       'NODE_ENV': 'development'
     },
-    tasks: ['bundle']
+    tasks: ['dev']
   });
 });
 

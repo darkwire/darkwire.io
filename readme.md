@@ -3,20 +3,17 @@
 Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
 
 ### Installation
-    
     # For es6 compatability, be sure you have the latest stable version of Node JS installed
     npm install -g n
     n stable
-
     npm install
     
-    # Bundle JS files
-    npm run bundle
-
+    # Bundle JS files (for deployment)
+    npm bundle
     # Start a local instance of darkwire
     npm start
 
-Create a **.secret** file in **/src** folder with a your session secret. It doesn't matter what it is- just keep it private.
+Create a **.secret** file in the **/src** folder with a your session secret. It doesn't matter what it is- just keep it private.
 
 Darkwire is now running on `http://localhost:3000`
 
@@ -48,11 +45,11 @@ Darkwire does not provide any guarantee that the person you're communicating wit
 
 ## File Transfer
 
-Files are not transferred over the wire-only the file name and extension. Darkwire encodes documents into base64 using [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa) and is encrypted the same way chat messages are. 
+Darkwire encodes documents (up to 1MB) into base64 using [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa) and is encrypted the same way chat messages are. 
 
 1. When a file is "uploaded", the document is encoded on the client and the server recieves the encrypted base64 string.
 2. The server sends the encrypted base64 string to clients in the same chat room.
-3. Clients recieving the encrypted base64 string then decrypts the string, then decodes the base64 string using [atob](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/atob).
+3. Clients recieving the encrypted base64 string then decrypts and decodes the base64 string using [atob](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/atob).
 
 ## Sockets & Server
 

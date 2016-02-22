@@ -26,7 +26,8 @@ class Room {
           data: data.data,
           vector: data.vector,
           secretKeys: data.secretKeys,
-          signature: data.signature
+          signature: data.signature,
+          timestamp: new Date
         });
       });
 
@@ -46,7 +47,8 @@ class Room {
         thisIO.emit('user joined', {
           username: socket.username,
           numUsers: this.numUsers,
-          users: this.users
+          users: this.users,
+          timestamp: new Date
         });
       });
 
@@ -75,7 +77,8 @@ class Room {
             username: socket.username,
             numUsers: this.numUsers,
             users: this.users,
-            id: socket.user.id
+            id: socket.user.id,
+            timestamp: new Date
           });
 
           // remove room from rooms array
@@ -84,6 +87,35 @@ class Room {
           }
         }
       });
+
+      // Update user
+      socket.on('update user', (data) => {
+        if (data.newUsername.length > 16) {
+          return false;
+        }
+        this.users = _.without(this.users, socket.user);
+        let modifiedUser = {
+          id: socket.user.id,
+          username: data.newUsername,
+          publicKey: data.publicKey
+        };
+
+        this.users.push(modifiedUser);
+
+        socket.username = data.newUsername;
+        socket.user = modifiedUser;
+
+        thisIO.emit('user update', {
+          id: socket.user.id,
+          username: data.username,
+          newUsername: data.newUsername,
+          publicKey: data.publicKey,
+          users: this.users,
+          timestamp: new Date
+        });
+
+      });
+
     });
   }
 

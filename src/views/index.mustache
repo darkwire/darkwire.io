@@ -68,13 +68,13 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">About</h4>
+            <p><strong>Darkwire Version:</strong> v{{APP.version}} (<a href="https://github.com/seripap/darkwire.io/releases/tag/v{{APP.version}}" target="_blank">View Release Notes</a>)<br></p>
           </div>
           <div class="modal-body">
-            <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
+            {{>partials/disclaimer}}
 
-            <p>darkwire.io is the simplest way to chat with encryption online. Chat history is never stored on a server or database, and plain text messages are never transferred over the wire.</p>
-
-            <p>Questions/comments? Email us at hello[at]darkwire.io</p>
+            <p>Questions/comments? Email us at hello[at]darkwire.io<br>
+               Found a bug or want a new feature? <a href="https://github.com/seripap/darkwire.io/issues" target="_blank">Open a ticket on Github</a>.</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -97,7 +97,10 @@
             </p>
             <br>
             <h6>Sound</h6>
-            <input type="checkbox" name="my-checkbox" class="form-control bs-switch" checked>
+            <input type="checkbox" name="sound-enabled" class="form-control bs-switch sound-enabled" checked>
+            <br>
+            <h6>Auto-embed images?</h6>
+            <input type="checkbox" name="embed-images" class="form-control bs-switch auto-embed-files">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Close</button>
@@ -111,11 +114,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Welcome to darkwire.io</h4>
+            <h4 class="modal-title">Welcome to darkwire.io v{{APP.version}}</h4>
           </div>
           <div class="modal-body">
             <h6>We've placed you in a new chat room</h6>
-            <p class="bold">WARNING: This product is in beta and its source code has not been peer-reviewed or undergone a security audit. This is a demo only and not intended for security-critical use. <a href="https://github.com/seripap/darkwire.io" target="_blank">View source code</a>.</p>
+            {{>partials/disclaimer}}
             <br>
             <h6>Invite People to This Room</h6>
             <p>
@@ -166,7 +169,6 @@
     <script src="/favicon.js"></script>
     <script src="/vendor/bootstrap-3.3.6.min.js"></script>
     <script src="/vendor/autolinker.min.js"></script>
-    <script src="/vendor/underscore.min.js"></script>
     <script src="/vendor/modernizr-custom.min.js"></script>
     <script src="/vendor/bootstrap-switch.min.js"></script>
     <script src="/vendor/web-crypto-shim.js"></script>

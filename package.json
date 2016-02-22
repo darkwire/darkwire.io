@@ -11,9 +11,12 @@
     "express": "^4.13.3",
     "gulp": "^3.9.0",
     "gulp-uglify": "^1.5.1",
+    "moment": "^2.11.2",
     "mustache-express": "^1.2.2",
+    "sanitize-html": "^1.11.3",
     "serve-favicon": "^2.3.0",
     "shortid": "^2.2.4",
+    "slug": "^0.9.1",
     "socket.io": "^1.4.0",
     "underscore": "^1.8.3",
     "uuid": "^2.0.1"
@@ -31,6 +34,11 @@
     "mocha-jshint": "^2.3.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "start": "gulp start",
+    "bundle": "gulp bundle",
+    "test": "gulp test"
   },
   "author": "Daniel Seripap",
   "license": "MIT"

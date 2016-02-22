@@ -296,3 +296,19 @@ html.no-touchevents .chat #input-icons {
 #fileInput {
   display: none;
 }
+
+.file-disclaimer {
+  font-size: 10px;
+  color: red;
+  line-height: 10px;
+}
+
+.log-info {
+  color: #FFF;
+  font-weight: bold;
+}
+
+.log-error {
+  color: yellow;
+  font-weight: bold;
+}

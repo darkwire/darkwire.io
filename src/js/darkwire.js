@@ -9,7 +9,33 @@ export default class Darkwire {
     this._myUserId = false;
     this._connected = false;
     this._users = [];
+    this._fileQueue = [];
     this._keys = {};
+    this._autoEmbedImages = false;
+  }
+
+  getFile(id) {
+    let file = _.findWhere(this._fileQueue, {id: id}) || false;
+
+    if (file) {
+      // TODO: Destroy object from memory when retrieved
+    }
+
+    return file.data;
+  }
+
+  set fileQueue(fileQueue) {
+    this._fileQueue = fileQueue;
+    return this;
+  }
+
+  get autoEmbedImages() {
+    return this._autoEmbedImages;
+  }
+
+  set autoEmbedImages(state) {
+    this._autoEmbedImages = state;
+    return this._autoEmbedImages;
   }
 
   get keys() {
@@ -76,9 +102,35 @@ export default class Darkwire {
     return this._users;
   }
 
-  encodeMessage(message, messageType) {
+  updateUsername(username) {
+    return new Promise((resolve, reject) => {
+      if (username) {
+        Promise.all([
+          this._cryptoUtil.createPrimaryKeys()
+        ])
+        .then((data) => {
+          this._keys = {
+            public: data[0].publicKey,
+            private: data[0].privateKey
+          };
+          return Promise.all([
+            this._cryptoUtil.exportKey(data[0].publicKey, 'spki')
+          ]);
+        })
+        .then((exportedKeys) => {
+          resolve({
+            username: username,
+            publicKey: exportedKeys[0]
+          });
+        });
+      }
+    });
+  }
+
+  encodeMessage(message, messageType, additionalData) {
     // Don't send unless other users exist
     return new Promise((resolve, reject) => {
+      additionalData = additionalData || {};
       // if (this._users.length <= 1) {
       //   console.log('rejected:' + this._users);
       //   reject();
@@ -95,7 +147,12 @@ export default class Darkwire {
         let signature = null;
         let signingKey = null;
         let encryptedMessageData = null;
+        let messageToEncode = {
+          text: escape(message),
+          additionalData: additionalData
+        };
 
+        messageToEncode = JSON.stringify(messageToEncode);
         // Generate new secret key and vector for each message
         this._cryptoUtil.createSecretKey()
           .then((key) => {
@@ -146,7 +203,7 @@ export default class Darkwire {
           })
           .then((data) => {
             secretKeys = data;
-            messageData = this._cryptoUtil.convertStringToArrayBufferView(message);
+            messageData = this._cryptoUtil.convertStringToArrayBufferView(messageToEncode);
             return this._cryptoUtil.signKey(messageData, signingKey);
           })
           .then((data) => {
@@ -202,7 +259,7 @@ export default class Darkwire {
       })
       .then((data) => {
         decryptedMessageData = data;
-        decryptedMessage = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(data));
+        decryptedMessage = JSON.parse(this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(data)));
         return this._cryptoUtil.decryptSigningKey(signingKeyArrayBuffer, this._keys.private);
       })
       .then((data) => {
@@ -217,10 +274,29 @@ export default class Darkwire {
           resolve({
             username: username,
             message: decryptedMessage,
-            messageType: data.messageType
+            messageType: data.messageType,
+            timestamp: data.timestamp
           });
         }
       });
     });
   }
+
+  generateMessage(fileId, fileName, messageType) {
+    let message = '<div id="file-transfer-request-' + fileId + '">is attempting to send you ' + fileName + ' (' + messageType + ')';
+    message += '<br><small class="file-disclaimer"><strong>WARNING: We cannot strictly verify the integrity of this file, its recipients or its owners. By accepting this file, you are liable for any risks that may arise from reciving this file.</strong></small>';
+    message += '<br><a onclick="triggerFileDownload(this);" data-file="' + fileId + '">Accept File</a></div>';
+
+    return message;
+  }
+
+  addFileToQueue(data) {
+    let fileData = {
+      id: data.additionalData.fileId,
+      data: data
+    };
+    this._fileQueue.push(fileData);
+    return this.generateMessage(data.additionalData.fileId, data.additionalData.fileName, data.messageType);
+  }
+
 }
