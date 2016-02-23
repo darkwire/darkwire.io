@@ -36,7 +36,7 @@ gulp.task('start', function() {
   nodemon({
     script: 'index.js',
     ext: 'css js mustache',
-    ignore: ['src/public/main.js'],
+    ignore: ['src/public/main.js', 'test'],
     env: {
       'NODE_ENV': 'development'
     },
@@ -46,7 +46,7 @@ gulp.task('start', function() {
 
 gulp.task('test', function() {
   let test = spawn(
-    'mocha',
+    'node_modules/mocha/bin/mocha',
     ['test', '--compilers', 'js:babel-core/register'],
     {stdio: 'inherit'}
   );
