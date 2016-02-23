@@ -75,11 +75,8 @@ describe('Darkwire', () => {
           browser.click('span#send-message-btn', done);
         });
 
-        it('should send message', () => {
-          browser.tabs.current = 0;
-          browser.wait('1s', () => {
-            browser.assert.text('.messageBody', /Hello world/);
-          });
+        it('should send message', (done) => {
+          helpers.zombie.waitFor(browser, '$(".messageBody").text() === "Hello world"', done);
         });
 
       });

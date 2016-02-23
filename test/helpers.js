@@ -44,6 +44,16 @@ var helpers = {
         return [1,2,3,4];
       }
     };
+  },
+  zombie: {
+    waitFor: (browser, str, cb) => {
+      let int = setInterval(() => {
+        if (browser.evaluate(str)) {
+          clearInterval(int);
+          cb();
+        }
+      }, 50);
+    }
   }
 };
 
