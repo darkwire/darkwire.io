@@ -1,15 +1,18 @@
+import appPkg from '../package.json';
 import helpers from './helpers';
 import app from '../index';
 import mochaJSCS from 'mocha-jscs';
 import mochaJSHint from 'mocha-jshint';
+import Browser from 'zombie';
 
-const Browser = require('zombie');
+const APPVER = 'v' + appPkg.version;
+
 Browser.localhost('localhost', 3000);
 
 mochaJSCS();
 mochaJSHint();
 
-describe('Visiting /', () => {
+describe('Darkwire', () => {
 
   const browser = new Browser();
 
@@ -22,19 +25,25 @@ describe('Visiting /', () => {
     browser.visit('/', done);
   });
 
-  it('should be successful', () => {
-    browser.assert.success();
-  });
+  describe('Navigate to /', () => {
+    it('should be running released version', () => {
+      browser.assert.text('#appVersion', APPVER);
+    });
 
-  it('should show welcome modal', () => {
-    browser.assert.evaluate('$("#first-modal:visible").length', 1);
-    browser.assert.text('#first-modal h4.modal-title', 'Welcome to darkwire.io');
+    it('should be successful', () => {
+      browser.assert.success();
+    });
+
+    it('should show welcome modal', () => {
+      browser.assert.evaluate('$("#first-modal:visible").length', 1);
+      browser.assert.text('#first-modal h4.modal-title', 'Welcome to darkwire.io ' + APPVER);
+    });
   });
 
   describe('closing the initial modal', () => {
 
     before((done) => {
-      browser.pressButton('#first-modal .modal-footer button', done);
+      return browser.pressButton('#first-modal .modal-footer button', done);
     });
 
     it('should close the modal and show the main chat page', () => {
@@ -68,7 +77,9 @@ describe('Visiting /', () => {
 
         it('should send message', () => {
           browser.tabs.current = 0;
-          browser.assert.text('body', /Hello world/);
+          browser.wait('1s', () => {
+            browser.assert.text('.messageBody', /Hello world/);
+          });
         });
 
       });

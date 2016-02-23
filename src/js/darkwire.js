@@ -24,11 +24,6 @@ export default class Darkwire {
     return file.data;
   }
 
-  set fileQueue(fileQueue) {
-    this._fileQueue = fileQueue;
-    return this;
-  }
-
   get autoEmbedImages() {
     return this._autoEmbedImages;
   }

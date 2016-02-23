@@ -4,4 +4,4 @@ node_js:
 before_script:
   - gulp bundle
   - sleep 5
-script: gulp test
+script: npm test

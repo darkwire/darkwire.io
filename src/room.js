@@ -27,7 +27,7 @@ class Room {
           vector: data.vector,
           secretKeys: data.secretKeys,
           signature: data.signature,
-          timestamp: new Date
+          timestamp: new Date()
         });
       });
 
@@ -48,7 +48,7 @@ class Room {
           username: socket.username,
           numUsers: this.numUsers,
           users: this.users,
-          timestamp: new Date
+          timestamp: new Date()
         });
       });
 
@@ -78,7 +78,7 @@ class Room {
             numUsers: this.numUsers,
             users: this.users,
             id: socket.user.id,
-            timestamp: new Date
+            timestamp: new Date()
           });
 
           // remove room from rooms array
@@ -111,7 +111,7 @@ class Room {
           newUsername: data.newUsername,
           publicKey: data.publicKey,
           users: this.users,
-          timestamp: new Date
+          timestamp: new Date()
         });
 
       });
@@ -119,7 +119,7 @@ class Room {
     });
   }
 
-  get roomId() {
+  roomId() {
     return this.id;
   }
 }
