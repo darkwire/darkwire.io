@@ -3,6 +3,7 @@ import Darkwire from './darkwire';
 import WindowHandler from './window';
 import CryptoUtil from './crypto';
 import Chat from './chat';
+import moment from 'moment';
 
 let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
@@ -49,6 +50,7 @@ $(function() {
         });
     }
 
+    chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
     darkwire.updateUsername(username).then((socketData) => {
       chat.chatPage.show();
       chat.inputMessage.focus();

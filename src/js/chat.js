@@ -156,6 +156,7 @@ export default class Chat {
       command: 'nick',
       description: 'Changes nickname.',
       paramaters: ['{username}'],
+      multiple: false,
       usage: '/nick {username}',
       action: () => {
         let newUsername = trigger.params[0] || false;
@@ -186,13 +187,37 @@ export default class Chat {
       command: 'help',
       description: 'Shows a list of commands.',
       paramaters: [],
+      multiple: false,
       usage: '/help',
       action: () => {
         validCommands = validCommands.map((command) => {
           return '/' + command;
         });
 
-        this.log('Valid commands: ' + validCommands.join(', '), {info: true});
+        this.log('Valid commands: ' + validCommands.sort().join(', '), {info: true});
+      }
+    }, {
+      command: 'me',
+      description: 'Invoke virtual action',
+      paramaters: ['{action}'],
+      multiple: true,
+      usage: '/me {action}',
+      action: () => {
+
+        expectedParams = 100;
+
+        let actionMessage = trigger.params.join(' ');
+
+        this.darkwire.encodeMessage(actionMessage, 'action').then((socketData) => {
+          this.addChatMessage({
+            username: username,
+            message: actionMessage,
+            messageType: 'action'
+          });
+          this.socket.emit('new message', socketData);
+        }).catch((err) => {
+          console.log(err);
+        });
       }
     }];
 
@@ -208,9 +233,12 @@ export default class Chat {
 
     if (commandToTrigger) {
       expectedParams = commandToTrigger.paramaters.length;
-      if (trigger.params.length > expectedParams || trigger.params.length < expectedParams) {
-        return this.log('Missing or too many paramater. Usage: ' + commandToTrigger.usage, {error: true});
+      if (expectedParams && trigger.params.length > expectedParams || expectedParams && trigger.params.length < expectedParams) {
+        if (!commandToTrigger.multple && trigger.params.length < 1) {
+          return this.log('Missing or too many paramater. Usage: ' + commandToTrigger.usage, {error: true});
+        }
       }
+
       return commandToTrigger.action.call();
     }
 
@@ -267,18 +295,25 @@ export default class Chat {
     let $usernameDiv = $('<span class="username"/>')
       .text(data.username)
       .css('color', this.getUsernameColor(data.username));
+
     let $messageBodyDiv = $('<span class="messageBody">');
-    if (messageType !== 'text') {
-      $messageBodyDiv.html(this.darkwire.addFileToQueue(data));
-    } else {
+
+    if (messageType === 'text' || messageType === 'action') {
+      if (messageType === 'action') {
+        $usernameDiv.css('color','').prepend('*');
+      }
       $messageBodyDiv.html(unescape(data.message));
+    } else {
+      $messageBodyDiv.html(this.darkwire.addFileToQueue(data));
     }
 
     let typingClass = data.typing ? 'typing' : '';
+    let actionClass = data.messageType === 'action' ? 'action' : '';
 
     let $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
       .addClass(typingClass)
+      .addClass(actionClass)
       .append($usernameDiv, $messageBodyDiv);
 
     this.addMessageElement($messageDiv, options);
