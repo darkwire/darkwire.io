@@ -25,7 +25,7 @@ gulp.task('start', function() {
   nodemon({
     script: 'index.js',
     ext: 'css js mustache',
-    ignore: ['src/public/main.js'],
+    ignore: ['src/public/main.js', 'test'],
     env: {
       'NODE_ENV': 'development'
     },
@@ -34,9 +34,31 @@ gulp.task('start', function() {
 });
 
 gulp.task('test', function() {
-  let test = spawn(
-    'mocha',
-    ['test', '--compilers', 'js:babel-core/register'],
+  let unitTest = spawn(
+    'node_modules/mocha/bin/mocha',
+    ['test/unit', '--compilers', 'js:babel-core/register'],
     {stdio: 'inherit'}
   );
+
+  unitTest.on('exit', function() {
+
+    // Start app
+    let app = spawn('node', ['index.js']);
+
+    app.stdout.on('data', function(data) {
+      console.log(String(data));
+    });
+
+    let acceptanceTest = spawn(
+      'node_modules/nightwatch/bin/nightwatch',
+      ['--test', 'test/acceptance/index.js', '--config', 'test/acceptance/nightwatch.json'],
+      {stdio: 'inherit'}
+    );
+
+    acceptanceTest.on('exit', function() {
+      // Kill app Node process when tests are done
+      app.kill();
+    });
+  });
+
 });
