@@ -4,6 +4,7 @@ import WindowHandler from './window';
 import CryptoUtil from './crypto';
 import Chat from './chat';
 import moment from 'moment';
+import sanitizeHtml from 'sanitize-html';
 
 let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
@@ -60,9 +61,15 @@ $(function() {
 
   // Prevents input from having injected markup
   function cleanInput(input) {
-    let message = $('<div/>').html(input).text();
+    let message = sanitizeHtml(_.escape(input), {
+      allowedTags: ['b', 'i', 'em', 'strong', 'a'],
+      allowedAttributes: {
+        'a': ['href']
+      }
+    });
+    // let message = $('<div/>').html(input).text();
     message = Autolinker.link(message);
-    return message;
+    return _.escape(message);
   }
 
   // Keyboard events
@@ -200,10 +207,10 @@ $(function() {
   function handleMessageSending() {
     let message = chat.inputMessage;
     let cleanedMessage = cleanInput(message.val());
-    let isCommand = chat.parseCommand(cleanedMessage);
+    let slashCommand = chat.parseCommand(cleanedMessage);
 
-    if (isCommand) {
-      return chat.executeCommand(isCommand, this);
+    if (slashCommand) {
+      return chat.executeCommand(slashCommand, this);
     }
 
     // Prevent markup from being injected into the message
