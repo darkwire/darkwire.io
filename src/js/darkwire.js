@@ -51,12 +51,35 @@ export default class Darkwire {
     return this._connected;
   }
 
+  get audio() {
+    return this._audio;
+  }
+
   get users() {
     return this._users;
   }
 
-  get audio() {
-    return this._audio;
+  getUserById(id) {
+    return _.findWhere(this._users, {id: id});
+  }
+
+  getUserByName(username) {
+    return _.findWhere(this._users, {username: username});
+  }
+
+  updateUser(data) {
+    return new Promise((resolve, reject) => {
+      let user = this.getUserById(data.id);
+
+      if (!user) {
+        return reject();
+      }
+
+      let oldUsername = user.username;
+
+      user.username = data.username;
+      resolve(oldUsername);
+    });
   }
 
   addUser(data) {
@@ -97,27 +120,40 @@ export default class Darkwire {
     return this._users;
   }
 
-  updateUsername(username) {
+  updateUsername(username, newUsername) {
+    let user = null;
+
     return new Promise((resolve, reject) => {
+      if (newUsername) {
+        user = this.getUserByName(username);
+      }
+
       if (username) {
-        Promise.all([
-          this._cryptoUtil.createPrimaryKeys()
-        ])
-        .then((data) => {
-          this._keys = {
-            public: data[0].publicKey,
-            private: data[0].privateKey
-          };
-          return Promise.all([
-            this._cryptoUtil.exportKey(data[0].publicKey, 'spki')
-          ]);
-        })
-        .then((exportedKeys) => {
-          resolve({
-            username: username,
-            publicKey: exportedKeys[0]
+        if (!user) {
+          Promise.all([
+            this._cryptoUtil.createPrimaryKeys()
+          ])
+          .then((data) => {
+            this._keys = {
+              public: data[0].publicKey,
+              private: data[0].privateKey
+            };
+            return Promise.all([
+              this._cryptoUtil.exportKey(data[0].publicKey, 'spki')
+            ]);
+          })
+          .then((exportedKeys) => {
+            resolve({
+              username: username,
+              publicKey: exportedKeys[0]
+            });
           });
-        });
+        } else {
+          resolve({
+            username: newUsername,
+            publicKey: user.publicKey
+          });
+        }
       }
     });
   }

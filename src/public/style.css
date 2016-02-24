@@ -9,7 +9,7 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-html, body, input {
+html, body, input, textarea {
   font-family:
     "SourceCodePro-Regular",
     "HelveticaNeue-Light",
@@ -160,6 +160,10 @@ input {
   font-size: 16px;
 }
 
+textarea {
+  font-size: 20px;
+}
+
 .log {
   color: gray;
   font-size: 70%;
@@ -196,19 +200,24 @@ input {
 
 /* Input */
 
+.inputContainer {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%; 
+  padding-bottom: 10px;
+}
+
 .inputMessage{
   background: black !important;
   color: white !important;
   border: none;
   border-top: 1px solid #282828;
-  bottom: 0;
   height: 60px;
-  left: 0;
   outline: none;
-  padding-left: 10px;
-  position: fixed;
-  right: 0;
   width: 100%;
+  padding: 10px 75px 10px 10px;
   /*Fix for inner shadow on iOS*/
   -webkit-appearance: none;
   border-radius: 0px;
@@ -218,7 +227,7 @@ input {
   position: fixed;
   bottom: 0px;
   right: 0px;
-  padding: 15px;
+  padding: 22px;
   cursor: pointer;
 }
 

@@ -31,7 +31,6 @@ export default class WindowHandler {
 
   enableFileTransfer() {
     if (this.fileHandler.isSupported) {
-      console.log('enabled');
       $('#send-file').click((e) => {
         e.preventDefault();
         $('#fileInput').trigger('click');

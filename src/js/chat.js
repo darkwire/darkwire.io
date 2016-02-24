@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import sanitizeHtml from 'sanitize-html';
+import he from 'he';
 
 export default class Chat {
   constructor(darkwire, socket) {
@@ -172,11 +173,10 @@ export default class Chat {
           return this.log('Username must start with a letter or number.', {error: true});
         }
 
-        this.darkwire.updateUsername(newUsername).then((socketData) => {
+        this.darkwire.updateUsername(window.username, newUsername).then((socketData) => {
           let modifiedSocketData = {
             username: window.username,
-            newUsername: socketData.username,
-            publicKey: socketData.publicKey
+            newUsername: socketData.username
           };
 
           this.socket.emit('update user', modifiedSocketData);
@@ -302,7 +302,10 @@ export default class Chat {
       if (messageType === 'action') {
         $usernameDiv.css('color','').prepend('*');
       }
-      $messageBodyDiv.html(unescape(data.message));
+      let unescapedMessage = unescape(data.message);
+      let lineBreaks = /&#x3C;br \/&#x3E;/g;
+      unescapedMessage = unescapedMessage.replace(lineBreaks, '<br />');
+      $messageBodyDiv.html(unescapedMessage);
     } else {
       $messageBodyDiv.html(this.darkwire.addFileToQueue(data));
     }

@@ -62,7 +62,7 @@ gulp.task('test', function() {
 
     let acceptanceTest = spawn(
       'node_modules/nightwatch/bin/nightwatch',
-      ['--test', 'test/acceptance/index.js', '--config', 'test/acceptance/nightwatch.json'],
+      ['--test', 'test/acceptance/index.js', '--config', 'test/acceptance/nightwatch-local.json'],
       {stdio: 'inherit'}
     );
 

@@ -5,6 +5,7 @@ import CryptoUtil from './crypto';
 import Chat from './chat';
 import moment from 'moment';
 import sanitizeHtml from 'sanitize-html';
+import he from 'he';
 
 let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
 
@@ -61,25 +62,21 @@ $(function() {
 
   // Prevents input from having injected markup
   function cleanInput(input) {
-    let message = sanitizeHtml(_.escape(input), {
-      allowedTags: ['b', 'i', 'em', 'strong', 'a'],
-      allowedAttributes: {
-        'a': ['href']
-      }
-    });
-    // let message = $('<div/>').html(input).text();
-    message = Autolinker.link(message);
-    return _.escape(message);
+    input = input.replace(/\r?\n/g, '<br />');
+    let sanitized = he.encode(input);
+    sanitized = Autolinker.link(sanitized);
+    return sanitized;
   }
 
   // Keyboard events
 
   $window.keydown(function(event) {
     // When the client hits ENTER on their keyboard and chat message input is focused
-    if (event.which === 13 && $('.inputMessage').is(':focus')) {
+    if (event.which === 13 && !event.shiftKey && $('.inputMessage').is(':focus')) {
       handleMessageSending();
       socket.emit('stop typing');
       chat.typing = false;
+      event.preventDefault();
     }
 
   });
@@ -107,7 +104,10 @@ $(function() {
   });
 
   socket.on('user update', (data) => {
-    updateUser(data);
+    darkwire.updateUser(data).then((oldUsername) => {
+      chat.log(oldUsername + ' changed name to ' + data.username);
+      renderParticipantsList();
+    });
   });
 
   // Whenever the server emits 'new message', update the chat body
@@ -225,20 +225,6 @@ $(function() {
     }).catch((err) => {
       console.log(err);
     });
-  }
-
-  function updateUser(data) {
-    let logMessage = data.username + ' changed name to ';
-    darkwire.removeUser(data);
-
-    data.username = data.newUsername;
-    logMessage += data.username;
-    let importKeysPromises = darkwire.addUser(data);
-    Promise.all(importKeysPromises).then(() => {
-      chat.log(logMessage);
-      renderParticipantsList();
-    });
-
   }
 
   window.triggerFileTransfer = function(context) {

@@ -1,5 +1,7 @@
 # Darkwire.io
 
+[![Build Status](https://travis-ci.org/seripap/darkwire.io.svg?branch=master)](https://travis-ci.org/seripap/darkwire.io) [![GitHub release](https://img.shields.io/github/release/seripap/darkwire.io.svg)]()
+
 Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
 
 ### Installation
@@ -10,10 +12,11 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web
     
     # Bundle JS files (for deployment)
     npm bundle
-    # Start a local instance of darkwire
+    # Running tests locally
+    brew install chromedriver # Installs chromedriver to /usr/local/bin
+    npm test
+    # Start a local instance of darkwire / for dev
     npm start
-
-Create a **.secret** file in the **/src** folder with a your session secret. It doesn't matter what it is- just keep it private.
 
 Darkwire is now running on `http://localhost:3000`
 

@@ -93,26 +93,21 @@ class Room {
         if (data.newUsername.length > 16) {
           return false;
         }
-        this.users = _.without(this.users, socket.user);
-        let modifiedUser = {
-          id: socket.user.id,
-          username: data.newUsername,
-          publicKey: data.publicKey
-        };
-
-        this.users.push(modifiedUser);
-
-        socket.username = data.newUsername;
-        socket.user = modifiedUser;
-
-        thisIO.emit('user update', {
-          id: socket.user.id,
-          username: data.username,
-          newUsername: data.newUsername,
-          publicKey: data.publicKey,
-          users: this.users,
-          timestamp: new Date()
+        let user = _.find(this.users, (users) => {
+          return users === socket.user;
         });
+
+        if (user) {
+          user.username = data.newUsername;
+          socket.username = user.username;
+          socket.user = user;
+
+          thisIO.emit('user update', {
+            username: socket.username,
+            id: socket.user.id,
+            timestamp: new Date()
+          });
+        }
 
       });
 

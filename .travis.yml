@@ -20,6 +20,6 @@ before_script:
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
   - sleep 5 # give xvfb some time to start
   - gulp bundle
-  - node index.js &
+  - npm start &
   - sleep 5
-script: node_modules/mocha/bin/mocha test/unit --compilers js:babel-core/register && node_modules/nightwatch/bin/nightwatch --test test/acceptance/index.js --config test/acceptance/nightwatch.json -e chrome
+script: npm run test-travis

@@ -53,11 +53,13 @@
             </li>
           </ul>
         </div>
-        <input class="inputMessage" placeholder="Type here..."/>
-        <div id="input-icons">
-          <span class="glyphicon glyphicon-file" id="send-file"></span>
-          <input type="file" id="fileInput">
-          <span class="glyphicon glyphicon-send" id="send-message-btn" aria-hidden="true"></span>
+        <div class="inputContainer">
+          <textarea class="inputMessage" placeholder="Type here..."/></textarea>
+          <div id="input-icons">
+            <span class="glyphicon glyphicon-file" id="send-file"></span>
+            <input type="file" name="fileUploader" id="fileInput">
+            <span class="glyphicon glyphicon-send" id="send-message-btn" aria-hidden="true"></span>
+          </div>
         </div>
       </li>
     </ul>
@@ -173,6 +175,7 @@
     <script src="/vendor/bootstrap-switch.min.js"></script>
     <script src="/vendor/web-crypto-shim.js"></script>
     <script src="/vendor/fastclick-1.0.6.min.js"></script>
+    <script src="/vendor/autogrow.js"></script>
     <script src="/main.js"></script>
   </body>
 </html>
