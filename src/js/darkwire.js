@@ -162,11 +162,6 @@ export default class Darkwire {
     // Don't send unless other users exist
     return new Promise((resolve, reject) => {
       additionalData = additionalData || {};
-      // if (this._users.length <= 1) {
-      //   console.log('rejected:' + this._users);
-      //   reject();
-      //   return;
-      // };
 
       // if there is a non-empty message and a socket connection
       if (message && this._connected) {
