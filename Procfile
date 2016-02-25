@@ -1,1 +1,1 @@
-web: port=$PORT npm start
+web: npm run bundle && port=$PORT npm start
