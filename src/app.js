@@ -50,7 +50,13 @@ app.get('/:roomId', (req, res) => {
   let roomExists = _.findWhere(rooms, {_id: roomId}) || false;
 
   if (roomExists) {
-    return res.render('index', {username: shortid.generate()});
+    return res.render('index', {
+      APP: {
+        version: process.env.npm_package_version,
+        ip: req.headers['x-forwarded-for']
+      },
+      username: shortid.generate()
+    });
   }
 
   return res.redirect('/');

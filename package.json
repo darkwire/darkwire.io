@@ -12,9 +12,13 @@
     "forever": "^0.15.1",
     "gulp": "^3.9.0",
     "gulp-uglify": "^1.5.1",
+    "he": "^0.5.0",
+    "moment": "^2.11.2",
     "mustache-express": "^1.2.2",
+    "sanitize-html": "^1.11.3",
     "serve-favicon": "^2.3.0",
     "shortid": "^2.2.4",
+    "slug": "^0.9.1",
     "socket.io": "^1.4.0",
     "underscore": "^1.8.3",
     "uuid": "^2.0.1"
@@ -36,8 +40,11 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
-    "dev": "gulp start",
-    "test": "gulp test"
+    "start": "npm run bundle && node index.js",
+    "dev": "npm run bundle && gulp start",
+    "bundle": "gulp bundle",
+    "test": "npm run bundle && gulp test",
+    "test-travis": "node_modules/mocha/bin/mocha test/unit --compilers js:babel-core/register && node_modules/nightwatch/bin/nightwatch --test test/acceptance/index.js --config test/acceptance/nightwatch.json -e chrome"
   },
   "author": "Daniel Seripap",
   "license": "MIT"

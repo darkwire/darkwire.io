@@ -1,9 +1,9 @@
 import FileHandler from './fileHandler';
 
 export default class WindowHandler {
-  constructor(darkwire, socket) {
+  constructor(darkwire, socket, chat) {
     this._isActive = false;
-    this.fileHandler = new FileHandler(darkwire, socket);
+    this.fileHandler = new FileHandler(darkwire, socket, chat);
 
     this.newMessages = 0;
     this.favicon = new Favico({
@@ -35,6 +35,9 @@ export default class WindowHandler {
         e.preventDefault();
         $('#fileInput').trigger('click');
       });
+    } else {
+      $('#send-file').remove();
+      $('#fileInput').remove();
     }
   }
 
