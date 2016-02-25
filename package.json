@@ -40,7 +40,8 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
-    "start": "npm run bundle && gulp start",
+    "start": "npm run bundle && node index.js",
+    "dev": "npm run bundle && gulp start",
     "bundle": "gulp bundle",
     "test": "npm run bundle && gulp test",
     "test-travis": "node_modules/mocha/bin/mocha test/unit --compilers js:babel-core/register && node_modules/nightwatch/bin/nightwatch --test test/acceptance/index.js --config test/acceptance/nightwatch.json -e chrome"

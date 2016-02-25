@@ -5,26 +5,25 @@
 Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
 
 ### Installation
-    # For es6 compatability, be sure you have the latest stable version of Node JS installed
+    # Get latest version of NodeJS for ES2015 support
     npm install -g n
     n stable
     npm install
     
-    # Bundle JS files (for deployment)
-    npm bundle
+    # Starting dev environment
+    npm run dev
+
     # Running tests locally
-    brew install chromedriver # Installs chromedriver to /usr/local/bin
+    brew install chromedriver
     npm test
-    # Start a local instance of darkwire / for dev
+
+    # Start a local instance of darkwire
     npm start
 
+    # Changing ports, default is 3000
+    port=3000 npm start
+
 Darkwire is now running on `http://localhost:3000`
-
-### Deployment
-
-Build source
-
-    gulp bundle
 
 ### How it works
 
