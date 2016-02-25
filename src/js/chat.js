@@ -162,15 +162,15 @@ export default class Chat {
       action: () => {
         let newUsername = trigger.params[0] || false;
 
-        if (newUsername > 16) {
+        if (newUsername.toString().length > 16) {
           return this.log('Username cannot be greater than 16 characters.', {error: true});
         }
 
         // Remove things that arent digits or chars
         newUsername = newUsername.replace(/[^A-Za-z0-9]/g, '-');
 
-        if (!newUsername.match(/^[A-Z0-9]/i)) {
-          return this.log('Username must start with a letter or number.', {error: true});
+        if (!newUsername.match(/^[A-Z]/i)) {
+          return this.log('Username must start with a letter.', {error: true});
         }
 
         this.darkwire.updateUsername(window.username, newUsername).then((socketData) => {
