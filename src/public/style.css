@@ -313,14 +313,20 @@ html.no-touchevents .chat #input-icons {
   line-height: 10px;
 }
 
-.log-info {
-  color: #FFF;
+.log-error, .log-info, .log-warning {
   font-weight: bold;
 }
 
 .log-error {
-  color: yellow;
-  font-weight: bold;
+  color: #D8D638;
+}
+
+.log-info {
+  color: #FFF;
+}
+
+.log-warning {
+  color: #E0873E;
 }
 
 .action {

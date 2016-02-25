@@ -34,8 +34,12 @@ export default class Chat {
     }
 
     if (options && options.error) {
-      $el = $('<li class="log-error">').addClass('log').html(message);
-    } else if (options && options.info) {
+      $el = $('<li class="log-error">').addClass('log').html('ERROR: ' + message);
+    } else if (options && options.warning)  {
+      $el = $('<li class="log-warning">').addClass('log').html('WARNING: ' + message);
+    } else if (options && options.notice) {
+      $el = $('<li class="log-info">').addClass('log').html('NOTICE: ' + message);
+    }  else if (options && options.info) {
       $el = $('<li class="log-info">').addClass('log').html(message);
     } else {
       $el = $('<li>').addClass('log').html(message);
@@ -68,9 +72,10 @@ export default class Chat {
     const COLORS = [
       '#e21400', '#ffe400', '#ff8f00',
       '#58dc00', '#dd9cff', '#4ae8c4',
-      '#3b88eb', '#f47777', '#d300e7',
-      '#99FF33', '#99CC33', '#999933',
-      '#996633', '#993333', '#990033',
+      '#3b88eb', '#f47777', '#EEACB7',
+      '#D3FF3E', '#99CC33', '#999933',
+      '#996633', '#B8D5B8', '#7FFF38',
+      '#FADBBC', '#FAE2B7', '#EBE8AF',
     ];
     // Compute hash code
     let hash = 7;
@@ -173,7 +178,7 @@ export default class Chat {
           return this.log('Username must start with a letter.', {error: true});
         }
 
-        this.darkwire.updateUsername(window.username, newUsername).then((socketData) => {
+        this.darkwire.updateUsername(newUsername).then((socketData) => {
           let modifiedSocketData = {
             username: window.username,
             newUsername: socketData.username
@@ -181,6 +186,8 @@ export default class Chat {
 
           this.socket.emit('update user', modifiedSocketData);
           window.username = username = socketData.username;
+        }).catch((err) => {
+          return this.log(err, {error: true});
         });
       }
     }, {
@@ -194,7 +201,7 @@ export default class Chat {
           return '/' + command;
         });
 
-        this.log('Valid commands: ' + validCommands.sort().join(', '), {info: true});
+        this.log('Valid commands: ' + validCommands.sort().join(', '), {notice: true});
       }
     }, {
       command: 'me',

@@ -48,7 +48,7 @@ $(function() {
       fs(window.TEMPORARY,
         100,
         () => {
-          chat.log('WARNING: Your browser is not in incognito mode!', {error: true});
+          chat.log('Your browser is not in incognito mode!', {warning: true});
         });
     }
     chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
