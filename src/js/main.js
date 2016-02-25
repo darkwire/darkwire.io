@@ -211,9 +211,10 @@ $(function() {
     darkwire.encodeMessage(cleanedMessage, 'text').then((socketData) => {
       message.val('');
       $('#send-message-btn').removeClass('active');
+      // Add escaped message since message did not come from the server
       chat.addChatMessage({
         username: username,
-        message: cleanedMessage
+        message: escape(cleanedMessage)
       });
       socket.emit('new message', socketData);
     }).catch((err) => {
