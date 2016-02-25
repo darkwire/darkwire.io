@@ -173,7 +173,7 @@ $(function() {
       let li;
       if (user.username === window.username) {
         // User is me
-        li = $('<li>' + user.username + ' <span class="you">(you)</span></li>').css('color', chat.getUsernameColor(user.username));
+        li = $('<li class="yourself">' + user.username + ' <span class="you">(you)</span></li>').css('color', chat.getUsernameColor(user.username));
       } else {
         li = $('<li>' + user.username + '</li>').css('color', chat.getUsernameColor(user.username));
       }
@@ -259,7 +259,7 @@ $(function() {
         }
       }
 
-      darkwire.encodeMessage('Downloaded ' + file.additionalData.fileName, 'text').then((socketData) => {
+      darkwire.encodeMessage('Accepted <strong>' + file.additionalData.fileName + '</strong>', 'text').then((socketData) => {
         socket.emit('new message', socketData);
       }).catch((err) => {
         console.log(err);

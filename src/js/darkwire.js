@@ -299,9 +299,9 @@ export default class Darkwire {
   }
 
   generateMessage(fileId, fileName, messageType) {
-    let message = '<div id="file-transfer-request-' + fileId + '">is attempting to send you ' + fileName + ' (' + messageType + ')';
+    let message = '<div id="file-transfer-request-' + fileId + '">is attempting to send you <strong>' + fileName + '</strong> (' + messageType + ')';
     message += '<br><small class="file-disclaimer"><strong>WARNING: We cannot strictly verify the integrity of this file, its recipients or its owners. By accepting this file, you are liable for any risks that may arise from reciving this file.</strong></small>';
-    message += '<br><a onclick="triggerFileDownload(this);" data-file="' + fileId + '">Accept File</a></div>';
+    message += '<br><a class="file-download" onclick="triggerFileDownload(this);" data-file="' + fileId + '">Accept File</a></div>';
 
     return message;
   }
