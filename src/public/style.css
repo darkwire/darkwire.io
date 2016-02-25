@@ -207,6 +207,7 @@ textarea {
   bottom: 0;
   width: 100%; 
   padding-bottom: 10px;
+  height: 60px;
 }
 
 .inputMessage{
@@ -214,7 +215,7 @@ textarea {
   color: white !important;
   border: none;
   border-top: 1px solid #282828;
-  height: 60px;
+  // height: 60px;
   outline: none;
   width: 100%;
   padding: 10px 75px 10px 10px;
@@ -227,7 +228,7 @@ textarea {
   position: fixed;
   bottom: 0px;
   right: 0px;
-  padding: 22px;
+  padding: 15px;
   cursor: pointer;
 }
 

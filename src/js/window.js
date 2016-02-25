@@ -30,11 +30,14 @@ export default class WindowHandler {
   }
 
   enableFileTransfer() {
-    if (this.fileHandler.isSupported) {
+    if (!this.fileHandler.isSupported) {
       $('#send-file').click((e) => {
         e.preventDefault();
         $('#fileInput').trigger('click');
       });
+    } else {
+      $('#send-file').remove();
+      $('#fileInput').remove();
     }
   }
 

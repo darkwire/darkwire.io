@@ -11,7 +11,6 @@ export default class Darkwire {
     this._users = [];
     this._fileQueue = [];
     this._keys = {};
-    this._autoEmbedImages = false;
   }
 
   getFile(id) {
@@ -22,15 +21,6 @@ export default class Darkwire {
     }
 
     return file.data;
-  }
-
-  get autoEmbedImages() {
-    return this._autoEmbedImages;
-  }
-
-  set autoEmbedImages(state) {
-    this._autoEmbedImages = state;
-    return this._autoEmbedImages;
   }
 
   get keys() {

@@ -51,7 +51,6 @@ $(function() {
           chat.log('WARNING: Your browser is not in incognito mode!', {error: true});
         });
     }
-
     chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
     darkwire.updateUsername(username).then((socketData) => {
       chat.chatPage.show();
@@ -194,14 +193,9 @@ $(function() {
   });
 
   let audioSwitch = $('input.sound-enabled').bootstrapSwitch();
-  let autoEmbedImages = $('input.auto-embed-files').bootstrapSwitch();
 
   audioSwitch.on('switchChange.bootstrapSwitch', function(event, state) {
     darkwire.audio.soundEnabled = state;
-  });
-
-  autoEmbedImages.on('switchChange.bootstrapSwitch', (event, state) => {
-    darkwire.autoEmbedImages = state;
   });
 
   function handleMessageSending() {
