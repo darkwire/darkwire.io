@@ -101,6 +101,31 @@ export default class Darkwire {
     return importKeysPromises;
   }
 
+  createUser(resolve, reject, username) {
+    Promise.all([
+      this._cryptoUtil.createPrimaryKeys()
+    ])
+    .then((data) => {
+      this._keys = {
+        public: data[0].publicKey,
+        private: data[0].privateKey
+      };
+      return Promise.all([
+        this._cryptoUtil.exportKey(data[0].publicKey, 'spki')
+      ]);
+    })
+    .then((exportedKeys) => {
+      if (!exportedKeys) {
+        return reject('Could not create a user session');
+      }
+
+      return resolve({
+        username: username,
+        publicKey: exportedKeys[0]
+      });
+    });
+  }
+
   checkSessionUsernames(username) {
     let matches = _.find(this._users, (users) => {
       return username.toLowerCase() === users.username.toLowerCase();
@@ -122,32 +147,19 @@ export default class Darkwire {
     let user = null;
 
     return new Promise((resolve, reject) => {
+      // Check if user is here
       if (username) {
         user = this.getUserById(this._myUserId);
       }
 
-      if (!user) {
-        Promise.all([
-          this._cryptoUtil.createPrimaryKeys()
-        ])
-        .then((data) => {
-          this._keys = {
-            public: data[0].publicKey,
-            private: data[0].privateKey
-          };
-          return Promise.all([
-            this._cryptoUtil.exportKey(data[0].publicKey, 'spki')
-          ]);
-        })
-        .then((exportedKeys) => {
-          resolve({
-            username: username,
-            publicKey: exportedKeys[0]
-          });
-        });
-      } else {
+      if (user) {
+        // User exists and is attempting to change username
+        // Check if anyone else is using the requested username
         let userExists = this.checkSessionUsernames(username);
+
         if (userExists) {
+          // Someone else is using the username requested, allow reformatting
+          // if it is owned by the user, else reject the promise
           if (userExists.id !== this._myUserId) {
             return reject(username + ' is being used by someone else in this chat session.');
           }
@@ -158,6 +170,9 @@ export default class Darkwire {
           publicKey: user.publicKey
         });
       }
+
+      // User doesn't exist, create the user
+      return this.createUser(resolve, reject, username);
     });
   }
 
