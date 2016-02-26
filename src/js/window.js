@@ -33,7 +33,7 @@ export default class WindowHandler {
     if (this.fileHandler.isSupported) {
       $('#send-file').click((e) => {
         e.preventDefault();
-        document.getElementById('fileInput').click();
+        $('#fileInput').trigger('click');
       });
     } else {
       $('#send-file').remove();
