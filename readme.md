@@ -18,6 +18,7 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web
     npm test
 
     # Start a local instance of darkwire
+    npm run bundle
     npm start
 
     # Changing ports, default is 3000

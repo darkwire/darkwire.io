@@ -40,7 +40,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
-    "start": "npm run bundle && node index.js",
+    "start": "node index.js",
     "dev": "npm run bundle && gulp start",
     "bundle": "gulp bundle",
     "test": "npm run bundle && gulp test",
