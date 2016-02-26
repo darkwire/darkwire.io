@@ -15,6 +15,7 @@ $(function() {
 
   let $window = $(window);
   let $participants = $('#participants');
+  let keyMapping = [];
 
   let roomId = window.location.pathname.length ? window.location.pathname : null;
 
@@ -68,16 +69,22 @@ $(function() {
   }
 
   // Keyboard events
-
-  $window.keydown(function(event) {
+  $window.keydown((event) => {
     // When the client hits ENTER on their keyboard and chat message input is focused
     if (event.which === 13 && !event.shiftKey && $('.inputMessage').is(':focus')) {
       handleMessageSending();
       socket.emit('stop typing');
       chat.typing = false;
       event.preventDefault();
+    } else {
+      keyMapping[event.keyCode] = event.type === 'keydown';
     }
 
+  }).keyup((event) => {
+    if ((keyMapping[17] || keyMapping[91] || keyMapping[93]) && keyMapping[75]) {
+      chat.clear();
+    }
+    keyMapping = [];
   });
 
   // Select message input when closing modal
