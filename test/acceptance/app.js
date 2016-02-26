@@ -193,7 +193,7 @@ describe('Darkwire', () => {
           browser.switchWindow(result.value[0], () => {
             browser.waitForElementPresent('span.messageBody', 5000, () => {
               browser.pause(5000);
-              browser.assert.containsText('span.messageBody', 'You are about to send ricky.jpg to all parties in this chat. Confirm | Cancel');
+              browser.assert.containsText('span.messageBody', 'You are about to send ricky.jpg to all participants in this chat. Confirm | Cancel');
             });
           });
         });
@@ -202,9 +202,9 @@ describe('Darkwire', () => {
       it('Should show sent confirmation message', () => {
         browser.windowHandles((result) => {
           browser.switchWindow(result.value[0], () => {
-            browser.waitForElementPresent('span.messageBody a:first-child', 5000, () => {
-              browser.click('span.messageBody a:first-child', () => {
-                browser.waitForElementNotPresent('span.messageBody a:first-child', 5000, () => {
+            browser.waitForElementPresent('a.file-trigger-confirm', 5000, () => {
+              browser.click('a.file-trigger-confirm', () => {
+                browser.waitForElementNotPresent('a.file-trigger-confirm', 5000, () => {
                   browser.assert.containsText('span.messageBody', 'Sent ricky.jpg');
                 });
               });

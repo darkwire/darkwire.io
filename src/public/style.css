@@ -74,6 +74,10 @@ p {
   margin: 15px 0 15px;
 }
 
+a {
+  cursor: pointer;
+}
+
 /* Typography */
 .bold {
   font-family: "SourceCodePro-Bold",
