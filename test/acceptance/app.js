@@ -141,7 +141,11 @@ describe('Darkwire', () => {
           browser.url('http://localhost:3000/' + testingRoom, () => {
             browser.waitForElementPresent('ul.users li:nth-child(2)', 5000, () => {
               browser.setValue('textarea.inputMessage', ['/nick rickAnsley', browser.Keys.RETURN], () => {
-                done();
+                browser.waitForElementPresent('.log:last-child', 5000, () => {
+                  browser.setValue('textarea.inputMessage', ['/nick rickAnsley', browser.Keys.RETURN], () => {
+                    done();
+                  });
+                });
               });
             });
           });

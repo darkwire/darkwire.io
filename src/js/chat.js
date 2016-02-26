@@ -2,6 +2,9 @@ import _ from 'underscore';
 import sanitizeHtml from 'sanitize-html';
 import he from 'he';
 
+// TODO: Remove in v2.0
+let warned = false;
+
 export default class Chat {
   constructor(darkwire, socket) {
     this.usernamesInMemory = [];
@@ -168,6 +171,7 @@ export default class Chat {
       multiple: false,
       usage: '/nick {username}',
       action: () => {
+
         let newUsername = trigger.params[0] || false;
 
         if (newUsername.toString().length > 16) {
@@ -179,6 +183,11 @@ export default class Chat {
 
         if (!newUsername.match(/^[A-Z]/i)) {
           return this.log('Username must start with a letter.', {error: true});
+        }
+
+        if (!warned) {
+          warned = true;
+          return this.log('Changing your username is currently in beta and your new username will be sent over the wire in plain text, unecrypted. This will be fixed in v2.0. If you really want to do this, type the command again.', {warning: true});
         }
 
         this.darkwire.updateUsername(newUsername).then((socketData) => {
