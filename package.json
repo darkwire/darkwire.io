@@ -1,6 +1,6 @@
 {
   "name": "darkwire",
-  "version": "1.2.3",
+  "version": "1.5.0",
   "description": "Encrypted web socket chat",
   "main": "index.js",
   "dependencies": {
