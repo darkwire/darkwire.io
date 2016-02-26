@@ -53,16 +53,12 @@ export default class Darkwire {
     return _.findWhere(this._users, {id: id});
   }
 
-  getUserByName(username) {
-    return _.findWhere(this._users, {username: username});
-  }
-
   updateUser(data) {
     return new Promise((resolve, reject) => {
       let user = this.getUserById(data.id);
 
       if (!user) {
-        return reject();
+        return reject('User cannot be found');
       }
 
       let oldUsername = user.username;
@@ -105,46 +101,78 @@ export default class Darkwire {
     return importKeysPromises;
   }
 
+  createUser(resolve, reject, username) {
+    Promise.all([
+      this._cryptoUtil.createPrimaryKeys()
+    ])
+    .then((data) => {
+      this._keys = {
+        public: data[0].publicKey,
+        private: data[0].privateKey
+      };
+      return Promise.all([
+        this._cryptoUtil.exportKey(data[0].publicKey, 'spki')
+      ]);
+    })
+    .then((exportedKeys) => {
+      if (!exportedKeys) {
+        return reject('Could not create a user session');
+      }
+
+      return resolve({
+        username: username,
+        publicKey: exportedKeys[0]
+      });
+    });
+  }
+
+  checkSessionUsernames(username) {
+    let matches = _.find(this._users, (users) => {
+      return username.toLowerCase() === users.username.toLowerCase();
+    });
+
+    if (matches && matches.username) {
+      return matches;
+    }
+
+    return false;
+  }
+
   removeUser(data) {
     this._users = _.without(this._users, _.findWhere(this._users, {id: data.id}));
     return this._users;
   }
 
-  updateUsername(username, newUsername) {
+  updateUsername(username) {
     let user = null;
 
     return new Promise((resolve, reject) => {
-      if (newUsername) {
-        user = this.getUserByName(username);
+      // Check if user is here
+      if (username) {
+        user = this.getUserById(this._myUserId);
       }
 
-      if (username) {
-        if (!user) {
-          Promise.all([
-            this._cryptoUtil.createPrimaryKeys()
-          ])
-          .then((data) => {
-            this._keys = {
-              public: data[0].publicKey,
-              private: data[0].privateKey
-            };
-            return Promise.all([
-              this._cryptoUtil.exportKey(data[0].publicKey, 'spki')
-            ]);
-          })
-          .then((exportedKeys) => {
-            resolve({
-              username: username,
-              publicKey: exportedKeys[0]
-            });
-          });
-        } else {
-          resolve({
-            username: newUsername,
-            publicKey: user.publicKey
-          });
+      if (user) {
+        // User exists and is attempting to change username
+        // Check if anyone else is using the requested username
+        let userExists = this.checkSessionUsernames(username);
+
+        if (userExists) {
+          // Someone else is using the username requested, allow reformatting
+          // if it is owned by the user, else reject the promise
+          if (userExists.id !== this._myUserId) {
+            return reject(username + ' is being used by someone else in this chat session.');
+          }
         }
+
+        return resolve({
+          username: username,
+          publicKey: user.publicKey
+        });
       }
+
+      // User doesn't exist, create the user
+      return this.createUser(resolve, reject, username);
     });
   }
 

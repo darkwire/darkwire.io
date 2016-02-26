@@ -48,7 +48,7 @@ $(function() {
       fs(window.TEMPORARY,
         100,
         () => {
-          chat.log('WARNING: Your browser is not in incognito mode!', {error: true});
+          chat.log('Your browser is not in incognito mode!', {warning: true});
         });
     }
     chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
@@ -211,9 +211,10 @@ $(function() {
     darkwire.encodeMessage(cleanedMessage, 'text').then((socketData) => {
       message.val('');
       $('#send-message-btn').removeClass('active');
+      // Add escaped message since message did not come from the server
       chat.addChatMessage({
         username: username,
-        message: cleanedMessage
+        message: escape(cleanedMessage)
       });
       socket.emit('new message', socketData);
     }).catch((err) => {
