@@ -33,7 +33,7 @@ export default class WindowHandler {
     if (this.fileHandler.isSupported) {
       $('#send-file').click((e) => {
         e.preventDefault();
-        $('#fileInput').trigger('click');
+        document.getElementById('fileInput').click();
       });
     } else {
       $('#send-file').remove();
@@ -51,6 +51,7 @@ export default class WindowHandler {
     window.onblur = () => {
       this._isActive = false;
     };
+
   }
 
 }
