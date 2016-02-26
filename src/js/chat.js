@@ -29,7 +29,10 @@ export default class Chat {
         let usernameContainer = $('<span/>')
           .text(matchedUsernames[i])
           .css('color', this.getUsernameColor(matchedUsernames[i]));
-        message = message.replace(matchedUsernames[i], usernameContainer.prop('outerHTML'));
+
+        // Match only the username
+        let matchedUsernameOnly = new RegExp('(' + matchedUsernames[i] + ')(?![^<]*>|[^<>]*<\/)', 'gm');
+        message = message.replace(matchedUsernameOnly, usernameContainer.prop('outerHTML'));
       }
     }
 
@@ -51,7 +54,7 @@ export default class Chat {
   checkIfUsername(words) {
     let matchedUsernames = [];
     this.darkwire.users.forEach((user) => {
-      let usernameMatch = new RegExp('^' + user.username + '$', 'g');
+      let usernameMatch = new RegExp('^' + user.username + '$');
       for (let i = 0; i < words.length; i++) {
         let exactMatch = words[i].match(usernameMatch) || false;
         let usernameInMemory = this.usernamesInMemory.indexOf(words[i]) > -1;
@@ -241,7 +244,7 @@ export default class Chat {
     if (commandToTrigger) {
       expectedParams = commandToTrigger.paramaters.length;
       if (expectedParams && trigger.params.length > expectedParams || expectedParams && trigger.params.length < expectedParams) {
-        if (!commandToTrigger.multple && trigger.params.length < 1) {
+        if ((!commandToTrigger.multple && trigger.params.length < 1) || (trigger.params.length >= 1 && trigger.params[0] === '')) {
           return this.log('Missing or too many paramater. Usage: ' + commandToTrigger.usage, {error: true});
         }
       }
