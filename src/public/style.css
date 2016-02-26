@@ -47,6 +47,10 @@ html, body {
   padding: 0;
 }
 
+img {
+  max-width: 100%;
+}
+
 @font-face {
   font-family: 'SourceCodePro-Regular';
   src: url('fonts/SourceCodePro-Regular.eot?#iefix') format('embedded-opentype'),  url('fonts/SourceCodePro-Regular.woff') format('woff'), url('fonts/SourceCodePro-Regular.ttf')  format('truetype'), url('fonts/SourceCodePro-Regular.svg#SourceCodePro-Regular') format('svg');
@@ -308,7 +312,16 @@ html.no-touchevents .chat #input-icons {
 }
 
 #fileInput {
-  display: none;
+  position: absolute;
+  top: 0;
+  right: 45px;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+  width: 45px;
 }
 
 .file-disclaimer {

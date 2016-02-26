@@ -128,9 +128,6 @@ export default class FileHandler {
   listen() {
     // browser API
     document.getElementById('fileInput').addEventListener('change', this.confirmTransfer.bind(this), false);
-
-    // darkwire
-
     return this;
   }
 

@@ -51,6 +51,7 @@ export default class WindowHandler {
     window.onblur = () => {
       this._isActive = false;
     };
+
   }
 
 }
