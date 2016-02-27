@@ -28,6 +28,7 @@ export default class Chat {
   // Log a message
   log(message, options) {
     let html = options && options.html === true || false;
+    let classNames = options && options.classNames ? options.classNames : '';
     let $el;
 
     let matchedUsernames = this.checkIfUsername(message.split(' '));
@@ -45,15 +46,15 @@ export default class Chat {
     }
 
     if (options && options.error) {
-      $el = $('<li class="log-error">').addClass('log').html('ERROR: ' + message);
+      $el = $('<li class="log-error">').addClass(`log ${classNames}`).html('ERROR: ' + message);
     } else if (options && options.warning)  {
-      $el = $('<li class="log-warning">').addClass('log').html('WARNING: ' + message);
+      $el = $('<li class="log-warning">').addClass(`log ${classNames}`).html('WARNING: ' + message);
     } else if (options && options.notice) {
-      $el = $('<li class="log-info">').addClass('log').html('NOTICE: ' + message);
+      $el = $('<li class="log-info">').addClass(`log ${classNames}`).html('NOTICE: ' + message);
     }  else if (options && options.info) {
-      $el = $('<li class="log-info">').addClass('log').html(message);
+      $el = $('<li class="log-info">').addClass(`log ${classNames}`).html(message);
     } else {
-      $el = $('<li>').addClass('log').html(message);
+      $el = $('<li>').addClass(`log ${classNames}`).html(message);
     }
 
     this.addMessageElement($el, options);
@@ -192,7 +193,11 @@ export default class Chat {
 
         if (!warned) {
           warned = true;
-          return this.log('Changing your username is currently in beta and your new username will be sent over the wire in plain text, unecrypted. This will be fixed in v2.0. If you really want to do this, type the command again.', {warning: true});
+          return this.log('Changing your username is currently in beta and your new username will be sent over the wire in plain text, unecrypted. This will be fixed in v2.0. If you really want to do this, type the command again.',
+          {
+            warning: true,
+            classNames: 'change-username-warning'
+          });
         }
 
         this.darkwire.updateUsername(newUsername).then((socketData) => {
