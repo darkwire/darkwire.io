@@ -42,6 +42,8 @@ describe('Darkwire', () => {
     describe('Joining chat room', () => {
 
       before((client, done) => {
+        // Close modal
+        browser.click('#first-modal .modal-footer button');
         browser.url((result) => {
           let urlSplit = result.value.split('/');
           testingRoom = urlSplit[urlSplit.length - 1];
@@ -52,6 +54,7 @@ describe('Darkwire', () => {
             browser.windowHandles((result) => {
               browser.switchWindow(result.value[1], () => {
                 browser.execute((id) => {
+                  // Open a new chat room at the same URL so we have 2 participants
                   window.open('http://localhost:3000/' + id, '_self');
                 }, [testingRoom], () => {
                   done();
@@ -69,52 +72,79 @@ describe('Darkwire', () => {
       describe('Sending chat message', () => {
 
         before((client, done) => {
-          browser.waitForElementPresent('ul.users li:nth-child(2)', 5000, () => {
-            browser.setValue('textarea.inputMessage', ['Hello world!', browser.Keys.RETURN], () => {
+          browser
+          .waitForElementPresent('ul.users li:nth-child(2)', 5000)
+          .waitForElementPresent('textarea.inputMessage', 5000)
+          .setValue('textarea.inputMessage', ['Hello world!', browser.Keys.RETURN], () => {
+            done();
+          });
+        });
+
+        it('Should send a message', (client) => {
+          browser.windowHandles((result) => {
+            browser.switchWindow(result.value[0], () => {
+              browser
+              .waitForElementVisible('span.messageBody', 5000)
+              .assert.containsText('span.messageBody', 'Hello world!');
+            });
+          });
+        });
+
+      });
+
+      describe('Slash Commands', () => {
+
+        describe('/me', () => {
+
+          before((client, done) => {
+            browser
+            .waitForElementPresent('textarea.inputMessage', 5000)
+            .clearValue('textarea.inputMessage')
+            .setValue('textarea.inputMessage', ['/me is no stranger to love', browser.Keys.RETURN])
+            .waitForElementVisible('.action span.messageBody', 5000, () => {
               done();
             });
           });
+
+          it('Should express an interactive action', () => {
+            browser.assert.containsText('.action span.messageBody', 'is no stranger to love');
+          });
+
         });
 
-        it('Should send a message', () => {
-          browser.windowHandles((result) => {
-            browser.switchWindow(result.value[0], () => {
-              browser.waitForElementPresent('span.messageBody', 5000, () => {
-                browser.pause(2000);
-                browser.assert.containsText('span.messageBody', 'Hello world!');
-              });
+        describe('/nick', () => {
+
+          before((client, done) => {
+            browser
+            .waitForElementPresent('textarea.inputMessage', 5000)
+            .clearValue('textarea.inputMessage')
+            .setValue('textarea.inputMessage', ['/nick rickAnsley', browser.Keys.RETURN])
+            .waitForElementVisible('.change-username-warning', 5000)
+            .clearValue('textarea.inputMessage')
+            .setValue('textarea.inputMessage', ['/nick rickAnsley', browser.Keys.RETURN])
+            .waitForElementVisible('.log.changed-name', 5000, () => {
+              done();
             });
           });
+
+          it('Should change username', () => {
+            browser.assert.containsText('.log.changed-name', 'rickAnsley');
+          });
+
         });
 
       });
 
-    });
-
-    describe('Slash Commands', () => {
-
-      before((client, done) => {
-        let url = 'http://localhost:3000/' + testingRoom;
-        browser.url(url, () => {
-          browser.windowHandles((result) => {
-            browser.switchWindow(result.value[0], () => {
-              browser.execute((id) => {
-                window.open('http://localhost:3000/' + id, '_self');
-              }, [testingRoom], () => {
-                done();
-              });
-            });
-          });
-        });
-      });
-
-      describe('/me', () => {
+      describe('Before file transfer: Image: Confirm sending', () => {
 
         before((client, done) => {
-          browser.windowHandles((result) => {
-            browser.switchWindow(result.value[0], () => {
-              browser.waitForElementPresent('ul.users li:nth-child(2)', 5000, () => {
-                browser.setValue('textarea.inputMessage', ['/me is no stranger to love', browser.Keys.RETURN], () => {
+          browser.waitForElementPresent('#send-file', 5000, () => {
+            browser.execute(() => {
+              $('input[name="fileUploader"]').show();
+            }, [], () => {
+              browser.waitForElementPresent('input[name="fileUploader"]', 5000, () => {
+                let testFile = __dirname + '/ricky.jpg';
+                browser.setValue('input[name="fileUploader"]', testFile, (result) => {
                   done();
                 });
               });
@@ -122,101 +152,21 @@ describe('Darkwire', () => {
           });
         });
 
-        it('Should express an interactive action', () => {
-          browser.windowHandles((result) => {
-            browser.switchWindow(result.value[0], () => {
-              browser.waitForElementPresent('span.messageBody', 5000, () => {
-                browser.pause(5000);
-                browser.assert.containsText('.action span.messageBody', 'is no stranger to love');
-              });
-            });
-          });
+        it('Should prompt user confirmation', () => {
+          browser
+          .waitForElementVisible('span.messageBody .file-presend-prompt', 5000)
+          .assert.containsText('span.messageBody .file-presend-prompt', 'You are about to send ricky.jpg to all participants in this chat. Confirm | Cancel');
+        });
+
+        it('Should show sent confirmation message', () => {
+          browser
+          .waitForElementVisible('a.file-trigger-confirm', 5000)
+          .click('a.file-trigger-confirm')
+          .waitForElementNotPresent('a.file-trigger-confirm', 5000)
+          .assert.containsText('.message .file-presend-prompt', 'Sent ricky.jpg');
         });
 
       });
-
-      describe('/nick', () => {
-
-        before((client, done) => {
-          browser.url('http://localhost:3000/' + testingRoom, () => {
-            browser.waitForElementPresent('ul.users li:nth-child(2)', 5000, () => {
-              browser.setValue('textarea.inputMessage', ['/nick rickAnsley', browser.Keys.RETURN], () => {
-                browser.waitForElementPresent('.log:last-child', 5000, () => {
-                  browser.setValue('textarea.inputMessage', ['/nick rickAnsley', browser.Keys.RETURN], () => {
-                    done();
-                  });
-                });
-              });
-            });
-          });
-        });
-
-        it('Should change username', () => {
-          browser.windowHandles((result) => {
-            browser.switchWindow(result.value[3], () => {
-              browser.pause(5000);
-              browser.assert.containsText('.log:last-child', 'rickAnsley');
-            });
-          });
-        });
-
-      });
-
-    });
-
-    describe('Before file transfer: Image: Confirm sending', () => {
-
-      before((client, done) => {
-        let url = 'http://localhost:3000/' + testingRoom;
-        browser.url(url, () => {
-          browser.windowHandles((result) => {
-            browser.switchWindow(result.value[0], () => {
-              browser.execute((id) => {
-                window.open('http://localhost:3000/' + id, '_self');
-              }, [testingRoom], () => {
-                browser.waitForElementPresent('#send-file', 5000, () => {
-                  browser.execute(() => {
-                    $('input[name="fileUploader"]').show();
-                  }, [], () => {
-                    browser.waitForElementPresent('input[name="fileUploader"]', 5000, () => {
-                      let testFile = __dirname + '/ricky.jpg';
-                      browser.setValue('input[name="fileUploader"]', testFile, (result) => {
-                        done();
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-
-      it('Should prompt user confirmation', () => {
-        browser.windowHandles((result) => {
-          browser.switchWindow(result.value[0], () => {
-            browser.waitForElementPresent('span.messageBody', 5000, () => {
-              browser.pause(5000);
-              browser.assert.containsText('span.messageBody', 'You are about to send ricky.jpg to all participants in this chat. Confirm | Cancel');
-            });
-          });
-        });
-      });
-
-      it('Should show sent confirmation message', () => {
-        browser.windowHandles((result) => {
-          browser.switchWindow(result.value[0], () => {
-            browser.waitForElementPresent('a.file-trigger-confirm', 5000, () => {
-              browser.click('a.file-trigger-confirm', () => {
-                browser.waitForElementNotPresent('a.file-trigger-confirm', 5000, () => {
-                  browser.assert.containsText('span.messageBody', 'Sent ricky.jpg');
-                });
-              });
-            });
-          });
-        });
-      });
-
     });
 
   });

@@ -188,7 +188,11 @@ export default class Chat {
 
         if (!warned) {
           warned = true;
-          return this.log('Changing your username is currently in beta and your new username will be sent over the wire in plain text, unecrypted. This will be fixed in v2.0. If you really want to do this, type the command again.', {warning: true});
+          return this.log('Changing your username is currently in beta and your new username will be sent over the wire in plain text, unecrypted. This will be fixed in v2.0. If you really want to do this, type the command again.',
+          {
+            warning: true,
+            classNames: 'change-username-warning'
+          });
         }
 
         this.darkwire.updateUsername(newUsername).then((socketData) => {

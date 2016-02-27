@@ -104,7 +104,10 @@ $(function() {
 
   socket.on('user update', (data) => {
     darkwire.updateUser(data).then((oldUsername) => {
-      chat.log(oldUsername + ' <span>changed name to</span> ' + data.username);
+      chat.log(oldUsername + ' <span>changed name to</span> ' + data.username,
+        {
+          classNames: 'changed-name'
+        });
       renderParticipantsList();
     });
   });
