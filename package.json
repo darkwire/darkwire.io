@@ -41,6 +41,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "prod": "forever start -c \"npm start\" ./",
     "dev": "npm run bundle && gulp start",
     "bundle": "gulp bundle",
     "test": "npm run bundle && gulp test",
