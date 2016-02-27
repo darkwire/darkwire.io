@@ -139,14 +139,13 @@ describe('Darkwire', () => {
             browser
             .waitForElementPresent('textarea.inputMessage', 5000)
             .clearValue('textarea.inputMessage')
-            .setValue('textarea.inputMessage', ['/clear', browser.Keys.RETURN])
-            .waitForElementNotPresent('span.messageBody', 5000, () => {
+            .setValue('textarea.inputMessage', ['/clear', browser.Keys.RETURN], () => {
               done();
             });
           });
 
           it('Should clear chat buffer', () => {
-            browser.assert.containsText('div.chatArea', '');
+            browser.waitForElementNotPresent('.messages li', 5000);
           });
 
         });
