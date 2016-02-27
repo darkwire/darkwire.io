@@ -20,6 +20,11 @@ export default class Chat {
     this.bindEvents();
   }
 
+  clear() {
+    let chatArea = $('.messages');
+    return chatArea.fadeOut(200, () => { chatArea.empty().show(); });
+  }
+
   // Log a message
   log(message, options) {
     let html = options && options.html === true || false;
@@ -242,6 +247,15 @@ export default class Chat {
         }).catch((err) => {
           console.log(err);
         });
+      }
+    }, {
+      command: 'clear',
+      description: 'Clears the chat screen',
+      paramaters: [],
+      multiple: true,
+      usage: '/clear',
+      action: () => {
+        this.clear();
       }
     }];
 
