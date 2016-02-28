@@ -21,14 +21,6 @@ describe('Darkwire', () => {
       });
     });
 
-    afterEach((client, done) => {
-      done();
-    });
-
-    beforeEach((client, done) => {
-      done();
-    });
-
     it('Should show welcome modal', () => {
       browser
       .waitForElementVisible('#first-modal', 5000)
@@ -80,7 +72,7 @@ describe('Darkwire', () => {
           });
         });
 
-        it('Should send a message', (client) => {
+        it('Should send a message', () => {
           browser.windowHandles((result) => {
             browser.switchWindow(result.value[0], () => {
               browser
@@ -129,6 +121,23 @@ describe('Darkwire', () => {
 
           it('Should change username', () => {
             browser.assert.containsText('.log.changed-name', 'rickAnsley');
+          });
+
+        });
+
+        describe('/clear', () => {
+
+          before((client, done) => {
+            browser
+            .waitForElementPresent('textarea.inputMessage', 5000)
+            .clearValue('textarea.inputMessage')
+            .setValue('textarea.inputMessage', ['/clear', browser.Keys.RETURN], () => {
+              done();
+            });
+          });
+
+          it('Should clear chat buffer', () => {
+            browser.waitForElementNotPresent('.messages li', 5000);
           });
 
         });
