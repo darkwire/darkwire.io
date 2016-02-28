@@ -2,6 +2,9 @@ import _ from 'underscore';
 import sanitizeHtml from 'sanitize-html';
 import he from 'he';
 
+// TODO: Remove in v2.0
+let warned = false;
+
 export default class Chat {
   constructor(darkwire, socket) {
     this.usernamesInMemory = [];
@@ -17,9 +20,15 @@ export default class Chat {
     this.bindEvents();
   }
 
+  clear() {
+    let chatArea = $('.messages');
+    return chatArea.fadeOut(200, () => { chatArea.empty().show(); });
+  }
+
   // Log a message
   log(message, options) {
     let html = options && options.html === true || false;
+    let classNames = options && options.classNames ? options.classNames : '';
     let $el;
 
     let matchedUsernames = this.checkIfUsername(message.split(' '));
@@ -37,15 +46,15 @@ export default class Chat {
     }
 
     if (options && options.error) {
-      $el = $('<li class="log-error">').addClass('log').html('ERROR: ' + message);
+      $el = $('<li class="log-error">').addClass(`log ${classNames}`).html('ERROR: ' + message);
     } else if (options && options.warning)  {
-      $el = $('<li class="log-warning">').addClass('log').html('WARNING: ' + message);
+      $el = $('<li class="log-warning">').addClass(`log ${classNames}`).html('WARNING: ' + message);
     } else if (options && options.notice) {
-      $el = $('<li class="log-info">').addClass('log').html('NOTICE: ' + message);
+      $el = $('<li class="log-info">').addClass(`log ${classNames}`).html('NOTICE: ' + message);
     }  else if (options && options.info) {
-      $el = $('<li class="log-info">').addClass('log').html(message);
+      $el = $('<li class="log-info">').addClass(`log ${classNames}`).html(message);
     } else {
-      $el = $('<li>').addClass('log').html(message);
+      $el = $('<li>').addClass(`log ${classNames}`).html(message);
     }
 
     this.addMessageElement($el, options);
@@ -168,6 +177,7 @@ export default class Chat {
       multiple: false,
       usage: '/nick {username}',
       action: () => {
+
         let newUsername = trigger.params[0] || false;
 
         if (newUsername.toString().length > 16) {
@@ -179,6 +189,15 @@ export default class Chat {
 
         if (!newUsername.match(/^[A-Z]/i)) {
           return this.log('Username must start with a letter.', {error: true});
+        }
+
+        if (!warned) {
+          warned = true;
+          return this.log('Changing your username is currently in beta and your new username will be sent over the wire in plain text, unecrypted. This will be fixed in v2.0. If you really want to do this, type the command again.',
+          {
+            warning: true,
+            classNames: 'change-username-warning'
+          });
         }
 
         this.darkwire.updateUsername(newUsername).then((socketData) => {
@@ -228,6 +247,15 @@ export default class Chat {
         }).catch((err) => {
           console.log(err);
         });
+      }
+    }, {
+      command: 'clear',
+      description: 'Clears the chat screen',
+      paramaters: [],
+      multiple: true,
+      usage: '/clear',
+      action: () => {
+        this.clear();
       }
     }];
 
