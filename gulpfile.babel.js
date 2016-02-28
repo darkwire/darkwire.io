@@ -45,30 +45,36 @@ gulp.task('start', function() {
 });
 
 gulp.task('test', function() {
-  let unitTest = spawn(
+  let lintTest = spawn(
     'node_modules/mocha/bin/mocha',
-    ['test/unit', '--compilers', 'js:babel-core/register'],
+    ['test/unit/lint.js', '--compilers', 'js:babel-core/register'],
     {stdio: 'inherit'}
   );
 
-  unitTest.on('exit', function() {
+  lintTest.on('exit', function() {
 
-    // Start app
-    let app = spawn('node', ['index.js']);
+    let unitTest = spawn('node_modules/karma/bin/karma', ['start', '--single-run'], {stdio: 'inherit'});
 
-    app.stdout.on('data', function(data) {
-      console.log(String(data));
-    });
+    unitTest.on('exit', function() {
 
-    let acceptanceTest = spawn(
-      'node_modules/nightwatch/bin/nightwatch',
-      ['--test', 'test/acceptance/index.js', '--config', 'test/acceptance/nightwatch-local.json'],
-      {stdio: 'inherit'}
-    );
+      // Start app
+      let app = spawn('node', ['index.js']);
 
-    acceptanceTest.on('exit', function() {
-      // Kill app Node process when tests are done
-      app.kill();
+      app.stdout.on('data', function(data) {
+        console.log(String(data));
+      });
+
+      let acceptanceTest = spawn(
+        'node_modules/nightwatch/bin/nightwatch',
+        ['--test', 'test/acceptance/index.js', '--config', 'test/acceptance/nightwatch-local.json'],
+        {stdio: 'inherit'}
+      );
+
+      acceptanceTest.on('exit', function() {
+        // Kill app Node process when tests are done
+        app.kill();
+      });
+
     });
   });
 
