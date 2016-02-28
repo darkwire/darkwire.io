@@ -10,7 +10,7 @@ import childProcess from 'child_process';
 let spawn = childProcess.spawn;
 
 gulp.task('bundle', function() {
-  return browserify('src/js/main.js', {
+  return browserify('src/js/index.js', {
     debug: true
   }).transform(babel.configure({
     presets: ['es2015']
@@ -22,7 +22,7 @@ gulp.task('bundle', function() {
 });
 
 gulp.task('dev', function() {
-  return browserify('src/js/main.js', {
+  return browserify('src/js/index.js', {
     debug: true
   }).transform(babel.configure({
     presets: ['es2015']
