@@ -41,6 +41,7 @@
     "mocha-jscs": "^4.2.0",
     "mocha-jshint": "^2.3.1",
     "nightwatch": "^0.8.16",
+    "proxyquireify": "^3.1.1",
     "sinon": "^1.17.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
