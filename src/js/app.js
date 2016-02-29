@@ -115,8 +115,6 @@ export default class App {
       $('#about-modal').modal('show');
     });
 
-    $('[data-toggle="tooltip"]').tooltip();
-
     $('.navbar .participants').click(() => {
       this.renderParticipantsList();
       $('#participants-modal').modal('show');
