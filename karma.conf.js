@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: 'test/unit',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -13,7 +13,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/unit/index.js'
+      'index.js',
+      'fixtures/**/*.html'
     ],
 
     // list of files to exclude
@@ -23,7 +24,8 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/unit/**/*.js': ['browserify']
+      '**/*.js': ['browserify'],
+      'fixtures/**/*.html': ['html2js']
     },
 
     // test results reporter to use
@@ -58,6 +60,7 @@ module.exports = function(config) {
 
     browserify: {
       debug: true,
+      plugin: ['proxyquireify/plugin'],
       configure: function(bundle) {
         bundle.once('prebundle', function() {
           bundle.transform('babelify');

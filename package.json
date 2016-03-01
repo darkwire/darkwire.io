@@ -35,11 +35,13 @@
     "karma": "^0.13.21",
     "karma-browserify": "^5.0.2",
     "karma-chrome-launcher": "^0.2.2",
+    "karma-html2js-preprocessor": "^0.1.0",
     "karma-mocha": "^0.2.2",
     "mocha": "^2.4.5",
     "mocha-jscs": "^4.2.0",
     "mocha-jshint": "^2.3.1",
     "nightwatch": "^0.8.16",
+    "proxyquireify": "^3.1.1",
     "sinon": "^1.17.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
