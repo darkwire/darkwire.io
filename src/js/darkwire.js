@@ -319,7 +319,6 @@ export default class Darkwire {
             username: username,
             message: decryptedMessage,
             messageType: data.messageType,
-            timestamp: data.timestamp
           });
         }
       });

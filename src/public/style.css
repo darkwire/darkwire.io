@@ -350,3 +350,11 @@ html.no-touchevents .chat #input-icons {
   font-style: italic;
   color: #00FF7F;
 }
+
+.timestamp {
+  font-size: 13px;
+  color: #CCC;
+  font-weight: bold;
+  font-style: italic;
+  display: block;
+}
