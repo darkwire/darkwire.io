@@ -1,5 +1,6 @@
 /*jshint -W030 */
 import App from '../../package.json';
+import moment from 'moment';
 
 describe('Darkwire', () => {
 
@@ -62,12 +63,14 @@ describe('Darkwire', () => {
       });
 
       describe('Sending chat message', () => {
+        let timestamp = null;
 
         before((client, done) => {
           browser
           .waitForElementPresent('ul.users li:nth-child(2)', 5000)
           .waitForElementPresent('textarea.inputMessage', 5000)
           .setValue('textarea.inputMessage', ['Hello world!', browser.Keys.RETURN], () => {
+            timestamp = moment(new Date()).format('LT');
             done();
           });
         });
@@ -78,6 +81,16 @@ describe('Darkwire', () => {
               browser
               .waitForElementVisible('span.messageBody', 5000)
               .assert.containsText('span.messageBody', 'Hello world!');
+            });
+          });
+        });
+
+        it('Should show correct timestamp', () => {
+          browser.windowHandles((result) => {
+            browser.switchWindow(result.value[0], () => {
+              browser
+              .waitForElementVisible('span.timestamp', 5000)
+              .assert.containsText('span.timestamp', timestamp);
             });
           });
         });

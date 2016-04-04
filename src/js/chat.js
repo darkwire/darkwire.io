@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import sanitizeHtml from 'sanitize-html';
 import he from 'he';
+import moment from 'moment';
 
 // TODO: Remove in v2.0
 let warned = false;
@@ -17,6 +18,7 @@ export default class Chat {
     this.messages = $('.messages'); // Messages area
     this.inputMessage = $('.inputMessage'); // Input message input box
     this.chatPage = $('.chat.page');
+    this.lastMessageTime = null;
     this.bindEvents();
   }
 
@@ -335,11 +337,13 @@ export default class Chat {
       .css('color', this.getUsernameColor(data.username));
 
     let $messageBodyDiv = $('<span class="messageBody">');
+    let timestamp = this.getTimestamp(data.typing);
 
     if (messageType === 'text' || messageType === 'action') {
       if (messageType === 'action') {
         $usernameDiv.css('color','').prepend('*');
       }
+
       let unescapedMessage = unescape(data.message);
       let lineBreaks = /&#x3C;br \/&#x3E;/g;
       unescapedMessage = unescapedMessage.replace(lineBreaks, '<br />');
@@ -355,9 +359,26 @@ export default class Chat {
       .data('username', data.username)
       .addClass(typingClass)
       .addClass(actionClass)
-      .append($usernameDiv, $messageBodyDiv);
+      .append(timestamp, $usernameDiv, $messageBodyDiv);
 
     this.addMessageElement($messageDiv, options);
+  }
+
+  getTimestamp(isTyping) {
+    if (isTyping) {
+      return false;
+    }
+
+    let now = moment(new Date()).format('LT');
+
+    if (this.lastMessageTime === now) {
+      return false;
+    }
+
+    this.lastMessageTime = now;
+
+    return '<span class="timestamp">' + now + '</span>';
+
   }
 
   addMessageElement(el, options) {

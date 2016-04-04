@@ -27,7 +27,6 @@ class Room {
           vector: data.vector,
           secretKeys: data.secretKeys,
           signature: data.signature,
-          timestamp: new Date()
         });
       });
 
@@ -48,7 +47,6 @@ class Room {
           username: socket.username,
           numUsers: this.numUsers,
           users: this.users,
-          timestamp: new Date()
         });
       });
 
@@ -78,7 +76,6 @@ class Room {
             numUsers: this.numUsers,
             users: this.users,
             id: socket.user.id,
-            timestamp: new Date()
           });
 
           // remove room from rooms array
@@ -105,7 +102,6 @@ class Room {
           thisIO.emit('user update', {
             username: socket.username,
             id: socket.user.id,
-            timestamp: new Date()
           });
         }
 
