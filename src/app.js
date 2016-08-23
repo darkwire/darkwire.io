@@ -11,7 +11,7 @@ import fs from 'fs';
 import Room from './room';
 
 const $CONFIG = {
-  port: process.env.port || 3000
+  port: process.env.port || process.env.PORT || 3000
 };
 
 const app = express();
