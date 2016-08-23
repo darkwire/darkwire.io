@@ -4,6 +4,24 @@
 
 Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
 
+### Running a local copy
+Starting at version **1.5.7**, you can run a local copy of Darkwire via Docker through dockerhub.
+
+```
+$ docker run -d -p 80:3000 --name dakrwire darkwire/1.5.7 
+```
+
+Docker is now running on local port 80.
+
+### Building Containers
+```
+$ docker build -t darkwire .
+# Running a local instance
+$ docker run -p 80:3000 darkwire
+```
+
+Darkwire is now online on local port 80. Default container port is 3000.
+
 ### Installation
     # Get latest version of NodeJS for ES2015 support
     npm install -g n
