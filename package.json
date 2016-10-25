@@ -4,7 +4,7 @@
   "description": "Encrypted web socket chat",
   "main": "index.js",
   "dependencies": {
-    "babel": "^5.8.23",
+    "babel": "^6.0.0",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "compression": "^1.6.0",
