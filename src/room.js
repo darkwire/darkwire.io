@@ -35,7 +35,7 @@ class Room {
         if (addedUser) { return; }
 
         data.id = uuid.v4();
-        
+
         this.users.push(data);
 
         const username = this.sanitizeUsername(data.username);
