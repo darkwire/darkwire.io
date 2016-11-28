@@ -38,10 +38,11 @@ describe('App', () => {
       app = new App();
     });
 
-    it('should create HTML links from URLs', () => {
+    it('should create HTML links from URLs with "rel=noopener noreferrer"', () => {
       let input = app.cleanInput('cnn.com');
-      assert.equal(input, '<a href="http://cnn.com" target="_blank">cnn.com</a>');
+      assert.equal(input, '<a href="http://cnn.com" target="_blank" rel="noopener noreferrer">cnn.com</a>');
     });
+
   });
 
 });

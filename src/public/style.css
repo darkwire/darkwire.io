@@ -358,3 +358,9 @@ html.no-touchevents .chat #input-icons {
   font-style: italic;
   display: block;
 }
+
+.external-link:after {
+  content: 'External Link';
+  color: #FFF;
+  background-color: red;
+}

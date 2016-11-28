@@ -12,6 +12,7 @@ class Room {
     EventEmitter.call(this);
 
     const thisIO = io.of(this._id);
+
     thisIO.on('connection', (socket) => {
       let addedUser = false;
 
@@ -34,10 +35,13 @@ class Room {
         if (addedUser) { return; }
 
         data.id = uuid.v4();
+
         this.users.push(data);
 
+        const username = this.sanitizeUsername(data.username);
+
         // we store the username in the socket session for this client
-        socket.username = data.username;
+        socket.username = username;
         socket.user = data;
         ++this.numUsers;
         addedUser = true;
@@ -87,16 +91,18 @@ class Room {
 
       // Update user
       socket.on('update user', (data) => {
-        if (data.newUsername.length > 16) {
+        const newUsername = this.sanitizeUsername(data.newUsername);
+
+        if (newUsername.length > 16) {
           return false;
         }
-        let user = _.find(this.users, (users) => {
+
+        const user = _.find(this.users, (users) => {
           return users === socket.user;
         });
 
         if (user) {
-          user.username = data.newUsername;
-          socket.username = user.username;
+          socket.username = user.username = newUsername;
           socket.user = user;
 
           thisIO.emit('user update', {
@@ -108,6 +114,10 @@ class Room {
       });
 
     });
+  }
+
+  sanitizeUsername(str) {
+    return str.replace(/[^A-Za-z0-9]/g, '-');
   }
 
   roomId() {

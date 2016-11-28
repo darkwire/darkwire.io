@@ -211,9 +211,19 @@ export default class App {
   // Prevents input from having injected markup
   cleanInput(input) {
     input = input.replace(/\r?\n/g, '<br />');
-    let sanitized = he.encode(input);
-    sanitized = Autolinker.link(sanitized);
-    return sanitized;
+    return this.autolinker(he.encode(input));
+  }
+
+  // Adds rel=noopener noreferrer to autolinked links (Addresses #46 from @Mickael-van-der-Beek)
+  autolinker(sanitized) {
+    return Autolinker.link(sanitized, {
+      replaceFn: function(match) {
+        const tag = match.buildTag();
+        tag.setAttr('rel', 'noopener noreferrer');
+
+        return tag;
+      }
+    });
   }
 
   // Sets the client's username
