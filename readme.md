@@ -5,7 +5,7 @@
 Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
 
 ### Running a local copy
-You can run a local copy of Darkwire via Docker through dockerhub. Versions are strictly controlled, (we recommend using the latest tagged version)[https://github.com/seripap/darkwire.io/releases] as older versions may pose some security issues.
+You can run a local copy of Darkwire via Docker through dockerhub. Versions are strictly controlled, [we recommend using the latest tagged version](https://github.com/seripap/darkwire.io/releases/latest) as older versions may pose some security issues.
 
 ```
 # Version numbers can be found in latest releases
