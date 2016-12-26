@@ -70,6 +70,7 @@ class Room {
 
       // when the user disconnects.. perform this
       socket.on('disconnect', () => {
+        console.log('disconnected');
         if (addedUser) {
           --this.numUsers;
           this.users = _.without(this.users, socket.user);

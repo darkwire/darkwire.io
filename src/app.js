@@ -10,6 +10,8 @@ import fs from 'fs';
 
 import Room from './room';
 
+let usage = 0;
+
 const $CONFIG = {
   port: process.env.port || 3000
 };
@@ -30,19 +32,12 @@ app.use(express.static(__dirname + '/public'));
 function generateNewRoom(req, res, id) {
   const room = new Room(io, id);
   rooms.push(room);
-  console.log('generating new room');
-
-  room.on('empty', function() {
-    rooms = _.without(rooms, _.findWhere(rooms, {_id: room._id}));
-  });
+  console.log(`rooms created: ${usage++}`);
 
   return res.redirect(`/${id}`);
 }
 
-app.get('/', (req, res) => {
-  const id = shortid.generate();
-  generateNewRoom(req, res, id);
-});
+app.get('/', (req, res) => generateNewRoom(req, res, 'lobby') );
 
 app.get('/:roomId', (req, res) => {
   const roomId = req.params.roomId || false;
@@ -59,7 +54,7 @@ app.get('/:roomId', (req, res) => {
     });
   }
 
-  return res.redirect('/');
+  return generateNewRoom(req, res, roomId);
 });
 
 server.listen($CONFIG.port, () => {
