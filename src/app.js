@@ -13,7 +13,7 @@ import Room from './room';
 let usage = 0;
 
 const $CONFIG = {
-  port: process.env.port || 3000
+  port: process.env.port || process.env.PORT || 3000
 };
 
 const app = express();
