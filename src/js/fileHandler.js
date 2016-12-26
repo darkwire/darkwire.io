@@ -25,7 +25,7 @@ export default class FileHandler {
   }
 
   confirmTransfer(event) {
-    const validFileTypes = ['png','jpg','jpeg','gif','zip','rar','gzip','pdf','txt','json','doc','docx'];
+    const validFileTypes = ['png','jpg','jpeg','gif','zip','rar','gzip','pdf','txt','json','doc','docx','csv','js','html','css'];
     const file = event.target.files && event.target.files[0];
 
     if (file) {

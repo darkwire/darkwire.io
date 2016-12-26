@@ -9,14 +9,26 @@ import he from 'he';
 export default class App {
 
   constructor() {
-    this._roomId = window.location.pathname.length ? window.location.pathname : null;
+    this._roomId = window.location.pathname.length ? this.stripName(window.location.pathname) : null;
     this._darkwire = new Darkwire();
     this._socket = io(this._roomId);
-    this._chat = new Chat(this._darkwire, this._socket);
+    this._darkwire.connected = false;
     this.init();
   }
 
+  stripName(name) {
+    const chatName = name.replace('/','').toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
+    if (chatName.length >= 25) {
+      const limitedChatName = chatName.substr(0, 25);
+      window.history.replaceState( {} , limitedChatName, `/${limitedChatName}` );
+      return `/${limitedChatName}`;
+    }
+
+    return '/' + chatName;
+  };
+
   init() {
+    this._chat = new Chat(this._darkwire, this._socket);
 
     if (!this._roomId) { return; }
 
@@ -102,6 +114,14 @@ export default class App {
     // Whenever the server emits 'stop typing', kill the typing message
     this._socket.on('stop typing', (data) => {
       this._chat.removeChatTyping(data);
+    });
+
+    this._socket.on('disconnect', (data) => {
+      this._darkwire.connected = false;
+      this._chat.log('Disconnected from server, automatically reloading chatroom in 10 seconds.', {
+        error: true,
+      });      
+      this.retryConnection();
     });
 
     this.initChat();
@@ -249,8 +269,13 @@ export default class App {
   addParticipantsMessage(data) {
     let message = '';
     let headerMsg = '';
+    const { numUsers } = data;
 
-    $('#participants').text(data.numUsers);
+    if (numUsers === 0) {
+      window.location.reload();
+    }
+
+    $('#participants').text(numUsers);
   }
 
   renderParticipantsList() {
@@ -266,6 +291,12 @@ export default class App {
       $('#participants-modal ul.users')
         .append(li);
     });
+  }
+
+  retryConnection() {
+    window.setTimeout(() => {
+      window.location.reload();
+    }, 10000);
   }
 
 }
