@@ -20,12 +20,12 @@ export default class App {
     const chatName = name.replace('/','').toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
     if (chatName.length >= 25) {
       const limitedChatName = chatName.substr(0, 25);
-      window.history.replaceState( {} , limitedChatName, `/${limitedChatName}` );
+      window.history.replaceState({}, limitedChatName, `/${limitedChatName}`);
       return `/${limitedChatName}`;
     }
 
     return '/' + chatName;
-  };
+  }
 
   init() {
     this._chat = new Chat(this._darkwire, this._socket);
@@ -37,7 +37,7 @@ export default class App {
     $('input.share-text').click(() => {
       $(this).focus();
       $(this).select();
-      this.setSelectionRange(0, 9999);
+      $(this).setSelectionRange(0, 9999);
     });
 
     const windowHandler = new WindowHandler(this._darkwire, this._socket, this._chat);
@@ -118,9 +118,9 @@ export default class App {
 
     this._socket.on('disconnect', (data) => {
       this._darkwire.connected = false;
-      this._chat.log('Disconnected from server, automatically reloading chatroom in 10 seconds.', {
+      this._chat.log('Disconnected from server, automatically reconnecting in 4 seconds.', {
         error: true,
-      });      
+      });
       this.retryConnection();
     });
 
@@ -259,6 +259,7 @@ export default class App {
     }
 
     this._chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
+    $('#roomName').text(this._roomId);
     this._darkwire.updateUsername(username).then((socketData) => {
       this._chat.chatPage.show();
       this._chat.inputMessage.focus();
@@ -269,7 +270,7 @@ export default class App {
   addParticipantsMessage(data) {
     let message = '';
     let headerMsg = '';
-    const { numUsers } = data;
+    const {numUsers} = data;
 
     if (numUsers === 0) {
       window.location.reload();
@@ -296,7 +297,7 @@ export default class App {
   retryConnection() {
     window.setTimeout(() => {
       window.location.reload();
-    }, 10000);
+    }, 4000);
   }
 
 }

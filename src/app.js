@@ -37,7 +37,7 @@ function generateNewRoom(req, res, id) {
   return res.redirect(`/${id}`);
 }
 
-app.get('/', (req, res) => generateNewRoom(req, res, 'lobby') );
+app.get('/', (req, res) => generateNewRoom(req, res, 'lobby'));
 
 app.get('/:roomId', (req, res) => {
   const stripName = (name) => {

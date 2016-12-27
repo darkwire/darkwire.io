@@ -364,3 +364,15 @@ html.no-touchevents .chat #input-icons {
   color: #FFF;
   background-color: red;
 }
+
+.room-name-top {
+  float: left;
+  text-align: center;
+  padding: 16px;
+}
+
+.room-name-top p {
+  margin: 0;
+  color: palegoldenrod;
+  font-weight: bold;
+}
