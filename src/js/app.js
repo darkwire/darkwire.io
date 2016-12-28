@@ -4,6 +4,7 @@ import WindowHandler from './window';
 import Chat from './chat';
 import moment from 'moment';
 import sanitizeHtml from 'sanitize-html';
+import uuid from 'uuid';
 import he from 'he';
 
 export default class App {
@@ -18,8 +19,8 @@ export default class App {
 
   stripName(name) {
     const chatName = name.replace('/','').toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
-    if (chatName.length >= 25) {
-      const limitedChatName = chatName.substr(0, 25);
+    if (chatName.length >= 50) {
+      const limitedChatName = chatName.substr(0, 50);
       window.history.replaceState({}, limitedChatName, `/${limitedChatName}`);
       return `/${limitedChatName}`;
     }
@@ -37,7 +38,6 @@ export default class App {
     $('input.share-text').click(() => {
       $(this).focus();
       $(this).select();
-      $(this).setSelectionRange(0, 9999);
     });
 
     const windowHandler = new WindowHandler(this._darkwire, this._socket, this._chat);
@@ -259,11 +259,21 @@ export default class App {
     }
 
     this._chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
+    
     $('#roomName').text(this._roomId);
+    $('#chatNameModal').text(this._roomId);
+
     this._darkwire.updateUsername(username).then((socketData) => {
       this._chat.chatPage.show();
       this._chat.inputMessage.focus();
       this._socket.emit('add user', socketData);
+    });
+
+    $('#newRoom').on('click', (e) => {
+      e.preventDefault();
+      const newWindow = window.open();
+      newWindow.opener = null;
+      newWindow.location = window.location.protocol + '//' + window.location.host + '/' + uuid.v4().replace(/-/g,'');
     });
   }
 

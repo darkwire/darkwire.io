@@ -39,7 +39,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/" target="_blank"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;New Room</a></li>
+            <li><a id="newRoom" href="#" target="_blank"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;New Room</a></li>
             <li><a href="javascript:void(0)" id="settings-nav"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Settings</a></li>
             <li><a href="javascript:void(0)" id="about-nav"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;About</a></li>
           </ul>
@@ -78,7 +78,10 @@
           <div class="modal-body">
             {{>partials/ip}}
 
+            <p>Public lobby: <a href="/lobby">/lobby</a></p>
+
             <p class="bold">WARNING: Darkwire does not mask IP addresses nor can verify the integrity of parties recieving messages. Proceed with caution and always confirm recipients before starting a chat session.</p>
+            <p>Please also note that <strong>ALL CHATROOMS</strong> are public. Anyone can guess your room URL. If you need a more-private room, we recommend using a randomly generated room (+New Room button) and stay away from dictionary words.</p>
 
             <p>Questions/comments? Email us at hello[at]darkwire.io<br>
                Found a bug or want a new feature? <a href="https://github.com/seripap/darkwire.io/issues" target="_blank">Open a ticket on Github</a>.</p>
@@ -123,10 +126,9 @@
             <small>TOR Mirror: <a href="http://darkwirevqhjfmla.onion" target="_blank">http://darkwirevqhjfmla.onion</a></small>
           </div>
           <div class="modal-body">
-            <h6>We've placed you in a new chat room</h6>
+            <h6>You're the first one in <span id="chatNameModal"></span></h6>
             <p class="bold">This software uses the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto" target="_blank">Crypto Web API</a> to encrypt data which is transferred using <a href="https://en.wikipedia.org/wiki/WebSocket" target="_blank">secure WebSockets</a>. <a href="javascript:void(0)" id="about-nav" data-dismiss="modal">See Disclaimer</a>.</p>
-
-<p><a href="https://github.com/seripap/darkwire.io" target="_blank">We believe in your privacy and full transparency. View the source code and documentation on Github.</a></p>
+<p><a href="https://github.com/seripap/darkwire.io" target="_blank">We believe in your privacy. View the source code and documentation on Github.</a></p>
             <br>
             <h6>Invite People to This Room</h6>
             <p>

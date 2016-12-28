@@ -42,8 +42,8 @@ app.get('/', (req, res) => generateNewRoom(req, res, 'lobby'));
 app.get('/:roomId', (req, res) => {
   const stripName = (name) => {
     const chatName = name.toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
-    if (chatName.length >= 25) {
-      return chatName.substr(0, 25);
+    if (chatName.length >= 50) {
+      return chatName.substr(0, 50);
     }
 
     return chatName;
