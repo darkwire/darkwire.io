@@ -8,6 +8,8 @@ class Room {
     this._id = id;
     this.numUsers = 0;
     this.users = [];
+    // Should probably abstract this to a new class
+    this.rateLimitQueue = [];
 
     EventEmitter.call(this);
 
@@ -18,9 +20,19 @@ class Room {
 
       // when the client emits 'new message', this listens and executes
       socket.on('new message', (data) => {
+        const { username } = socket;
+        const isRateLimited = this.isRateLimited(username);
+
+        if (isRateLimited) {
+          return thisIO.emit('rated', {
+            username,
+            id: socket.user.id,
+          });
+        }
+
         // we tell the client to execute 'new message'
         socket.broadcast.emit('new message', {
-          username: socket.username,
+          username,
           id: socket.user.id,
           message: data.message,
           messageType: data.messageType,
@@ -114,6 +126,32 @@ class Room {
       });
 
     });
+  }
+
+  isRateLimited(username) {
+    if (this.rateLimitQueue.indexOf(username) > -1) {
+      return true;
+    }
+
+    this.triggerRateLimitOn(username);
+    return false;
+  }
+
+  triggerRateLimitOn(username) {
+    this.addToRateQueue(username);
+    setTimeout(() => {
+      this.removeFromRateQueue(username);
+    }, 120);
+  }
+
+  addToRateQueue(username) {
+    this.rateLimitQueue.push(username);
+    return this;
+  }
+
+  removeFromRateQueue(username) {
+    this.rateLimitQueue = _.without(this.rateLimitQueue, username);
+    return this;
   }
 
   sanitizeUsername(str) {

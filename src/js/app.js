@@ -49,6 +49,12 @@ export default class App {
       this._chat.inputMessage.focus();
     });
 
+    this._socket.on('rated', () => {
+      this._chat.log('You are sending messages to fast, please slow down. Your last message was ignored.', {
+        error: true,
+      });
+    });
+
     // Whenever the server emits 'login', log the login message
     this._socket.on('user joined', (data) => {
       this._darkwire.connected = true;
