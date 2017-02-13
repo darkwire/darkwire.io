@@ -48,7 +48,7 @@ export default class FileHandler {
       let fileData = {
         id: fileId,
         file: file,
-        fileName : fileName
+        fileName: fileName
       };
       this.localFileQueue.push(fileData);
       this.chat.addChatMessage({
