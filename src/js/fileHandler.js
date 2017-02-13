@@ -87,7 +87,7 @@ export default class FileHandler {
       });
       this.resetInput();
     };
-    
+
     reader.readAsBinaryString(file);
   }
 
