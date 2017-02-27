@@ -37,18 +37,19 @@ function generateNewRoom(req, res, id) {
   return res.redirect(`/${id}`);
 }
 
-app.get('/', (req, res) => generateNewRoom(req, res, shortid.generate()));
+function stripName(name) {
+  const chatName = name.toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
+  if (chatName.length >= 50) {
+    return chatName.substr(0, 50);
+  }
+
+  return chatName;
+};
+
+
+app.get('/', (req, res) => generateNewRoom(req, res, stripName(shortid.generate())));
 
 app.get('/:roomId', (req, res) => {
-  const stripName = (name) => {
-    const chatName = name.toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
-    if (chatName.length >= 50) {
-      return chatName.substr(0, 50);
-    }
-
-    return chatName;
-  };
-
   const roomId = stripName(req.params.roomId) || false;
 
   let roomExists = _.findWhere(rooms, {_id: roomId}) || false;
