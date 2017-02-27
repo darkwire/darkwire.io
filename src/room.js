@@ -1,7 +1,7 @@
-import _ from 'underscore';
-import {EventEmitter} from 'events';
-import util from 'util';
-import uuid from 'uuid';
+import _ from "underscore";
+import { EventEmitter } from "events";
+import util from "util";
+import uuid from "uuid";
 
 class Room {
   constructor(io = {}, id = {}) {
@@ -15,23 +15,20 @@ class Room {
 
     const thisIO = io.of(this._id);
 
-    thisIO.on('connection', (socket) => {
+    thisIO.on("connection", socket => {
       let addedUser = false;
 
       // when the client emits 'new message', this listens and executes
-      socket.on('new message', (data) => {
+      socket.on("new message", data => {
         const { username } = socket;
         const isRateLimited = this.isRateLimited(username);
 
         if (isRateLimited) {
-          return thisIO.emit('rated', {
-            username,
-            id: socket.user.id,
-          });
+          return thisIO.emit("rated", { username, id: socket.user.id });
         }
 
         // we tell the client to execute 'new message'
-        socket.broadcast.emit('new message', {
+        socket.broadcast.emit("new message", {
           username,
           id: socket.user.id,
           message: data.message,
@@ -39,12 +36,14 @@ class Room {
           data: data.data,
           vector: data.vector,
           secretKeys: data.secretKeys,
-          signature: data.signature,
+          signature: data.signature
         });
       });
 
-      socket.on('add user', (data) => {
-        if (addedUser) { return; }
+      socket.on("add user", data => {
+        if (addedUser) {
+          return;
+        }
 
         data.id = uuid.v4();
 
@@ -59,57 +58,53 @@ class Room {
         addedUser = true;
 
         // Broadcast to ALL sockets, including this one
-        thisIO.emit('user joined', {
+        thisIO.emit("user joined", {
           username: socket.username,
           numUsers: this.numUsers,
-          users: this.users,
+          users: this.users
         });
       });
 
       // when the client emits 'typing', we broadcast it to others
-      socket.on('typing', () => {
-        socket.broadcast.emit('typing', {
-          username: socket.username
-        });
+      socket.on("typing", () => {
+        socket.broadcast.emit("typing", { username: socket.username });
       });
 
       // when the client emits 'stop typing', we broadcast it to others
-      socket.on('stop typing', () => {
-        socket.broadcast.emit('stop typing', {
-          username: socket.username
-        });
+      socket.on("stop typing", () => {
+        socket.broadcast.emit("stop typing", { username: socket.username });
       });
 
       // when the user disconnects.. perform this
-      socket.on('disconnect', () => {
+      socket.on("disconnect", () => {
         if (addedUser) {
           --this.numUsers;
           this.users = _.without(this.users, socket.user);
 
           // echo globally that this client has left
-          socket.broadcast.emit('user left', {
+          socket.broadcast.emit("user left", {
             username: socket.username,
             numUsers: this.numUsers,
             users: this.users,
-            id: socket.user.id,
+            id: socket.user.id
           });
 
           // remove room from rooms array
           if (this.numUsers === 0) {
-            this.emit('empty');
+            this.emit("empty");
           }
         }
       });
 
       // Update user
-      socket.on('update user', (data) => {
+      socket.on("update user", data => {
         const newUsername = this.sanitizeUsername(data.newUsername);
 
         if (newUsername.length > 16) {
           return false;
         }
 
-        const user = _.find(this.users, (users) => {
+        const user = _.find(this.users, users => {
           return users === socket.user;
         });
 
@@ -117,14 +112,12 @@ class Room {
           socket.username = user.username = newUsername;
           socket.user = user;
 
-          thisIO.emit('user update', {
+          thisIO.emit("user update", {
             username: socket.username,
-            id: socket.user.id,
+            id: socket.user.id
           });
         }
-
       });
-
     });
   }
 
@@ -139,9 +132,12 @@ class Room {
 
   triggerRateLimitOn(username) {
     this.addToRateQueue(username);
-    setTimeout(() => {
-      this.removeFromRateQueue(username);
-    }, 120);
+    setTimeout(
+      () => {
+        this.removeFromRateQueue(username);
+      },
+      120
+    );
   }
 
   addToRateQueue(username) {
@@ -155,7 +151,7 @@ class Room {
   }
 
   sanitizeUsername(str) {
-    return str.replace(/[^A-Za-z0-9]/g, '-');
+    return str.replace(/[^A-Za-z0-9]/g, "-");
   }
 
   roomId() {
@@ -166,3 +162,4 @@ class Room {
 util.inherits(Room, EventEmitter);
 
 export default Room;
+
