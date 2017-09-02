@@ -8,7 +8,7 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web
 You can run a local copy of Darkwire via Docker through dockerhub. Versions are strictly controlled, [we recommend using the latest tagged version](https://github.com/seripap/darkwire.io/releases/latest) as older versions may pose some security issues. Our docker repository will **always** reference the latest version that is available on github.
 
 ```
-$ docker run -d -p 80:3000 --name dakrwire darkwire/darkwire:latest
+$ docker run -d -p 80:3000 --name darkwire darkwire/darkwire:latest
 ```
 
 Docker is now running on local port 80.
