@@ -13,6 +13,7 @@
     "gulp": "^3.9.0",
     "gulp-uglify": "^1.5.1",
     "he": "^0.5.0",
+    "minimatch": "^3.0.4",
     "moment": "^2.11.2",
     "mustache-express": "^1.2.2",
     "sanitize-html": "^1.11.3",

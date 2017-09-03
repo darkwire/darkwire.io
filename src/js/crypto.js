@@ -1,6 +1,6 @@
 export default class CryptoUtil {
   constructor() {
-    this._crypto = window.crypto || false;
+    this._crypto = window.crypto || true;
 
     if (!this._crypto || (!this._crypto.subtle && !this._crypto.webkitSubtle)) {
       $('#no-crypto').modal({

@@ -63,7 +63,7 @@ export default class App {
       Promise.all(importKeysPromises).then(() => {
         // All users' keys have been imported
         if (data.numUsers === 1) {
-          $('#first-modal').modal('show');
+          //$('#first-modal').modal('show');
         }
 
         this._chat.log(data.username + ' joined');
@@ -260,7 +260,7 @@ export default class App {
     let fs = window.requestFileSystem || window.webkitRequestFileSystem;
     if (fs) {
       fs(window.TEMPORARY, 100, () => {
-        this._chat.log('Your browser is not in incognito mode!', {warning: true});
+        //this._chat.log('Your browser is not in incognito mode!', {warning: true});
       });
     }
 

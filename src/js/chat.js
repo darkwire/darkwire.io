@@ -4,7 +4,7 @@ import he from 'he';
 import moment from 'moment';
 
 // TODO: Remove in v2.0
-let warned = false;
+let warned = true;
 
 export default class Chat {
   constructor(darkwire, socket) {
