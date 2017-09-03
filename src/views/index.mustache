@@ -3,9 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>darkwire.io - encrypted web chat</title>
+    <title>Chat BolaBanget</title>
     <meta name="description" content="darkwire.io is the simplest way to chat with encryption online.">
-    <link rel="shortcut icon" type="image/png" href="favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="//bolabanget.id/img/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="//bolabanget.id/img/icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="//bolabanget.id/img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="//bolabanget.id/img/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="//bolabanget.id/img/icons/favicon-16x16.png">
     <link rel="stylesheet" href="/vendor/bootstrap-switch.min.css">
     <link rel="stylesheet" href="/vendor/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
@@ -25,8 +29,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="javascript:void(0)">
-            <img src="/logo.png">
+          <a class="navbar-brand" href="http://bolabanget.id">
+            <img src="//bolabanget.id/img/icons/android-icon-192x192.png">
           </a>
           <span class="room-name-top">
             <p id="roomName" class="room-name"></p>
@@ -39,9 +43,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a id="newRoom" href="#" target="_blank"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;New Room</a></li>
+            <li><a id="gotoHome" href="http://bolabanget.id"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Home</a></li>
+            <!--<li><a id="newRoom" href="#" target="_blank"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;New Room</a></li>
             <li><a href="javascript:void(0)" id="settings-nav"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Settings</a></li>
-            <li><a href="javascript:void(0)" id="about-nav"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;About</a></li>
+            <li><a href="javascript:void(0)" id="about-nav"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;About</a></li>-->
           </ul>
         </div>
       </div>
@@ -52,15 +57,15 @@
         <div class="chatArea">
           <ul class="messages">
             <li class="log">
-              <p>Welcome to darkwire.io - encrypted chat</p>
+              <p>Selamat datang di Chat BolaBanget<br><span style="color:#ef790b;">(km bs ganti nickname dgn command /nick namakamu)</span></p>
             </li>
           </ul>
         </div>
         <div class="inputContainer">
           <textarea class="inputMessage" placeholder="Type here..."/></textarea>
           <div id="input-icons">
-            <span class="glyphicon glyphicon-file" id="send-file"></span>
-            <input type="file" name="fileUploader" id="fileInput">
+            <!--span class="glyphicon glyphicon-file" id="send-file"></span-->
+            <input name="fileUploader" id="fileInput" type="hidden">
             <span class="glyphicon glyphicon-send" id="send-message-btn" aria-hidden="true"></span>
           </div>
         </div>
@@ -120,7 +125,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Welcome to darkwire.io v{{APP.version}}</h4>
+            <h4 class="modal-title">Selamat datang di Chat BolaBanget v{{APP.version}}</h4>
             <small>TOR Mirror: <a href="http://darkwirevqhjfmla.onion" target="_blank">http://darkwirevqhjfmla.onion</a></small>
           </div>
           <div class="modal-body">
