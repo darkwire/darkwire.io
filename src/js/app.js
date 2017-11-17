@@ -265,7 +265,7 @@ export default class App {
     }
 
     this._chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
-    
+
     $('#roomName').text(this._roomId);
     $('#chatNameModal').text(this._roomId);
 

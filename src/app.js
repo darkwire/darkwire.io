@@ -44,8 +44,7 @@ function stripName(name) {
   }
 
   return chatName;
-};
-
+}
 
 app.get('/', (req, res) => generateNewRoom(req, res, stripName(shortid.generate())));
 
