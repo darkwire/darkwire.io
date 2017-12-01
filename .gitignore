@@ -1,10 +1,1 @@
 .DS_Store
-node_modules
-npm-debug.log
-src/public/main.js
-src/.secret
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml

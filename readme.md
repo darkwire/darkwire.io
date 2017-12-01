@@ -2,44 +2,51 @@
 
 [![Build Status](https://travis-ci.org/seripap/darkwire.io.svg?branch=master)](https://travis-ci.org/seripap/darkwire.io) [![GitHub release](https://img.shields.io/github/release/seripap/darkwire.io.svg)]()
 
-Simple encrypted web chat. Powered by [socket.io](http://socket.io) and the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
+Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
 
-### Running a local copy
-You can run a local copy of Darkwire via Docker through dockerhub. Versions are strictly controlled, [we recommend using the latest tagged version](https://github.com/seripap/darkwire.io/releases/latest) as older versions may pose some security issues. Our docker repository will **always** reference the latest version that is available on github.
+### Darkwire Server
+
+Darkwire server was written in JavaScript.
+
+[darkwire-server](https://github.com/seripap/darkwire-server) 
+
+### Darkwire Web Client
+
+The Darkwire.io webclient is written in JavaScript with React JS.
+
+[darkwire-client](https://github.com/seripap/darkwire-client) 
+
+### Running Darkwire Locally
+
+To quickly get up and running, we recommend using Docker and Docker Compose.
 
 ```
-$ docker run -d -p 80:3000 --name dakrwire darkwire/darkwire:latest
+$ docker-compose up
 ```
 
-Docker is now running on local port 80.
+Darkwire client will be binded to port 80 while the server is on port 3000.
 
-### Building Containers
+If running in a public environment, be sure the modify ENV_VARS via `docker-compose.yml`.
+
 ```
-$ docker build -t darkwire .
-# Running a local instance
-$ docker run -p 80:3000 darkwire
+environment:
+    - API_SERVER=dwserver
+    - PROTOCOL=http
+    - PORT=3000
 ```
 
-Darkwire is now online on local port 80. Default container port is 3000.
+For any SSL setup, set `PROTOCOL` to `https` and `PORT` to `443`.
 
-### Installation
-    # Using node@v6.7
-    $ npm install
-    
-    # Starting dev environment
-    $ npm run dev
+### Contributing to Darkwire
 
-    # Running tests locally (Mac)
-    $ brew install chromedriver
-    $ npm test
-    # Start a local instance of darkwire
-    $ npm run bundle
-    $ npm start
+Run `setup-dev.sh` to automatically clone server/client files and install dependencies, or clone the client and server repositories.
 
-    # Changing ports, default is 3000
-    port=3000 npm start
+1. Create a Pull Request for the respective service with detailed changes
+2. Wait for review and/or merges
 
-Darkwire is now running on `http://localhost:3000`
+### Security
+
+Please report any security issues to `info@darkwire.io`.
 
 ### How it works
 

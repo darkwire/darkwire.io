@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+    dwserver:
+        image: darkwire/darkwire-server:2.0.0-beta
+        ports:
+            - "3000:3000"
+    dwclient:
+        image: darkwire/darkwire-client:2.0.0-beta
+        environment:
+            - API_SERVER=dwserver
+            - PROTOCOL=http
+            - PORT=3000
+        ports:
+            - "80:80"
