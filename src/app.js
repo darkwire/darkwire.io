@@ -29,6 +29,8 @@ app.set('view engine', 'mustache');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 
+app.get('/health-check', (req, res) => res.send(200));
+
 function generateNewRoom(req, res, id) {
   const room = new Room(io, id);
   rooms.push(room);
