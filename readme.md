@@ -30,12 +30,10 @@ If running in a public environment, be sure the modify ENV_VARS via `docker-comp
 
 ```
 environment:
-    - API_SERVER=dwserver
-    - PROTOCOL=http
-    - PORT=3000
+    - API_HOST=dwserver
+    - API_PROTOCOL=http
+    - API_PORT=3000
 ```
-
-For any SSL setup, set `PROTOCOL` to `https` and `PORT` to `443`.
 
 ### Contributing to Darkwire
 
