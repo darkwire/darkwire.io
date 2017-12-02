@@ -46,7 +46,7 @@ Run `setup-dev.sh` to automatically clone server/client files and install depend
 
 ### Security
 
-Please report any security issues to `info@darkwire.io`.
+Please report any security issues to `hello@darkwire.io`.
 
 ### How it works
 
