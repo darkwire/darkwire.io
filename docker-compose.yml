@@ -2,14 +2,14 @@ version: '2'
 
 services:
     dwserver:
-        image: darkwire/darkwire-server:2.0.0-beta2
+        image: darkwire/darkwire-server:latest
         environment:
             - NODE_ENV=production
             - PORT=8080
         ports:
             - "8080:8080"
     dwclient:
-        image: darkwire/darkwire-client:2.0.0-beta2
+        image: darkwire/darkwire-client:latest
         environment:
             - NODE_ENV=production
             - API_HOST=dwserver
