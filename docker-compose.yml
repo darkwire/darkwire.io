@@ -5,15 +5,9 @@ services:
         image: darkwire/darkwire-server:latest
         environment:
             - NODE_ENV=production
-            - PORT=8080
         ports:
-            - "8080:8080"
+            - "3000:3000"
     dwclient:
         image: darkwire/darkwire-client:latest
-        environment:
-            - NODE_ENV=production
-            - API_HOST=dwserver
-            - API_PROTOCOL=http
-            - API_PORT=3000
         ports:
             - "80:80"
