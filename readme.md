@@ -21,7 +21,7 @@ The Darkwire.io web client is written in JavaScript with React JS and Redux.
 To quickly get up and running, we recommend using Docker and Docker Compose.
 
 ```
-$ docker-compose up
+$ docker-compose pull && docker-compose up
 ```
 
 Darkwire client will be binded to port 80 while the server is on port 3000. Go to [http://localhost](http://localhost).
