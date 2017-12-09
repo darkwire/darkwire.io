@@ -6,13 +6,13 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cr
 
 ### Darkwire Server
 
-Darkwire server was written in JavaScript.
+Darkwire server is a Node.js application.
 
 [darkwire-server](https://github.com/seripap/darkwire-server) 
 
 ### Darkwire Web Client
 
-The Darkwire.io webclient is written in JavaScript with React JS.
+The Darkwire.io web client is written in JavaScript with React JS and Redux.
 
 [darkwire-client](https://github.com/seripap/darkwire-client) 
 
@@ -21,21 +21,19 @@ The Darkwire.io webclient is written in JavaScript with React JS.
 To quickly get up and running, we recommend using Docker and Docker Compose.
 
 ```
-$ docker-compose up
+$ docker-compose pull && docker-compose up
 ```
 
-Darkwire client will be binded to port 80 while the server is on port 3000.
+Darkwire client will be binded to port 80 while the server is on port 3000. Go to [http://localhost](http://localhost).
 
 If running in a public environment, be sure the modify ENV_VARS via `docker-compose.yml`.
 
 ```
 environment:
-    - API_SERVER=dwserver
-    - PROTOCOL=http
-    - PORT=3000
+    - API_HOST=dwserver
+    - API_PROTOCOL=http
+    - API_PORT=3000
 ```
-
-For any SSL setup, set `PROTOCOL` to `https` and `PORT` to `443`.
 
 ### Contributing to Darkwire
 
@@ -46,7 +44,7 @@ Run `setup-dev.sh` to automatically clone server/client files and install depend
 
 ### Security
 
-Please report any security issues to `info@darkwire.io`.
+Please report any security issues to `hello@darkwire.io`.
 
 ### How it works
 
