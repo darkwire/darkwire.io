@@ -5,6 +5,7 @@ services:
         image: darkwire/darkwire-server:latest
         environment:
             - NODE_ENV=production
+            - REDIS_HOST=redis
         ports:
             - "3000:3000"
     dwclient:
