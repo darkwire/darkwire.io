@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+    dwserver:
+        image: darkwire/darkwire-server:latest
+        environment:
+            - NODE_ENV=production
+        ports:
+            - "3000:3000"
+    dwclient:
+        image: darkwire/darkwire-client:latest
+        ports:
+            - "80:80"
+    redis:
+        image: redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./.data/redis:/var/lib/redis
