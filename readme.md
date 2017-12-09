@@ -1,12 +1,12 @@
 # Darkwire.io
 
-[![Build Status](https://travis-ci.org/seripap/darkwire.io.svg?branch=master)](https://travis-ci.org/seripap/darkwire.io) [![GitHub release](https://img.shields.io/github/release/seripap/darkwire.io.svg)]()
+[![GitHub release](https://img.shields.io/github/release/seripap/darkwire.io.svg)]()
 
 Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
 
 ### Darkwire Server
 
-Darkwire server is a Node.js application.
+Darkwire server is a Node.js application that requires redis.
 
 [darkwire-server](https://github.com/seripap/darkwire-server) 
 
@@ -24,7 +24,7 @@ To quickly get up and running, we recommend using Docker and Docker Compose.
 $ docker-compose pull && docker-compose up
 ```
 
-Darkwire client will be binded to port 80 while the server is on port 3000. Go to [http://localhost](http://localhost).
+Darkwire client will be binded to port 80 while the server is on port 3000. Go to [http://localhost](http://localhost). This will also start a redis instance running on port 6379.
 
 If running in a public environment, be sure the modify ENV_VARS via `docker-compose.yml`.
 
