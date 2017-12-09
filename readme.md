@@ -46,6 +46,10 @@ Run `setup-dev.sh` to automatically clone server/client files and install depend
 
 Please report any security issues to `hello@darkwire.io`.
 
+### Legacy Darkwire
+
+If you are trying to access the legacy stable version of darkwire, you can use the oldest tag before `v2.0.0` which is `v1.6.0` or checkout the `legacy` branch.
+
 ### How it works
 
 Darkwire uses a combination of asymmetric encryption (RSA-OAEP), symmetric session keys (AES-CBC) and signing keys (HMAC) for security.
