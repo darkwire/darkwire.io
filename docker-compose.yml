@@ -17,3 +17,9 @@ services:
             - PORT=3000
         ports:
             - "80:80"
+    redis:
+        image: redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./.data/redis:/var/lib/redis
