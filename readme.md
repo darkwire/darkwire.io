@@ -2,7 +2,11 @@
 
 [![GitHub release](https://img.shields.io/github/release/seripap/darkwire.io.svg)]()
 
-Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto).
+Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto). This project is an example of how client side encryption works and how you can integrate it as a chat service.
+
+### Hosted Service (Darkwire.io)
+
+As of January 11, 2018, Darkwire.io is no longer provided as a hosted service. You may set up your own version of Darkwire by using the server and client code located in the repository below. 
 
 ### Darkwire Server
 
