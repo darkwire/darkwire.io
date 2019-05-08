@@ -1,6 +1,6 @@
 # Darkwire.io
 
-[![GitHub release](https://img.shields.io/github/release/seripap/darkwire.io.svg)]()
+[![GitHub release](https://img.shields.io/github/release/darkwire/darkwire.io.svg)]()
 
 Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto). This project is an example of how client side encryption works and how you can integrate it as a chat service.
 
@@ -8,13 +8,13 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cr
 
 Darkwire server is a Node.js application that requires redis.
 
-[darkwire-server](https://github.com/seripap/darkwire-server) 
+[darkwire-server](https://github.com/darkwire/darkwire-server) 
 
 ### Darkwire Web Client
 
 The Darkwire.io web client is written in JavaScript with React JS and Redux.
 
-[darkwire-client](https://github.com/seripap/darkwire-client) 
+[darkwire-client](https://github.com/darkwire/darkwire-client) 
 
 ### Running Darkwire Locally
 
