@@ -1,3 +1,5 @@
+yarn setup
+
 echo "building client..."
 cd client
 yarn  --production=false
