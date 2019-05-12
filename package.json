@@ -19,7 +19,7 @@
   "scripts": {
     "build": "./build.sh",
     "start": "cd server && CLIENT_DIST_DIRECTORY='../client/build' yarn start",
-    "dev": "concurrently 'cd client && PORT=3001 yarn start' 'cd server && yarn dev'",
+    "dev": "concurrently 'cd client && yarn start' 'cd server && yarn dev'",
     "setup": "./setup.sh"
   },
   "devDependencies": {
