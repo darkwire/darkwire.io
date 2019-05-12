@@ -1,7 +1,5 @@
 # Darkwire.io
 
-[![GitHub release](https://img.shields.io/github/release/darkwire/darkwire.io.svg)]()
-
 Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto). This project is an example of how client side encryption works and how you can integrate it as a chat service.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
@@ -18,58 +16,46 @@ The Darkwire.io web client is written in JavaScript with React JS and Redux.
 
 [darkwire-client](https://github.com/darkwire/darkwire-client) 
 
-### Running Darkwire Locally
+### Development
 
-To quickly get up and running, we recommend using Docker and Docker Compose.
+#### Setup
 
-```
-$ docker-compose pull && docker-compose up
-```
-
-Darkwire client will be binded to port 80 while the server is on port 3000. Go to [http://localhost](http://localhost). This will also start a redis instance running on port 6379.
-
-If running in a public environment, be sure the modify ENV_VARS via `docker-compose.yml`.
+Install dependencies
 
 ```
-environment:
-    - API_HOST=dwserver
-    - API_PROTOCOL=http
-    - API_PORT=3000
+$ yarn
+```
+
+Pull down the client and server repos
+
+```
+$ yarn setup
+```
+
+Start server and client
+
+```
+$ yarn dev
 ```
 
 ### Production
 
-#### Build
-
-This command will pull server and client repos down and create production builds of each.
+Pull server and client repos down and create production builds of each.
 
 ```
-$ yarn
+$ yarn setup
 $ yarn build
 ```
 
-#### Start server
-
-This will start a production server.
+Start server
 
 ```
 $ yarn start
 ```
 
-### Contributing to Darkwire
-
-Run `setup-dev.sh` to automatically clone server/client files and install dependencies, or clone the client and server repositories.
-
-1. Create a Pull Request for the respective service with detailed changes
-2. Wait for review and/or merges
-
 ### Security
 
 Please report any security issues to `hello@darkwire.io`.
-
-### Legacy Darkwire
-
-If you are trying to access the legacy stable version of darkwire, you can use the oldest tag before `v2.0.0` which is `v1.6.0` or checkout the `legacy` branch.
 
 ### How it works
 
