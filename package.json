@@ -4,6 +4,9 @@
   "description": "encrypted web chat",
   "main": "index.js",
   "repository": "https://github.com/darkwire/darkwire.io.git",
+  "engines": {
+    "yarn": "1.x"
+  },
   "contributors": [
     {
       "name": "Daniel Seripap"
