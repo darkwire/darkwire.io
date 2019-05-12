@@ -1,3 +1,5 @@
 .DS_Store
 server
 client
+node_modules
+*.log
