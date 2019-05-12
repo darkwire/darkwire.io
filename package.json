@@ -1,0 +1,20 @@
+{
+  "name": "darkwire.io",
+  "version": "2.0.0",
+  "description": "encrypted web chat",
+  "main": "index.js",
+  "repository": "https://github.com/darkwire/darkwire.io.git",
+  "contributors": [
+    {
+      "name": "Daniel Seripap"
+    },
+    {
+      "name": "Alan Friedman"
+    }
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "./build.sh",
+    "start": "cd server && CLIENT_DIST_DIRECTORY='../client/build' yarn start"
+  }
+}
