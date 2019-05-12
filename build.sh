@@ -15,6 +15,3 @@ git clone https://github.com/darkwire/darkwire-server.git server
 cd server
 yarn
 yarn build
-rm -rf build
-rm -rf dist
-npx babel src -d dist/src --copy-files
