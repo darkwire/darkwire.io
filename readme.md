@@ -4,6 +4,8 @@
 
 Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Window/crypto). This project is an example of how client side encryption works and how you can integrate it as a chat service.
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ### Darkwire Server
 
 Darkwire server is a Node.js application that requires redis.
@@ -33,6 +35,25 @@ environment:
     - API_HOST=dwserver
     - API_PROTOCOL=http
     - API_PORT=3000
+```
+
+### Production
+
+#### Build
+
+This command will pull server and client repos down and create production builds of each.
+
+```
+$ yarn
+$ yarn build
+```
+
+#### Start server
+
+This will start a production server.
+
+```
+$ yarn start
 ```
 
 ### Contributing to Darkwire
