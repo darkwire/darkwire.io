@@ -6,15 +6,11 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cr
 
 ### Darkwire Server
 
-Darkwire server is a Node.js application that requires redis.
-
-[darkwire-server](https://github.com/darkwire/darkwire-server) 
+[Darkwire server](/server) is a Node.js application that requires redis.
 
 ### Darkwire Web Client
 
-The Darkwire.io web client is written in JavaScript with React JS and Redux.
-
-[darkwire-client](https://github.com/darkwire/darkwire-client) 
+The Darkwire.io [web client](/client) is written in JavaScript with React JS and Redux.
 
 ### Development
 
@@ -26,12 +22,6 @@ Install dependencies
 $ yarn
 ```
 
-Pull down the client and server repos
-
-```
-$ yarn setup
-```
-
 Start server and client
 
 ```
@@ -40,10 +30,9 @@ $ yarn dev
 
 ### Production
 
-Pull server and client repos down and create production builds of each.
+Create server and client production builds
 
 ```
-$ yarn setup
 $ yarn build
 ```
 

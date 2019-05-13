@@ -20,7 +20,7 @@
     "build": "./build.sh",
     "start": "cd server && CLIENT_DIST_DIRECTORY='../client/build' yarn start",
     "dev": "concurrently 'cd client && yarn start' 'cd server && yarn dev'",
-    "setup": "./setup.sh"
+    "test": "echo 'tests'"
   },
   "devDependencies": {
     "concurrently": "^4.1.0"

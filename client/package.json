@@ -1,0 +1,69 @@
+{
+  "name": "darkwire-client",
+  "version": "2.0.0-beta.12",
+  "main": "index.js",
+  "contributors": [
+    {
+      "name": "Daniel Seripap"
+    },
+    {
+      "name": "Alan Friedman"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "autosize": "^4.0.2",
+    "bootstrap": "^4.3.1",
+    "clipboard": "^2.0.4",
+    "feather-icons": "^4.21.0",
+    "jquery": "^3.4.1",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "node-sass": "^4.12.0",
+    "popper.js": "^1.15.0",
+    "query-string": "^6.5.0",
+    "randomcolor": "^0.5.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-feather": "^1.1.6",
+    "react-linkify": "^0.2.2",
+    "react-modal": "^3.8.1",
+    "react-redux": "^7.0.3",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "3.0.0",
+    "react-simple-dropdown": "^3.2.3",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "sanitize-html": "^1.20.1",
+    "shortid": "^2.2.14",
+    "socket.io-client": "^2.2.0",
+    "tinycon": "^0.6.8",
+    "webcrypto-shim": "^0.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "REACT_APP_COMMIT_SHA=`git rev-parse --short HEAD` react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
+    "enzyme-to-json": "^3.3.5"
+  }
+}

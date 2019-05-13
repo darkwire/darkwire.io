@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+dist
+coverage
+*.log
+.env*
+!.env.example
+build/
+*sublime*
