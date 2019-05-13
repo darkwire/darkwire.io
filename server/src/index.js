@@ -6,7 +6,6 @@ import Io from 'socket.io';
 import KoaBody from 'koa-body';
 import cors from 'kcors';
 import Router from 'koa-router';
-import config from './config';
 import bluebird from 'bluebird';
 import Redis from 'redis';
 import socketRedis from 'socket.io-redis';
@@ -51,8 +50,6 @@ router.post('/handshake', koaBody, async (ctx) => {
     ready: true,
     isLocked: Boolean(roomExists && roomExists.isLocked),
     size: ((roomExists && roomExists.users.length) || 0) + 1,
-    version: config.version,
-    sha: config.sha,
   };
 });
 
