@@ -19,6 +19,7 @@
   "scripts": {
     "build": "./build.sh",
     "start": "cd server && CLIENT_DIST_DIRECTORY='../client/build' yarn start",
+    "setup": "cd client && yarn && cd ../server && yarn",
     "dev": "concurrently 'cd client && yarn start' 'cd server && yarn dev'",
     "test": "echo 'tests'"
   },

@@ -27,6 +27,7 @@ $ yarn
 Start server and client
 
 ```
+$ yarn setup
 $ yarn dev
 ```
 
