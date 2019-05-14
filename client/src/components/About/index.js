@@ -189,7 +189,6 @@ terms, please stop using the Service.</p>
 }
 
 About.propTypes = {
-  serverSHA: PropTypes.string.isRequired,
   roomId: PropTypes.string.isRequired,
 }
 

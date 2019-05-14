@@ -36,7 +36,6 @@ const mapStateToProps = (state) => {
     joining: state.room.joining,
     faviconCount: state.app.unreadMessageCount,
     soundIsEnabled: state.app.soundIsEnabled,
-    serverSHA: state.app.serverSHA,
     socketConnected: state.app.socketConnected,
   }
 }

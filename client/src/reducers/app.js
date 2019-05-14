@@ -4,17 +4,13 @@ const initialState = {
   windowIsFocused: true,
   unreadMessageCount: 0,
   soundIsEnabled: true,
-  serverSHA: '',
   socketConnected: false,
 }
 
 const app = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_CREATE_HANDSHAKE_SUCCESS':
-      return {
-        ...state,
-        serverSHA: action.payload.json.sha,
-      }
+      return state;
     case 'OPEN_MODAL':
       return {
         ...state,
