@@ -87,6 +87,7 @@ export default class FileTransfer extends Component {
             fileName: fileData.fileName,
             encodedFile: fileData.encodedFile,
             fileType: fileData.fileType,
+            timestamp: Date.now(),
           },
         })
       })

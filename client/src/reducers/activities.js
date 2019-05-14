@@ -66,10 +66,7 @@ const activities = (state = initialState, action) => {
         items: [
           ...state.items,
           {
-            fileName: action.payload.fileName,
-            encodedFile: action.payload.encodedFile,
-            fileType: action.payload.fileType,
-            username: action.payload.username,
+            ...action.payload,
             type: 'SEND_FILE',
           },
         ],
@@ -80,10 +77,7 @@ const activities = (state = initialState, action) => {
         items: [
           ...state.items,
           {
-            encodedFile: action.payload.payload.encodedFile,
-            fileType: action.payload.payload.fileType,
-            fileName: action.payload.payload.fileName,
-            username: action.payload.payload.username,
+            ...action.payload.payload,
             type: 'RECEIVE_FILE',
           },
         ],
