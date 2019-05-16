@@ -8,7 +8,7 @@ class RoomLink extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      roomUrl: `https://darkwire.io/${props.roomId}`,
+      roomUrl: `${window.location.origin}/${props.roomId}`,
     }
   }
 
