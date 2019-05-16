@@ -96,10 +96,6 @@ export default class FileTransfer extends Component {
     return false
   }
 
-  canSend() {
-    return false
-  }
-
   render() {
     if (!this.state.supported) {
       return null
@@ -108,7 +104,7 @@ export default class FileTransfer extends Component {
       <div className={`${styles} icon file-transfer btn btn-link`}>
         <input type="file" name="fileUploader" id="fileInput" ref={c => this._fileInput = c} />
         <label htmlFor="fileInput">
-          <File className={this.canSend() ? '' : 'disabled'} />
+          <File color="#fff" />
         </label>
       </div>
     )
