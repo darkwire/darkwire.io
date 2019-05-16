@@ -354,7 +354,7 @@ export default class Home extends Component {
         <div className="nav-container">
           {!this.props.socketConnected &&
             <div className="alert-banner">
-              <span className="icon"><AlertCircle size="15" /></span> Disconnected
+              <span className="icon"><AlertCircle size="15" /></span> <span>Disconnected</span>
             </div>
           }
           <Nav
