@@ -82,7 +82,8 @@ router.post('/abuse/:roomId', koaBody, async (ctx) => {
 
 app.use(router.routes());
 
-const cspDefaultSrc = `'self'${process.env.API_HOST ? ` https://${process.env.API_HOST} wss://${process.env.API_HOST}` : ''}`
+const apiHost = process.env.API_HOST && process.env.API_HOST !== "false" ? process.env.API_HOST : null;
+const cspDefaultSrc = `'self'${apiHost ? ` https://${apiHost} wss://${apiHost}` : ''}`
 
 function setStaticFileHeaders(ctx) {
   ctx.set({
