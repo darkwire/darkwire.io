@@ -1,3 +1,5 @@
+#!/bin/bash
+
 api_host=$API_HOST
 
 if [[ "$HEROKU_APP_NAME" =~ "-pr-" ]]
