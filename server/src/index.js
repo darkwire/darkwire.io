@@ -78,14 +78,20 @@ router.post('/abuse/:roomId', koaBody, async (ctx) => {
 app.use(router.routes());
 
 function setStaticFileHeaders(ctx) {
-  ctx.set('x-foo', 'bar');
+  ctx.set('strict-transport-security', 'max-age=31536000');
+  ctx.set('Content-Security-Policy', "default-src 'self'");
+  ctx.set('X-Frame-Options', 'deny');
+  ctx.set('X-XSS-Protection', '1; mode=block');
+  ctx.set('X-Content-Type-Options', 'nosniff');
+  ctx.set('Referrer-Policy', 'no-referrer');
+  ctx.set('Feature-Policy', "vibrate 'none'; geolocation 'none'; vr 'none'; payment 'none'; microphone 'none'");
 }
 
 const clientDistDirectory = process.env.CLIENT_DIST_DIRECTORY;
 if (clientDistDirectory) {
-  app.use((ctx, next) => {
+  app.use(async (ctx, next) => {
     setStaticFileHeaders(ctx);
-    koaStatic(clientDistDirectory)(ctx, next);
+    await koaStatic(clientDistDirectory)(ctx, next);
   });
 
   app.use(async (ctx) => {
