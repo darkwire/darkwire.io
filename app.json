@@ -27,7 +27,8 @@
     },
     "API_HOST": {
       "description": "Example: 'api.your-darkwire-api.com'",
-      "required": false
+      "required": false,
+      "value": ""
     },
     "API_PROTOCOL": {
       "description": "Example: 'https'",
