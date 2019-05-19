@@ -30,9 +30,14 @@ const PORT = process.env.PORT || 3001;
 const router = new Router();
 const koaBody = new KoaBody();
 
-app.use(cors({
-  credentials: true,
-}));
+const siteURL = process.env.SITE_URL;
+if (siteURL || env === 'development') {
+  app.use(cors({
+    origin: env === 'development' ? '*' : siteURL,
+    methods: 'GET,HEAD,POST',
+    credentials: true,
+  }));
+}
 
 router.post('/handshake', koaBody, async (ctx) => {
   const { body } = ctx.request;

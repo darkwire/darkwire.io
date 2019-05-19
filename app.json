@@ -38,6 +38,11 @@
       "description": "Example: 443",
       "required": false,
       "value": "443"
+    },
+    "SITE_URL": {
+      "description": "Full URL of site. Example: https://darkwire.io",
+      "required": false,
+      "value": ""
     }
   },
   "image": "heroku/nodejs",
