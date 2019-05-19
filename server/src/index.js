@@ -30,10 +30,10 @@ const PORT = process.env.PORT || 3001;
 const router = new Router();
 const koaBody = new KoaBody();
 
-const siteURL = process.env.SITE_URL && process.env.SITE_URL !== 'false';
-if (siteURL || env === 'development') {
+const hasSiteURL = process.env.SITE_URL && process.env.SITE_URL !== 'false';
+if (hasSiteURL || env === 'development') {
   app.use(cors({
-    origin: env === 'development' ? '*' : siteURL,
+    origin: env === 'development' ? '*' : process.env.SITE_URL,
     methods: 'GET,HEAD,POST',
     credentials: true,
   }));
