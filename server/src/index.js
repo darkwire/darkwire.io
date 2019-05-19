@@ -77,9 +77,11 @@ router.post('/abuse/:roomId', koaBody, async (ctx) => {
 
 app.use(router.routes());
 
+const cspDefaultSrc = `'self'${process.env.API_HOST && ` ${process.env.API_HOST}`}`
+
 function setStaticFileHeaders(ctx) {
   ctx.set('strict-transport-security', 'max-age=31536000');
-  ctx.set('Content-Security-Policy', "default-src 'self' 'unsafe-inline'; img-src 'self' data:;");
+  ctx.set('Content-Security-Policy', `default-src ${cspDefaultSrc} 'unsafe-inline'; img-src 'self' data:;`);
   ctx.set('X-Frame-Options', 'deny');
   ctx.set('X-XSS-Protection', '1; mode=block');
   ctx.set('X-Content-Type-Options', 'nosniff');
