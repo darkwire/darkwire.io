@@ -16,7 +16,7 @@
     "@babel/runtime": "^7.4.4",
     "bluebird": "^3.5.1",
     "dotenv": "^8.0.0",
-    "kcors": "2",
+    "kcors": "^2.2.2",
     "koa": "^2.3.0",
     "koa-body": "^2.3.0",
     "koa-router": "^7.2.1",

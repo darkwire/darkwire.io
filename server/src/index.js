@@ -30,9 +30,17 @@ const PORT = process.env.PORT || 3001;
 const router = new Router();
 const koaBody = new KoaBody();
 
-app.use(cors({
-  credentials: true,
-}));
+const appName = process.env.HEROKU_APP_NAME;
+const isReviewApp = /-pr-/.test(appName);
+const siteURL = process.env.SITE_URL;
+
+if ((siteURL || env === 'development') && !isReviewApp) {
+  app.use(cors({
+    origin: env === 'development' ? '*' : siteURL,
+    allowMethods: ['GET','HEAD','POST'],
+    credentials: true,
+  }));
+}
 
 router.post('/handshake', koaBody, async (ctx) => {
   const { body } = ctx.request;
@@ -77,7 +85,8 @@ router.post('/abuse/:roomId', koaBody, async (ctx) => {
 
 app.use(router.routes());
 
-const cspDefaultSrc = `'self'${process.env.API_HOST ? ` https://${process.env.API_HOST} wss://${process.env.API_HOST}` : ''}`
+const apiHost = process.env.API_HOST;
+const cspDefaultSrc = `'self'${apiHost ? ` https://${apiHost} wss://${apiHost}` : ''}`
 
 function setStaticFileHeaders(ctx) {
   ctx.set({

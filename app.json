@@ -9,6 +9,12 @@
   "website": "https://darkwire.io",
   "repository": "https://github.com/darkwire/darkwire.io",
   "env": {
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+    "HEROKU_PARENT_APP_NAME": {
+      "required": true
+    },
     "MAILGUN_API_KEY": {
       "description": "Mailgun API Key (only required for abuse reporting)",
       "required": false
@@ -38,6 +44,10 @@
       "description": "Example: 443",
       "required": false,
       "value": "443"
+    },
+    "SITE_URL": {
+      "description": "Full URL of site. Example: https://darkwire.io",
+      "required": false
     }
   },
   "image": "heroku/nodejs",
