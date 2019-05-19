@@ -77,11 +77,19 @@ router.post('/abuse/:roomId', koaBody, async (ctx) => {
 
 app.use(router.routes());
 
+function setStaticFileHeaders(ctx) {
+  ctx.set('x-foo', 'bar');
+}
+
 const clientDistDirectory = process.env.CLIENT_DIST_DIRECTORY;
 if (clientDistDirectory) {
-  app.use(koaStatic(clientDistDirectory));
+  app.use((ctx, next) => {
+    setStaticFileHeaders(ctx);
+    koaStatic(clientDistDirectory)(ctx, next);
+  });
 
   app.use(async (ctx) => {
+    setStaticFileHeaders(ctx);
     await koaSend(ctx, 'index.html', { root: clientDistDirectory });
   })
 } else {
