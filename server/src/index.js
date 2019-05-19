@@ -77,11 +77,29 @@ router.post('/abuse/:roomId', koaBody, async (ctx) => {
 
 app.use(router.routes());
 
+const cspDefaultSrc = `'self'${process.env.API_HOST ? ` https://${process.env.API_HOST} wss://${process.env.API_HOST}` : ''}`
+
+function setStaticFileHeaders(ctx) {
+  ctx.set({
+    'strict-transport-security': 'max-age=31536000',
+    'Content-Security-Policy': `default-src ${cspDefaultSrc} 'unsafe-inline'; img-src 'self' data:;`,
+    'X-Frame-Options': 'deny',
+    'X-XSS-Protection': '1; mode=block',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'no-referrer',
+    'Feature-Policy': "geolocation 'none'; vr 'none'; payment 'none'; microphone 'none'",
+  });
+}
+
 const clientDistDirectory = process.env.CLIENT_DIST_DIRECTORY;
 if (clientDistDirectory) {
-  app.use(koaStatic(clientDistDirectory));
+  app.use(async (ctx, next) => {
+    setStaticFileHeaders(ctx);
+    await koaStatic(clientDistDirectory)(ctx, next);
+  });
 
   app.use(async (ctx) => {
+    setStaticFileHeaders(ctx);
     await koaSend(ctx, 'index.html', { root: clientDistDirectory });
   })
 } else {
