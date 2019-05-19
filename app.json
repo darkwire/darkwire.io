@@ -10,10 +10,10 @@
   "repository": "https://github.com/darkwire/darkwire.io",
   "env": {
     "HEROKU_APP_NAME": {
-      "required": true
+      "required": false
     },
     "HEROKU_PARENT_APP_NAME": {
-      "required": true
+      "required": false
     },
     "MAILGUN_API_KEY": {
       "description": "Mailgun API Key (only required for abuse reporting)",
