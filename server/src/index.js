@@ -30,8 +30,11 @@ const PORT = process.env.PORT || 3001;
 const router = new Router();
 const koaBody = new KoaBody();
 
+const appName = process.env.HEROKU_APP_NAME;
+const isReviewApp = /-pr-/.test(appName);
+
 const hasSiteURL = process.env.SITE_URL && process.env.SITE_URL !== 'false';
-if (hasSiteURL || env === 'development') {
+if ((hasSiteURL || env === 'development') && !isReviewApp) {
   app.use(cors({
     origin: env === 'development' ? '*' : process.env.SITE_URL,
     allowMethods: ['GET','HEAD','POST'],
