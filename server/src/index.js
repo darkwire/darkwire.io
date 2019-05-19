@@ -32,11 +32,11 @@ const koaBody = new KoaBody();
 
 const appName = process.env.HEROKU_APP_NAME;
 const isReviewApp = /-pr-/.test(appName);
+const siteURL = process.env.SITE_URL;
 
-const hasSiteURL = process.env.SITE_URL && process.env.SITE_URL !== 'false';
-if ((hasSiteURL || env === 'development') && !isReviewApp) {
+if ((siteURL || env === 'development') && !isReviewApp) {
   app.use(cors({
-    origin: env === 'development' ? '*' : process.env.SITE_URL,
+    origin: env === 'development' ? '*' : siteURL,
     allowMethods: ['GET','HEAD','POST'],
     credentials: true,
   }));
