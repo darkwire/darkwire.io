@@ -42,7 +42,7 @@
     "SITE_URL": {
       "description": "Full URL of site. Example: https://darkwire.io",
       "required": false,
-      "value": ""
+      "value": "false"
     }
   },
   "image": "heroku/nodejs",

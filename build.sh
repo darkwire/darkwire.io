@@ -1,5 +1,3 @@
-echo "git branch: `git rev-parse --abbrev-ref HEAD`"
-
 echo "building client..."
 cd client
 yarn  --production=false
