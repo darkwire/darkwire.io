@@ -81,13 +81,13 @@ const cspDefaultSrc = `'self'${process.env.API_HOST ? ` https://${process.env.AP
 
 function setStaticFileHeaders(ctx) {
   ctx.set({
-    'strict-transport-security', 'max-age=31536000'
-    'Content-Security-Policy', `default-src ${cspDefaultSrc} 'unsafe-inline'; img-src 'self' data:;`,
-    'X-Frame-Options', 'deny',
-    'X-XSS-Protection', '1; mode=block',
-    'X-Content-Type-Options', 'nosniff',
-    'Referrer-Policy', 'no-referrer',
-    'Feature-Policy', "geolocation 'none'; vr 'none'; payment 'none'; microphone 'none'",
+    'strict-transport-security': 'max-age=31536000',
+    'Content-Security-Policy': `default-src ${cspDefaultSrc} 'unsafe-inline'; img-src 'self' data:;`,
+    'X-Frame-Options': 'deny',
+    'X-XSS-Protection': '1; mode=block',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'no-referrer',
+    'Feature-Policy': "geolocation 'none'; vr 'none'; payment 'none'; microphone 'none'",
   });
 }
 
