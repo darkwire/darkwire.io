@@ -34,7 +34,7 @@ const hasSiteURL = process.env.SITE_URL && process.env.SITE_URL !== 'false';
 if (hasSiteURL || env === 'development') {
   app.use(cors({
     origin: env === 'development' ? '*' : process.env.SITE_URL,
-    methods: 'GET,HEAD,POST',
+    allowMethods: ['GET','HEAD','POST'],
     credentials: true,
   }));
 }
