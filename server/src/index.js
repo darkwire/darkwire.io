@@ -79,12 +79,12 @@ app.use(router.routes());
 
 function setStaticFileHeaders(ctx) {
   ctx.set('strict-transport-security', 'max-age=31536000');
-  ctx.set('Content-Security-Policy', "default-src 'self'");
+  ctx.set('Content-Security-Policy', "default-src 'self' 'unsafe-inline'; img-src 'self' data:;");
   ctx.set('X-Frame-Options', 'deny');
   ctx.set('X-XSS-Protection', '1; mode=block');
   ctx.set('X-Content-Type-Options', 'nosniff');
   ctx.set('Referrer-Policy', 'no-referrer');
-  ctx.set('Feature-Policy', "vibrate 'none'; geolocation 'none'; vr 'none'; payment 'none'; microphone 'none'");
+  ctx.set('Feature-Policy', "geolocation 'none'; vr 'none'; payment 'none'; microphone 'none'");
 }
 
 const clientDistDirectory = process.env.CLIENT_DIST_DIRECTORY;
