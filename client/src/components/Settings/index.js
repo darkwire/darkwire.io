@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import RoomLink from 'components/RoomLink'
+import {styles} from './styles.module.scss'
 
 class Settings extends Component {
   handleSoundToggle() {
@@ -9,9 +10,9 @@ class Settings extends Component {
 
   render() {
     return (
-      <div>
-        <div>
-          <h5>Sound</h5>
+      <div className={styles}>
+        <section>
+          <h4>Sound</h4>
           <form>
             <div className="form-check">
               <label className="form-check-label" htmlFor="sound-control">
@@ -20,28 +21,24 @@ class Settings extends Component {
               </label>
             </div>
           </form>
-        </div>
-        <br />
-        <div>
-          <h5>This room</h5>
+        </section>
+        <section>
+          <h4 className='mb-3'>This room</h4>
           <RoomLink roomId={this.props.roomId} />
-        </div>
-        <br />
-        <div>
-          <h5>Room Ownership</h5>
+        </section>
+        <section>
+          <h4>Room Ownership</h4>
           <p>The person who created the room is the room owner and has special privileges, like the ability to lock and unlock the room.
           If the owner leaves the room, the second person to join assumes ownership. If they leave, the third person becomes owner, and so on.
           The room owner has a star icon next to their username in the participants dropdown.
           </p>
-        </div>
-        <br />
-        <div>
-          <h5>Lock Room</h5>
+        </section>
+        <section>
+          <h4>Lock Room</h4>
           <p>If you are the room owner, you can lock and unlock the room by clicking the lock icon in the nav bar. When a room is locked, no other participants will be able to join.</p>
-        </div>
-        <br />
-        <div>
-          <h5>Slash Commands</h5>
+        </section>
+        <section>
+          <h4>Slash Commands</h4>
           <p>The following slash commands are available:</p>
           <ul>
             <li>/nick [username] <span className="text-muted">changes username</span></li>
@@ -49,7 +46,7 @@ class Settings extends Component {
             <li>/clear <span className="text-muted">clears your message history</span></li>
             <li>/help <span className="text-muted">lists all commands</span></li>
           </ul>
-        </div>
+        </section>
       </div>
     )
   }

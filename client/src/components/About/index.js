@@ -66,8 +66,17 @@ class About extends Component {
           <form onSubmit={this.handleReportAbuse.bind(this)}>
             {this.state.abuseReported && <div>Thank you!</div>}
             <div>
-              <input placeholder='Room ID' onChange={this.handleUpdateRoomId.bind(this)} value={this.state.roomId} type="text"/>
-              <button>Submit</button>
+              <div className="input-group">
+                <input className='form-control' placeholder='Room ID' onChange={this.handleUpdateRoomId.bind(this)} value={this.state.roomId} type="text"/>
+                <div className="input-group-append">
+                  <button
+                    className="btn btn-secondary"
+                    type="button"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
             </div>
           </form>
           <br />
