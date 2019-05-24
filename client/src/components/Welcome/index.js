@@ -27,7 +27,7 @@ class Welcome extends Component {
           </div>
         </div>
         <br />
-        <p>Others can join this room using the following URL:</p>
+        <p className='mb-2'>Others can join this room using the following URL:</p>
         <RoomLink roomId={this.props.roomId} />
         <div className="react-modal-footer">
           <button className="btn btn-primary btn-lg" onClick={this.props.close}>Ok</button>

@@ -182,9 +182,14 @@ textarea
     width: calc(100% - 30px)
     margin: 20px auto 0px auto
     max-height: 75%
+    position: relative
     .close-modal
-      float: right
-      padding: 0px
+      padding: 7px
+      position: absolute
+      right: 15px
+      top: 15px
+      &:hover
+        background-color: #333
   .react-modal-header
     overflow: auto
     margin-bottom: 20px
@@ -232,3 +237,13 @@ img.zoom-img
 
 img.zoomable
   cursor: zoom-in
+
+.react-modal-content
+  opacity: 0
+  transition: opacity 150ms ease-in-out
+
+.react-modal-content_after-open
+  opacity: 1
+
+.react-modal-content_before-close
+  opacity: 0

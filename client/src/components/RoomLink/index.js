@@ -39,7 +39,7 @@ class RoomLink extends Component {
         <div className="form-group">
           <div className="input-group">
             <input id="room-url" className="form-control" type="text" readOnly value={this.state.roomUrl} />
-            <span className="input-group-btn">
+            <div className="input-group-append">
               <button
                 className="copy-room btn btn-secondary"
                 type="button"
@@ -48,9 +48,9 @@ class RoomLink extends Component {
                 data-clipboard-text={this.state.roomUrl}
                 title="Copied!"
               >
-                <Copy className="mt-1" />
+                <Copy />
               </button>
-            </span>
+            </div>
           </div>
         </div>
       </form>
