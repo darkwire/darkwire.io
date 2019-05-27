@@ -30,7 +30,7 @@ const app = (state = initialState, action) => {
         windowIsFocused: action.payload,
         unreadMessageCount: 0,
       }
-    case 'HANDLE_SOCKET_MESSAGE_SEND_MESSAGE':
+    case 'RECEIVE_ENCRYPTED_MESSAGE_TEXT_MESSAGE':
       return {
         ...state,
         unreadMessageCount: state.windowIsFocused ? 0 : state.unreadMessageCount + 1,

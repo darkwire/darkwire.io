@@ -6,11 +6,11 @@ import {
 } from 'utils/message'
 import { getSocket } from 'utils/socket'
 
-export const receiveSocketMessage = payload => async (dispatch, getState) => {
+export const receiveEncryptedMessage = payload => async (dispatch, getState) => {
   const state = getState()
   const message = await processMessage(payload, state)
-  // Pass current state to all HANDLE_SOCKET_MESSAGE reducers for convenience, since each may have different needs
-  dispatch({ type: `HANDLE_SOCKET_MESSAGE_${message.type}`, payload: { payload: message.payload, state } })
+  // Pass current state to all RECEIVE_ENCRYPTED_MESSAGE reducers for convenience, since each may have different needs
+  dispatch({ type: `RECEIVE_ENCRYPTED_MESSAGE_${message.type}`, payload: { payload: message.payload, state } })
 }
 
 export const createUser = payload => async (dispatch) => {
@@ -52,11 +52,11 @@ export const onFileTransfer = payload => async (dispatch) => {
   dispatch({ type: 'PREFLIGHT_FILE_TRANSFER', payload })
 }
 
-export const sendSocketMessage = payload => async (dispatch, getState) => {
+export const sendEncryptedMessage = payload => async (dispatch, getState) => {
   const state = getState()
   const msg = await prepareMessage(payload, state)
-  dispatch({ type: `SEND_SOCKET_MESSAGE_${msg.original.type}`, payload: msg.original.payload })
-  getSocket().emit('PAYLOAD', msg.toSend)
+  dispatch({ type: `SEND_ENCRYPTED_MESSAGE_${msg.original.type}`, payload: msg.original.payload })
+  getSocket().emit('ENCRYPTED_MESSAGE', msg.toSend)
 }
 
 export const toggleLockRoom = () => async (dispatch, getState) => {
@@ -92,10 +92,6 @@ export const receiveToggleLockRoom = payload => async (dispatch, getState) => {
 
 export const clearActivities = () => async (dispatch) => {
   dispatch({ type: 'CLEAR_ACTIVITIES' })
-}
-
-export const onConnected = payload => async (dispatch) => {
-  dispatch({ type: 'CONNECTED', payload })
 }
 
 export const sendUserDisconnect = () => async () => {

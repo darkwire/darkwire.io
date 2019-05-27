@@ -15,15 +15,6 @@ const initialState = {
 
 const room = (state = initialState, action) => {
   switch (action.type) {
-    case 'CONNECTED':
-      const size = action.payload.users ? action.payload.users.length : 1;
-      return {
-        ...state,
-        id: action.payload.id,
-        isLocked: Boolean(action.payload.isLocked),
-        size,
-        joining: false
-      }
     case 'USER_EXIT':
       const memberPubKeys = action.payload.members.map(m => JSON.stringify(m.publicKey))
       return {
@@ -38,7 +29,7 @@ const room = (state = initialState, action) => {
             }
           }),
       }
-    case 'HANDLE_SOCKET_MESSAGE_ADD_USER':
+    case 'RECEIVE_ENCRYPTED_MESSAGE_ADD_USER':
       const membersWithId = state.members.filter(m => m.id)
       const joining = false
 
@@ -70,17 +61,15 @@ const room = (state = initialState, action) => {
         ],
       }
     case 'USER_ENTER':
-      /*
-      In this payload the server sends all users' public keys. Normally the server
-      will have all the users the client does, but in some cases - such as when
-      new users join before this client has registered with the server (this can
-      happen when lots of users join in quick succession) - the client
-      will receive a USER_ENTER event that doesn't contain itself. In that case we
-      want to prepend "me" to the members payload
-      */
-      const members = _.uniqBy(action.payload, member => member.publicKey.n);
+      const members = _.uniqBy(action.payload.users, member => member.publicKey.n);
+      const size = action.payload.users ? action.payload.users.length : 1;
+
       return {
         ...state,
+        id: action.payload.id,
+        isLocked: Boolean(action.payload.isLocked),
+        size,
+        joining: false,
         members: members.reduce((acc, user) => {
           const exists = state.members.find(m => m.publicKey.n === user.publicKey.n)
           if (exists) {
@@ -112,7 +101,7 @@ const room = (state = initialState, action) => {
         ...state,
         isLocked: action.payload.locked,
       }
-    case 'SEND_SOCKET_MESSAGE_CHANGE_USERNAME':
+    case 'SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
       const newUsername = action.payload.newUsername
       const userId = action.payload.id
       return {
@@ -125,7 +114,7 @@ const room = (state = initialState, action) => {
             } : member
         )),
       }
-    case 'HANDLE_SOCKET_MESSAGE_CHANGE_USERNAME':
+    case 'RECEIVE_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
       const newUsername2 = action.payload.payload.newUsername
       const userId2 = action.payload.payload.id
       return {

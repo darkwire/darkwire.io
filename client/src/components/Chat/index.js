@@ -51,7 +51,7 @@ export class Chat extends Component {
           })
         }
 
-        this.props.sendSocketMessage({
+        this.props.sendEncryptedMessage({
           type: 'CHANGE_USERNAME',
           payload: {
             id: this.props.userId,
@@ -85,7 +85,7 @@ export class Chat extends Component {
           return false
         }
 
-        this.props.sendSocketMessage({
+        this.props.sendEncryptedMessage({
           type: 'USER_ACTION',
           payload: {
             action: actionMessage,
@@ -216,8 +216,8 @@ export class Chat extends Component {
         return
       }
     } else {
-      this.props.sendSocketMessage({
-        type: 'SEND_MESSAGE',
+      this.props.sendEncryptedMessage({
+        type: 'TEXT_MESSAGE',
         payload: {
           text: message,
           timestamp: Date.now(),
@@ -256,7 +256,7 @@ export class Chat extends Component {
           placeholder="Type here"
           onChange={this.handleInputChange.bind(this)} />
         <div className="input-controls">
-          <FileTransfer sendSocketMessage={this.props.sendSocketMessage} />
+          <FileTransfer sendEncryptedMessage={this.props.sendEncryptedMessage} />
           {touchSupport &&
             <button onClick={this.handleSendClick.bind(this)} className={`icon is-right send btn btn-link ${this.canSend() ? 'active' : ''}`}>
               <CornerDownRight className={this.canSend() ? '' : 'disabled'} />
@@ -269,7 +269,7 @@ export class Chat extends Component {
 }
 
 Chat.propTypes = {
-  sendSocketMessage: PropTypes.func.isRequired,
+  sendEncryptedMessage: PropTypes.func.isRequired,
   showNotice: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,

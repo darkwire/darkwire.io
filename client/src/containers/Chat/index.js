@@ -1,12 +1,12 @@
 import { connect } from 'react-redux'
-import { sendSocketMessage } from 'actions'
+import { sendEncryptedMessage } from 'actions'
 import ChatInput from 'components/Chat'
 
 const mapStateToProps = () => ({
 })
 
 const mapDispatchToProps = {
-  sendSocketMessage,
+  sendEncryptedMessage,
 }
 
 export default connect(

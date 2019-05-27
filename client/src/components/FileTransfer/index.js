@@ -81,7 +81,7 @@ export default class FileTransfer extends Component {
       this.setState({
         localFileQueue,
       }, async () => {
-        this.props.sendSocketMessage({
+        this.props.sendEncryptedMessage({
           type: 'SEND_FILE',
           payload: {
             fileName: fileData.fileName,
@@ -112,5 +112,5 @@ export default class FileTransfer extends Component {
 }
 
 FileTransfer.propTypes = {
-  sendSocketMessage: PropTypes.func.isRequired,
+  sendEncryptedMessage: PropTypes.func.isRequired,
 }

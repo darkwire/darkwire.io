@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import Home from 'components/Home'
 import {
-  receiveSocketMessage,
-  sendSocketMessage,
+  receiveEncryptedMessage,
+  sendEncryptedMessage,
   createUser,
   receiveUserExit,
   receiveUserEnter,
@@ -15,7 +15,6 @@ import {
   toggleWindowFocus,
   toggleSoundEnabled,
   toggleSocketConnected,
-  onConnected,
   sendUserDisconnect
 } from 'actions'
 
@@ -42,8 +41,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  receiveSocketMessage,
-  sendSocketMessage,
+  receiveEncryptedMessage,
+  sendEncryptedMessage,
   receiveUserExit,
   receiveUserEnter,
   createUser,
@@ -56,7 +55,6 @@ const mapDispatchToProps = {
   toggleWindowFocus,
   toggleSoundEnabled,
   toggleSocketConnected,
-  onConnected,
   sendUserDisconnect
 }
 

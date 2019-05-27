@@ -12,7 +12,7 @@ const user = (state = initialState, action) => {
         ...action.payload,
         id: action.payload.publicKey.n,
       }
-    case 'SEND_SOCKET_MESSAGE_CHANGE_USERNAME':
+    case 'SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
       return {
         ...state,
         username: action.payload.newUsername,

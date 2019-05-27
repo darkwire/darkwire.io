@@ -41,6 +41,7 @@ export default class Home extends Component {
   }
 
   async componentWillMount() {
+    console.log(this.props.dispatch);
     const roomId = encodeURI(this.props.match.params.roomId)
 
     const user = await this.createUser()
@@ -70,7 +71,7 @@ export default class Home extends Component {
 
     socket.on('USER_ENTER', (payload) => {
       this.props.receiveUserEnter(payload)
-      this.props.sendSocketMessage({
+      this.props.sendEncryptedMessage({
         type: 'ADD_USER',
         payload: {
           username: this.props.username,
@@ -85,17 +86,13 @@ export default class Home extends Component {
       this.props.receiveUserExit(payload)
     })
 
-    socket.on('PAYLOAD', (payload) => {
-      this.props.receiveSocketMessage(payload)
+    socket.on('ENCRYPTED_MESSAGE', (payload) => {
+      this.props.receiveEncryptedMessage(payload)
     })
 
     socket.on('TOGGLE_LOCK_ROOM', (payload) => {
       this.props.receiveToggleLockRoom(payload)
     })
-
-    socket.on('CONNECTED', (payload) => {
-      this.props.onConnected(payload);
-    });
 
     socket.on('ROOM_LOCKED', (payload) => {
       this.props.openModal('Room Locked')
@@ -171,7 +168,7 @@ export default class Home extends Component {
 
   getActivityComponent(activity) {
     switch (activity.type) {
-      case 'SEND_MESSAGE':
+      case 'TEXT_MESSAGE':
         return (
           <Message
             sender={activity.username}
@@ -411,8 +408,8 @@ Home.defaultProps = {
 }
 
 Home.propTypes = {
-  receiveSocketMessage: PropTypes.func.isRequired,
-  sendSocketMessage: PropTypes.func.isRequired,
+  receiveEncryptedMessage: PropTypes.func.isRequired,
+  sendEncryptedMessage: PropTypes.func.isRequired,
   createUser: PropTypes.func.isRequired,
   receiveUserExit: PropTypes.func.isRequired,
   receiveUserEnter: PropTypes.func.isRequired,
@@ -441,5 +438,4 @@ Home.propTypes = {
   toggleSoundEnabled: PropTypes.func.isRequired,
   toggleSocketConnected: PropTypes.func.isRequired,
   socketConnected: PropTypes.bool.isRequired,
-  onConnected: PropTypes.func.isRequired
 }

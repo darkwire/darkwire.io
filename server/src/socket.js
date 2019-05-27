@@ -75,11 +75,11 @@ export default class Socket {
   }
 
   async handleSocket(socket) {
-    socket.on('PAYLOAD', (payload) => {
-      socket.to(this._roomId).emit('PAYLOAD', payload);
+    socket.on('ENCRYPTED_MESSAGE', (payload) => {
+      socket.to(this._roomId).emit('ENCRYPTED_MESSAGE', payload);
     });
 
-    socket.on('USER_ENTER', async payload => {
+    socket.on('USER_ENTER', async (payload) => {
       let room = await this.fetchRoom()
       if (_.isEmpty(room)) {
         room = {
@@ -99,10 +99,8 @@ export default class Socket {
         }]
       }
       await this.saveRoom(newRoom)
-      getIO().to(this._roomId).emit('USER_ENTER', newRoom.users.map(u => ({
-        publicKey: u.publicKey,
-        isOwner: u.isOwner,
-      })));
+
+      getIO().to(this._roomId).emit('USER_ENTER', newRoom);
     })
 
     socket.on('TOGGLE_LOCK_ROOM', async (data, callback) => {
