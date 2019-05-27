@@ -79,7 +79,6 @@ export const receiveToggleLockRoom = payload => async (dispatch, getState) => {
   const lockedByUser = state.room.members.find(m => isEqual(m.publicKey, payload.publicKey))
   const lockedByUsername = lockedByUser.username
   const lockedByUserId = lockedByUser.id
-  console.log('locked by', lockedByUserId);
 
   dispatch({
     type: 'RECEIVE_TOGGLE_LOCK_ROOM',
