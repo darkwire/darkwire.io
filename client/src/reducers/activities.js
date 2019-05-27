@@ -1,12 +1,5 @@
 const initialState = {
-  items: [
-    // {
-    // type: 'message | file | isTyping | usernameChange | slashCommand',
-    // data,
-    // username,
-    // timestamp
-    // }
-  ],
+  items: [],
 }
 
 const activities = (state = initialState, action) => {
@@ -87,10 +80,6 @@ const activities = (state = initialState, action) => {
 
       const haveUser = action.payload.state.room.members.find(m => m.id === newUserId)
       if (haveUser) {
-        return state
-      }
-
-      if (action.payload.state.room.joining) {
         return state
       }
 

@@ -109,18 +109,10 @@ class Home extends Component {
   componentDidMount() {
     this.bindEvents()
 
-    if (this.props.joining) {
-      this.props.openModal('Connecting')
-    }
-
     this.beep = window.Audio && new window.Audio(beepFile)
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.joining && !nextProps.joining) {
-      this.props.closeModal()
-    }
-
     Tinycon.setBubble(nextProps.faviconCount)
 
     if (nextProps.faviconCount !== 0 && nextProps.faviconCount !== this.props.faviconCount && this.props.soundIsEnabled) {
@@ -427,7 +419,6 @@ Home.propTypes = {
   scrolledToBottom: PropTypes.bool.isRequired,
   iAmOwner: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
-  joining: PropTypes.bool.isRequired,
   toggleWindowFocus: PropTypes.func.isRequired,
   faviconCount: PropTypes.number.isRequired,
   soundIsEnabled: PropTypes.bool.isRequired,
@@ -453,7 +444,6 @@ const mapStateToProps = (state) => {
     modalComponent: state.app.modalComponent,
     scrolledToBottom: state.app.scrolledToBottom,
     iAmOwner: Boolean(me && me.isOwner),
-    joining: state.room.joining,
     faviconCount: state.app.unreadMessageCount,
     soundIsEnabled: state.app.soundIsEnabled,
     socketConnected: state.app.socketConnected,

@@ -1,5 +1,4 @@
 import { getSocket } from 'utils/socket'
-import isEqual from 'lodash/isEqual'
 
 const receiveUserEnter = (payload, dispatch) => {
   dispatch({ type: 'USER_ENTER', payload })
@@ -8,7 +7,7 @@ const receiveUserEnter = (payload, dispatch) => {
 const receiveToggleLockRoom = (payload, dispatch, getState) => {
   const state = getState()
 
-  const lockedByUser = state.room.members.find(m => isEqual(m.publicKey, payload.publicKey))
+  const lockedByUser = state.room.members.find(m => m.publicKey.n === payload.publicKey.n)
   const lockedByUsername = lockedByUser.username
   const lockedByUserId = lockedByUser.id
 

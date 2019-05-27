@@ -1,7 +1,3 @@
-import {
-  process as processMessage,
-} from 'utils/message'
-
 export const openModal = payload => ({ type: 'OPEN_MODAL', payload })
 export const closeModal = () => ({ type: 'CLOSE_MODAL' })
 
@@ -21,13 +17,6 @@ export const toggleSoundEnabled = payload => async (dispatch) => {
 
 export const toggleSocketConnected = payload => async (dispatch) => {
   dispatch({ type: 'TOGGLE_SOCKET_CONNECTED', payload })
-}
-
-export const receiveEncryptedMessage = payload => async (dispatch, getState) => {
-  const state = getState()
-  const message = await processMessage(payload, state)
-  // Pass current state to all RECEIVE_ENCRYPTED_MESSAGE reducers for convenience, since each may have different needs
-  dispatch({ type: `RECEIVE_ENCRYPTED_MESSAGE_${message.type}`, payload: { payload: message.payload, state } })
 }
 
 export const createUser = payload => async (dispatch) => {

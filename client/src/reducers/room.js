@@ -9,33 +9,22 @@ const initialState = {
   ],
   id: '',
   isLocked: false,
-  joining: true,
-  size: 0,
 }
 
 const room = (state = initialState, action) => {
   switch (action.type) {
     case 'USER_EXIT':
-      const memberPubKeys = action.payload.members.map(m => JSON.stringify(m.publicKey))
+      const memberPubKeys = action.payload.members.map(m => m.publicKey.n)
       return {
         ...state,
         members: state.members
-          .filter(m => memberPubKeys.includes(JSON.stringify(m.publicKey)))
-          .map((m) => {
-            const payloadMember = action.payload.members.find(member => _.isEqual(m.publicKey, member.publicKey))
-            return {
-              ...m,
-              ...payloadMember,
-            }
-          }),
+          .filter(member => memberPubKeys.includes(member.publicKey.n))
       }
     case 'RECEIVE_ENCRYPTED_MESSAGE_ADD_USER':
-      const joining = false
-
       return {
         ...state,
         members: state.members.map((member) => {
-          if (_.isEqual(member.publicKey, action.payload.payload.publicKey)) {
+          if (member.publicKey.n === action.payload.payload.publicKey.n) {
             return {
               ...member,
               username: action.payload.payload.username,
@@ -45,7 +34,6 @@ const room = (state = initialState, action) => {
           }
           return member
         }),
-        joining,
       }
     case 'CREATE_USER':
       return {
@@ -61,14 +49,11 @@ const room = (state = initialState, action) => {
       }
     case 'USER_ENTER':
       const members = _.uniqBy(action.payload.users, member => member.publicKey.n);
-      const size = action.payload.users ? action.payload.users.length : 1;
 
       return {
         ...state,
         id: action.payload.id,
         isLocked: Boolean(action.payload.isLocked),
-        size,
-        joining: false,
         members: members.reduce((acc, user) => {
           const exists = state.members.find(m => m.publicKey.n === user.publicKey.n)
           if (exists) {
