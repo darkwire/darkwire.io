@@ -23,7 +23,8 @@ const receiveToggleLockRoom = (payload, dispatch, getState) => {
 
 const receiveUserExit = (payload, dispatch, getState) => {
   const state = getState()
-  const exitingUser = state.room.members.find(m => !payload.map(p => JSON.stringify(p.publicKey)).includes(JSON.stringify(m.publicKey)))
+  const payloadPublicKeys = payload.map(member => member.publicKey.n);
+  const exitingUser = state.room.members.find(m => !payloadPublicKeys.includes(m.publicKey.n))
 
   if (!exitingUser) {
     return;
