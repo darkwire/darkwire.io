@@ -4,8 +4,9 @@ import sanitizeHtml from 'sanitize-html'
 import FileTransfer from 'components/FileTransfer'
 import { CornerDownRight } from 'react-feather'
 import { connect } from 'react-redux'
-import { clearActivities, showNotice } from '../../actions'
+import { clearActivities, showNotice, sendEncryptedMessage } from '../../actions'
 import { getSelectedText, hasTouchSupport } from '../../utils/dom'
+
 // Disable for now
 // import autosize from 'autosize'
 
@@ -286,6 +287,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   clearActivities,
   showNotice,
+  sendEncryptedMessage
 }
 
 export default connect(

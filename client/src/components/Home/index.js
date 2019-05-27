@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Crypto from 'utils/crypto'
-import { connect } from 'utils/socket'
+import { connect as connectSocket } from 'utils/socket'
 import Nav from 'components/Nav'
 import shortId from 'shortid'
-import ChatInput from 'containers/Chat'
+import ChatInput from 'components/Chat'
 import Connecting from 'components/Connecting'
 import Message from 'components/Message'
 import Username from 'components/Username'
@@ -21,6 +21,24 @@ import beepFile from 'audio/beep.mp3'
 import Zoom from 'utils/ImageZoom'
 import classNames from 'classnames'
 import { getObjectUrl } from 'utils/file'
+import { connect } from 'react-redux'
+import {
+  receiveEncryptedMessage,
+  sendEncryptedMessage,
+  createUser,
+  receiveUserExit,
+  receiveUserEnter,
+  toggleLockRoom,
+  receiveToggleLockRoom,
+  openModal,
+  closeModal,
+  setScrolledToBottom,
+  sendUserEnter,
+  toggleWindowFocus,
+  toggleSoundEnabled,
+  toggleSocketConnected,
+  sendUserDisconnect
+} from 'actions'
 
 import styles from './styles.module.scss'
 
@@ -28,7 +46,7 @@ const crypto = new Crypto()
 
 Modal.setAppElement('#root');
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props)
 
@@ -41,12 +59,11 @@ export default class Home extends Component {
   }
 
   async componentWillMount() {
-    console.log(this.props.dispatch);
     const roomId = encodeURI(this.props.match.params.roomId)
 
     const user = await this.createUser()
 
-    const socket = connect(roomId)
+    const socket = connectSocket(roomId)
 
     const disconnectEvents = [
       'disconnect',
@@ -439,3 +456,48 @@ Home.propTypes = {
   toggleSocketConnected: PropTypes.func.isRequired,
   socketConnected: PropTypes.bool.isRequired,
 }
+
+const mapStateToProps = (state) => {
+  const me = state.room.members.find(m => m.id === state.user.id)
+
+  return {
+    activities: state.activities.items,
+    userId: state.user.id,
+    username: state.user.username,
+    publicKey: state.user.publicKey,
+    privateKey: state.user.privateKey,
+    members: state.room.members.filter(m => m.username && m.publicKey),
+    roomId: state.room.id,
+    roomLocked: state.room.isLocked,
+    modalComponent: state.app.modalComponent,
+    scrolledToBottom: state.app.scrolledToBottom,
+    iAmOwner: Boolean(me && me.isOwner),
+    joining: state.room.joining,
+    faviconCount: state.app.unreadMessageCount,
+    soundIsEnabled: state.app.soundIsEnabled,
+    socketConnected: state.app.socketConnected,
+  }
+}
+
+const mapDispatchToProps = {
+  receiveEncryptedMessage,
+  sendEncryptedMessage,
+  receiveUserExit,
+  receiveUserEnter,
+  createUser,
+  toggleLockRoom,
+  receiveToggleLockRoom,
+  openModal,
+  closeModal,
+  setScrolledToBottom,
+  sendUserEnter,
+  toggleWindowFocus,
+  toggleSoundEnabled,
+  toggleSocketConnected,
+  sendUserDisconnect
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home)
