@@ -30,7 +30,6 @@ const room = (state = initialState, action) => {
           }),
       }
     case 'RECEIVE_ENCRYPTED_MESSAGE_ADD_USER':
-      const membersWithId = state.members.filter(m => m.id)
       const joining = false
 
       return {
