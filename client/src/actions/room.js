@@ -4,15 +4,7 @@ import {
   process as processMessage,
   prepare as prepareMessage,
 } from 'utils/message'
-import { getIO } from 'utils/socket'
-
-export const createRoom = id => async dispatch => fetch({
-  resourceName: 'handshake',
-  method: 'POST',
-  body: {
-    roomId: id,
-  },
-}, dispatch, 'handshake')
+import { getSocket } from 'utils/socket'
 
 export const receiveSocketMessage = payload => async (dispatch, getState) => {
   const state = getState()
@@ -26,7 +18,7 @@ export const createUser = payload => async (dispatch) => {
 }
 
 export const sendUserEnter = payload => async () => {
-  getIO().emit('USER_ENTER', {
+  getSocket().emit('USER_ENTER', {
     publicKey: payload.publicKey,
   })
 }
@@ -34,6 +26,11 @@ export const sendUserEnter = payload => async () => {
 export const receiveUserExit = payload => async (dispatch, getState) => {
   const state = getState()
   const exitingUser = state.room.members.find(m => !payload.map(p => JSON.stringify(p.publicKey)).includes(JSON.stringify(m.publicKey)))
+
+  if (!exitingUser) {
+    return;
+  }
+
   const exitingUserId = exitingUser.id
   const exitingUsername = exitingUser.username
 
@@ -59,12 +56,12 @@ export const sendSocketMessage = payload => async (dispatch, getState) => {
   const state = getState()
   const msg = await prepareMessage(payload, state)
   dispatch({ type: `SEND_SOCKET_MESSAGE_${msg.original.type}`, payload: msg.original.payload })
-  getIO().emit('PAYLOAD', msg.toSend)
+  getSocket().emit('PAYLOAD', msg.toSend)
 }
 
 export const toggleLockRoom = () => async (dispatch, getState) => {
   const state = getState()
-  getIO().emit('TOGGLE_LOCK_ROOM', null, (res) => {
+  getSocket().emit('TOGGLE_LOCK_ROOM', null, (res) => {
     dispatch({
       type: 'TOGGLE_LOCK_ROOM',
       payload: {
@@ -82,6 +79,7 @@ export const receiveToggleLockRoom = payload => async (dispatch, getState) => {
   const lockedByUser = state.room.members.find(m => isEqual(m.publicKey, payload.publicKey))
   const lockedByUsername = lockedByUser.username
   const lockedByUserId = lockedByUser.id
+  console.log('locked by', lockedByUserId);
 
   dispatch({
     type: 'RECEIVE_TOGGLE_LOCK_ROOM',
@@ -96,3 +94,12 @@ export const receiveToggleLockRoom = payload => async (dispatch, getState) => {
 export const clearActivities = () => async (dispatch) => {
   dispatch({ type: 'CLEAR_ACTIVITIES' })
 }
+
+export const onConnected = payload => async (dispatch) => {
+  dispatch({ type: 'CONNECTED', payload })
+}
+
+export const sendUserDisconnect = () => async () => {
+  getSocket().emit('USER_DISCONNECT')
+}
+

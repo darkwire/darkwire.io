@@ -13,4 +13,4 @@ export const connect = (roomId) => {
   return socket
 }
 
-export const getIO = () => socket
+export const getSocket = () => socket

@@ -90,13 +90,6 @@ const activities = (state = initialState, action) => {
         return state
       }
 
-      // Duplicate "user entered" can happen when >2 users join
-      // in quick succession
-      const alreadyEntered = state.items.find(act => act.type === 'USER_ENTER' && act.userId === newUserId)
-      if (alreadyEntered) {
-        return state
-      }
-
       if (action.payload.state.room.joining) {
         return state
       }

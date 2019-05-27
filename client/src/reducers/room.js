@@ -15,15 +15,14 @@ const initialState = {
 
 const room = (state = initialState, action) => {
   switch (action.type) {
-    case 'FETCH_CREATE_HANDSHAKE_SUCCESS':
-      const isLocked = action.payload.json.isLocked
-      // Handle "room is locked" message for new members here
+    case 'CONNECTED':
+      const size = action.payload.users ? action.payload.users.length : 1;
       return {
         ...state,
-        id: action.payload.json.id,
-        isLocked,
-        size: action.payload.json.size,
-        joining: !(action.payload.json.size === 1),
+        id: action.payload.id,
+        isLocked: Boolean(action.payload.isLocked),
+        size,
+        joining: false
       }
     case 'USER_EXIT':
       const memberPubKeys = action.payload.members.map(m => JSON.stringify(m.publicKey))
@@ -41,7 +40,7 @@ const room = (state = initialState, action) => {
       }
     case 'HANDLE_SOCKET_MESSAGE_ADD_USER':
       const membersWithId = state.members.filter(m => m.id)
-      const joining = state.joining ? membersWithId.length + 1 < state.size : false
+      const joining = false
 
       return {
         ...state,
@@ -79,24 +78,29 @@ const room = (state = initialState, action) => {
       will receive a USER_ENTER event that doesn't contain itself. In that case we
       want to prepend "me" to the members payload
       */
-      const diff = _.differenceBy(state.members, action.payload, m => m.publicKey.n)
-      const members = diff.length ? state.members.concat(action.payload) : action.payload
+      const members = _.uniqBy(action.payload, member => member.publicKey.n);
       return {
         ...state,
-        members: members.map((user) => {
-          const exists = state.members.find(m => _.isEqual(m.publicKey, user.publicKey))
+        members: members.reduce((acc, user) => {
+          const exists = state.members.find(m => m.publicKey.n === user.publicKey.n)
           if (exists) {
-            return {
-              ...user,
-              ...exists,
+            return [
+              ...acc,
+              {
+                ...user,
+                ...exists,
+              }
+            ]
+          }
+          return [
+            ...acc,
+            {
+              publicKey: user.publicKey,
+              isOwner: user.isOwner,
+              id: user.id,
             }
-          }
-          return {
-            publicKey: user.publicKey,
-            isOwner: user.isOwner,
-            id: user.id,
-          }
-        }),
+          ]
+        }, []),
       }
     case 'TOGGLE_LOCK_ROOM':
       return {

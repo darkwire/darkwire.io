@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import Home from 'components/Home'
 import {
-  createRoom,
   receiveSocketMessage,
   sendSocketMessage,
   createUser,
@@ -16,6 +15,8 @@ import {
   toggleWindowFocus,
   toggleSoundEnabled,
   toggleSocketConnected,
+  onConnected,
+  sendUserDisconnect
 } from 'actions'
 
 const mapStateToProps = (state) => {
@@ -41,7 +42,6 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  createRoom,
   receiveSocketMessage,
   sendSocketMessage,
   receiveUserExit,
@@ -56,6 +56,8 @@ const mapDispatchToProps = {
   toggleWindowFocus,
   toggleSoundEnabled,
   toggleSocketConnected,
+  onConnected,
+  sendUserDisconnect
 }
 
 export default connect(
