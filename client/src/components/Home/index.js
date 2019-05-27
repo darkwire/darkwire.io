@@ -24,20 +24,16 @@ import { getObjectUrl } from 'utils/file'
 import { connect } from 'react-redux'
 import {
   receiveEncryptedMessage,
-  sendEncryptedMessage,
   createUser,
-  receiveUserExit,
-  receiveUserEnter,
-  toggleLockRoom,
-  receiveToggleLockRoom,
   openModal,
   closeModal,
   setScrolledToBottom,
-  sendUserEnter,
   toggleWindowFocus,
   toggleSoundEnabled,
   toggleSocketConnected,
-  sendUserDisconnect
+  receiveUnencryptedMessage,
+  sendUnencryptedMessage,
+  sendEncryptedMessage
 } from 'actions'
 
 import styles from './styles.module.scss'
@@ -65,29 +61,19 @@ class Home extends Component {
 
     const socket = connectSocket(roomId)
 
-    const disconnectEvents = [
-      'disconnect',
-    ]
+    this.socket = socket;
 
-    disconnectEvents.forEach((evt) => {
-      socket.on(evt, () => {
-        this.props.toggleSocketConnected(false)
-      })
+    socket.on('disconnect', () => {
+      this.props.toggleSocketConnected(false)
     })
 
-    const connectEvents = [
-      'connect',
-    ]
-
-    connectEvents.forEach((evt) => {
-      socket.on(evt, () => {
-        this.initApp(user)
-        this.props.toggleSocketConnected(true)
-      })
+    socket.on('connect', () => {
+      this.initApp(user)
+      this.props.toggleSocketConnected(true)
     })
 
     socket.on('USER_ENTER', (payload) => {
-      this.props.receiveUserEnter(payload)
+      this.props.receiveUnencryptedMessage('USER_ENTER', payload)
       this.props.sendEncryptedMessage({
         type: 'ADD_USER',
         payload: {
@@ -100,7 +86,7 @@ class Home extends Component {
     })
 
     socket.on('USER_EXIT', (payload) => {
-      this.props.receiveUserExit(payload)
+      this.props.receiveUnencryptedMessage('USER_EXIT', payload)
     })
 
     socket.on('ENCRYPTED_MESSAGE', (payload) => {
@@ -108,7 +94,7 @@ class Home extends Component {
     })
 
     socket.on('TOGGLE_LOCK_ROOM', (payload) => {
-      this.props.receiveToggleLockRoom(payload)
+      this.props.receiveUnencryptedMessage('TOGGLE_LOCK_ROOM', payload)
     })
 
     socket.on('ROOM_LOCKED', (payload) => {
@@ -116,7 +102,7 @@ class Home extends Component {
     });
 
     window.addEventListener('beforeunload', (evt) => {
-      this.props.sendUserDisconnect();
+      socket.emit('USER_DISCONNECT')
     });
   }
 
@@ -289,7 +275,7 @@ class Home extends Component {
   }
 
   initApp(user) {
-    this.props.sendUserEnter({
+    this.socket.emit('USER_ENTER', {
       publicKey: user.publicKey,
     })
   }
@@ -363,7 +349,7 @@ class Home extends Component {
             members={this.props.members}
             roomId={this.props.roomId}
             roomLocked={this.props.roomLocked}
-            toggleLockRoom={this.props.toggleLockRoom}
+            toggleLockRoom={() => this.props.sendUnencryptedMessage('TOGGLE_LOCK_ROOM')}
             openModal={this.props.openModal}
             iAmOwner={this.props.iAmOwner}
             userId={this.props.userId}
@@ -426,10 +412,7 @@ Home.defaultProps = {
 
 Home.propTypes = {
   receiveEncryptedMessage: PropTypes.func.isRequired,
-  sendEncryptedMessage: PropTypes.func.isRequired,
   createUser: PropTypes.func.isRequired,
-  receiveUserExit: PropTypes.func.isRequired,
-  receiveUserEnter: PropTypes.func.isRequired,
   activities: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
   publicKey: PropTypes.object.isRequired,
@@ -437,16 +420,12 @@ Home.propTypes = {
   match: PropTypes.object.isRequired,
   roomId: PropTypes.string.isRequired,
   roomLocked: PropTypes.bool.isRequired,
-  toggleLockRoom: PropTypes.func.isRequired,
-  receiveToggleLockRoom: PropTypes.func.isRequired,
   modalComponent: PropTypes.string,
   openModal: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
   setScrolledToBottom: PropTypes.func.isRequired,
   scrolledToBottom: PropTypes.bool.isRequired,
   iAmOwner: PropTypes.bool.isRequired,
-  sendUserEnter: PropTypes.func.isRequired,
-  sendUserDisconnect: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   joining: PropTypes.bool.isRequired,
   toggleWindowFocus: PropTypes.func.isRequired,
@@ -455,6 +434,8 @@ Home.propTypes = {
   toggleSoundEnabled: PropTypes.func.isRequired,
   toggleSocketConnected: PropTypes.func.isRequired,
   socketConnected: PropTypes.bool.isRequired,
+  sendUnencryptedMessage: PropTypes.func.isRequired,
+  sendEncryptedMessage: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -481,20 +462,16 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   receiveEncryptedMessage,
-  sendEncryptedMessage,
-  receiveUserExit,
-  receiveUserEnter,
   createUser,
-  toggleLockRoom,
-  receiveToggleLockRoom,
   openModal,
   closeModal,
   setScrolledToBottom,
-  sendUserEnter,
   toggleWindowFocus,
   toggleSoundEnabled,
   toggleSocketConnected,
-  sendUserDisconnect
+  receiveUnencryptedMessage,
+  sendUnencryptedMessage,
+  sendEncryptedMessage
 }
 
 export default connect(

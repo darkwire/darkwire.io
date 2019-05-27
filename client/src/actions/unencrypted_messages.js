@@ -1,0 +1,80 @@
+import { getSocket } from 'utils/socket'
+import isEqual from 'lodash/isEqual'
+
+const receiveUserEnter = (payload, dispatch) => {
+  dispatch({ type: 'USER_ENTER', payload })
+}
+
+const receiveToggleLockRoom = (payload, dispatch, getState) => {
+  const state = getState()
+
+  const lockedByUser = state.room.members.find(m => isEqual(m.publicKey, payload.publicKey))
+  const lockedByUsername = lockedByUser.username
+  const lockedByUserId = lockedByUser.id
+
+  dispatch({
+    type: 'RECEIVE_TOGGLE_LOCK_ROOM',
+    payload: {
+      username: lockedByUsername,
+      locked: payload.locked,
+      id: lockedByUserId,
+    },
+  })
+}
+
+const receiveUserExit = (payload, dispatch, getState) => {
+  const state = getState()
+  const exitingUser = state.room.members.find(m => !payload.map(p => JSON.stringify(p.publicKey)).includes(JSON.stringify(m.publicKey)))
+
+  if (!exitingUser) {
+    return;
+  }
+
+  const exitingUserId = exitingUser.id
+  const exitingUsername = exitingUser.username
+
+  dispatch({
+    type: 'USER_EXIT',
+    payload: {
+      members: payload,
+      id: exitingUserId,
+      username: exitingUsername,
+    },
+  })
+}
+
+export const receiveUnencryptedMessage = (type, payload) => async (dispatch, getState) => {
+  switch(type) {
+    case 'USER_ENTER':
+      return receiveUserEnter(payload, dispatch);
+    case 'USER_EXIT':
+      return receiveUserExit(payload, dispatch, getState);
+    case 'TOGGLE_LOCK_ROOM':
+      return receiveToggleLockRoom(payload, dispatch, getState);
+    default:
+      return;
+  }
+}
+
+const sendToggleLockRoom = (dispatch, getState) => {
+  const state = getState()
+  getSocket().emit('TOGGLE_LOCK_ROOM', null, (res) => {
+    dispatch({
+      type: 'TOGGLE_LOCK_ROOM',
+      payload: {
+        locked: res.isLocked,
+        username: state.user.username,
+        sender: state.user.id,
+      },
+    })
+  })
+}
+
+export const sendUnencryptedMessage = (type, payload) => async (dispatch, getState) => {
+  switch(type) {
+    case 'TOGGLE_LOCK_ROOM':
+      return sendToggleLockRoom(dispatch, getState);
+    default:
+      return;
+  }
+}
