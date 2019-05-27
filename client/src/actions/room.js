@@ -1,4 +1,3 @@
-import fetch from 'api'
 import isEqual from 'lodash/isEqual'
 import {
   process as processMessage,
