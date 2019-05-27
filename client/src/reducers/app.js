@@ -9,8 +9,6 @@ const initialState = {
 
 const app = (state = initialState, action) => {
   switch (action.type) {
-    case 'FETCH_CREATE_HANDSHAKE_SUCCESS':
-      return state;
     case 'OPEN_MODAL':
       return {
         ...state,

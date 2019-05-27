@@ -43,56 +43,32 @@ export default class Home extends Component {
   async componentWillMount() {
     const roomId = encodeURI(this.props.match.params.roomId)
 
-    const res = await this.props.createRoom(roomId)
-
-    if (res.json.isLocked) {
-      this.props.openModal('Room Locked')
-      return
-    }
-
-    if (res.json.size === 1) {
-      this.props.openModal('Welcome')
-    }
-
     const user = await this.createUser()
 
-    const io = connect(roomId)
+    const socket = connect(roomId)
 
     const disconnectEvents = [
-      'reconnect_failed',
-      'connect_timeout',
-      'connect_error',
       'disconnect',
-      'reconnect',
-      'reconnect_error',
-      'reconnecting',
-      'reconnect_attempt',
     ]
 
     disconnectEvents.forEach((evt) => {
-      io.on(evt, () => {
+      socket.on(evt, () => {
         this.props.toggleSocketConnected(false)
       })
     })
 
     const connectEvents = [
       'connect',
-      'reconnect',
     ]
 
     connectEvents.forEach((evt) => {
-      io.on(evt, () => {
-        if (evt === 'connect') {
-          if (!this.hasConnected) {
-            this.initApp(user)
-            this.hasConnected = true
-          }
-        }
+      socket.on(evt, () => {
+        this.initApp(user)
         this.props.toggleSocketConnected(true)
       })
     })
 
-    io.on('USER_ENTER', (payload) => {
+    socket.on('USER_ENTER', (payload) => {
       this.props.receiveUserEnter(payload)
       this.props.sendSocketMessage({
         type: 'ADD_USER',
@@ -105,17 +81,29 @@ export default class Home extends Component {
       })
     })
 
-    io.on('USER_EXIT', (payload) => {
+    socket.on('USER_EXIT', (payload) => {
       this.props.receiveUserExit(payload)
     })
 
-    io.on('PAYLOAD', (payload) => {
+    socket.on('PAYLOAD', (payload) => {
       this.props.receiveSocketMessage(payload)
     })
 
-    io.on('TOGGLE_LOCK_ROOM', (payload) => {
+    socket.on('TOGGLE_LOCK_ROOM', (payload) => {
       this.props.receiveToggleLockRoom(payload)
     })
+
+    socket.on('CONNECTED', (payload) => {
+      this.props.onConnected(payload);
+    });
+
+    socket.on('ROOM_LOCKED', (payload) => {
+      this.props.openModal('Room Locked')
+    });
+
+    window.addEventListener('beforeunload', (evt) => {
+      this.props.sendUserDisconnect();
+    });
   }
 
   componentDidMount() {
@@ -135,7 +123,7 @@ export default class Home extends Component {
 
     Tinycon.setBubble(nextProps.faviconCount)
 
-    if (nextProps.faviconCount !== 0 && this.props.soundIsEnabled) {
+    if (nextProps.faviconCount !== 0 && nextProps.faviconCount !== this.props.faviconCount && this.props.soundIsEnabled) {
       this.beep.play()
     }
   }
@@ -423,7 +411,6 @@ Home.defaultProps = {
 }
 
 Home.propTypes = {
-  createRoom: PropTypes.func.isRequired,
   receiveSocketMessage: PropTypes.func.isRequired,
   sendSocketMessage: PropTypes.func.isRequired,
   createUser: PropTypes.func.isRequired,
@@ -445,6 +432,7 @@ Home.propTypes = {
   scrolledToBottom: PropTypes.bool.isRequired,
   iAmOwner: PropTypes.bool.isRequired,
   sendUserEnter: PropTypes.func.isRequired,
+  sendUserDisconnect: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   joining: PropTypes.bool.isRequired,
   toggleWindowFocus: PropTypes.func.isRequired,
@@ -453,4 +441,5 @@ Home.propTypes = {
   toggleSoundEnabled: PropTypes.func.isRequired,
   toggleSocketConnected: PropTypes.func.isRequired,
   socketConnected: PropTypes.bool.isRequired,
+  onConnected: PropTypes.func.isRequired
 }

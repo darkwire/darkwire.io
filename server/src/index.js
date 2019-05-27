@@ -42,25 +42,6 @@ if ((siteURL || env === 'development') && !isReviewApp) {
   }));
 }
 
-router.post('/handshake', koaBody, async (ctx) => {
-  const { body } = ctx.request;
-  const { roomId } = body;
-
-  const roomIdHash = getRoomIdHash(roomId)
-
-  let roomExists = await redis.hgetAsync('rooms', roomIdHash)
-  if (roomExists) {
-    roomExists = JSON.parse(roomExists)
-  }
-
-  ctx.body = {
-    id: roomId,
-    ready: true,
-    isLocked: Boolean(roomExists && roomExists.isLocked),
-    size: ((roomExists && roomExists.users.length) || 0) + 1,
-  };
-});
-
 router.post('/abuse/:roomId', koaBody, async (ctx) => {
   let { roomId } = ctx.params;
 
@@ -120,7 +101,10 @@ if (clientDistDirectory) {
 const protocol = (process.env.PROTOCOL || 'http') === 'http' ? http : https;
 
 const server = protocol.createServer(app.callback());
-const io = Io(server);
+const io = Io(server, {
+  pingInterval: 5000,
+  pingTimeout: 3000
+});
 io.adapter(socketRedis(process.env.REDIS_URL));
 
 const roomHashSecret = process.env.ROOM_HASH_SECRET;
@@ -151,6 +135,7 @@ io.on('connection', async (socket) => {
   room = JSON.parse(room || '{}')
 
   new Socket({
+    roomIdOriginal: roomId,
     roomId: roomIdHash,
     socket,
     room,

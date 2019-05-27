@@ -4,10 +4,14 @@ import { getIO, getRedis } from './index'
 
 export default class Socket {
   constructor(opts) {
-    const { roomId, socket, room } = opts
+    const { roomId, socket, room, roomIdOriginal } = opts
 
     this._roomId = roomId
+    this.socket = socket;
+    this.roomIdOriginal = roomIdOriginal;
+    this.room = room;
     if (room.isLocked) {
+      this.sendRoomLocked();
       return
     }
 
@@ -17,7 +21,26 @@ export default class Socket {
   async init(opts) {
     const { roomId, socket, room } = opts
     await this.joinRoom(roomId, socket.id)
+    this.sendRoomInfo();
     this.handleSocket(socket)
+  }
+
+  sendRoomInfo() {
+    let room;
+    if (_.isEmpty(this.room)) {
+      room = {
+        id: this.roomIdOriginal,
+        users: [],
+        isLocked: false,
+      }
+    } else {
+      room = this.room;
+    }
+    this.socket.emit('CONNECTED', room);
+  }
+
+  sendRoomLocked() {
+    this.socket.emit('ROOM_LOCKED');
   }
 
   async saveRoom(room) {
@@ -109,6 +132,8 @@ export default class Socket {
     });
 
     socket.on('disconnect', () => this.handleDisconnect(socket));
+
+    socket.on('USER_DISCONNECT', () => this.handleDisconnect(socket));
   }
 
   async handleDisconnect(socket) {
@@ -129,6 +154,8 @@ export default class Socket {
     if (newRoom.users && newRoom.users.length === 0) {
       await this.destroyRoom()
     }
+
+    socket.disconnect(true);
   }
 
 }
