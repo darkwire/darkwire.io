@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import configureStore from 'store'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import shortId from 'shortid'
-import Home from 'containers/Home'
+import Home from 'components/Home'
 import { hasTouchSupport } from './utils/dom'
 
 const store = configureStore()
