@@ -21,22 +21,7 @@ export default class Socket {
   async init(opts) {
     const { roomId, socket, room } = opts
     await this.joinRoom(roomId, socket.id)
-    this.sendRoomInfo();
     this.handleSocket(socket)
-  }
-
-  sendRoomInfo() {
-    let room;
-    if (_.isEmpty(this.room)) {
-      room = {
-        id: this.roomIdOriginal,
-        users: [],
-        isLocked: false,
-      }
-    } else {
-      room = this.room;
-    }
-    this.socket.emit('CONNECTED', room);
   }
 
   sendRoomLocked() {
@@ -100,7 +85,10 @@ export default class Socket {
       }
       await this.saveRoom(newRoom)
 
-      getIO().to(this._roomId).emit('USER_ENTER', newRoom);
+      getIO().to(this._roomId).emit('USER_ENTER', {
+        ...newRoom,
+        id: this.roomIdOriginal
+      });
     })
 
     socket.on('TOGGLE_LOCK_ROOM', async (data, callback) => {
