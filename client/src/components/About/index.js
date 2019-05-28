@@ -71,7 +71,7 @@ class About extends Component {
                 <div className="input-group-append">
                   <button
                     className="btn btn-secondary"
-                    type="button"
+                    type="submit"
                   >
                     Submit
                   </button>

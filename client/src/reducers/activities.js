@@ -1,12 +1,5 @@
 const initialState = {
-  items: [
-    // {
-    // type: 'message | file | isTyping | usernameChange | slashCommand',
-    // data,
-    // username,
-    // timestamp
-    // }
-  ],
+  items: [],
 }
 
 const activities = (state = initialState, action) => {
@@ -16,7 +9,7 @@ const activities = (state = initialState, action) => {
         ...state,
         items: [],
       }
-    case 'SEND_SOCKET_MESSAGE_SLASH_COMMAND':
+    case 'SEND_ENCRYPTED_MESSAGE_SLASH_COMMAND':
       return {
         ...state,
         items: [
@@ -27,7 +20,7 @@ const activities = (state = initialState, action) => {
           },
         ],
       }
-    case 'SEND_SOCKET_MESSAGE_FILE_TRANSFER':
+    case 'SEND_ENCRYPTED_MESSAGE_FILE_TRANSFER':
       return {
         ...state,
         items: [
@@ -38,29 +31,29 @@ const activities = (state = initialState, action) => {
           },
         ],
       }
-    case 'SEND_SOCKET_MESSAGE_SEND_MESSAGE':
+    case 'SEND_ENCRYPTED_MESSAGE_TEXT_MESSAGE':
       return {
         ...state,
         items: [
           ...state.items,
           {
             ...action.payload,
-            type: 'SEND_MESSAGE',
+            type: 'TEXT_MESSAGE',
           },
         ],
       }
-    case 'HANDLE_SOCKET_MESSAGE_SEND_MESSAGE':
+    case 'RECEIVE_ENCRYPTED_MESSAGE_TEXT_MESSAGE':
       return {
         ...state,
         items: [
           ...state.items,
           {
             ...action.payload.payload,
-            type: 'SEND_MESSAGE',
+            type: 'TEXT_MESSAGE',
           },
         ],
       }
-    case 'SEND_SOCKET_MESSAGE_SEND_FILE':
+    case 'SEND_ENCRYPTED_MESSAGE_SEND_FILE':
       return {
         ...state,
         items: [
@@ -71,7 +64,7 @@ const activities = (state = initialState, action) => {
           },
         ],
       }
-    case 'HANDLE_SOCKET_MESSAGE_SEND_FILE':
+    case 'RECEIVE_ENCRYPTED_MESSAGE_SEND_FILE':
       return {
         ...state,
         items: [
@@ -82,15 +75,11 @@ const activities = (state = initialState, action) => {
           },
         ],
       }
-    case 'HANDLE_SOCKET_MESSAGE_ADD_USER':
+    case 'RECEIVE_ENCRYPTED_MESSAGE_ADD_USER':
       const newUserId = action.payload.payload.id
 
       const haveUser = action.payload.state.room.members.find(m => m.id === newUserId)
       if (haveUser) {
-        return state
-      }
-
-      if (action.payload.state.room.joining) {
         return state
       }
 
@@ -159,7 +148,7 @@ const activities = (state = initialState, action) => {
           },
         ],
       }
-    case 'SEND_SOCKET_MESSAGE_CHANGE_USERNAME':
+    case 'SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
       return {
         ...state,
         items: [
@@ -179,7 +168,7 @@ const activities = (state = initialState, action) => {
           return item
         }),
       }
-    case 'HANDLE_SOCKET_MESSAGE_CHANGE_USERNAME':
+    case 'RECEIVE_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
       return {
         ...state,
         items: [
@@ -190,7 +179,7 @@ const activities = (state = initialState, action) => {
             newUsername: action.payload.payload.newUsername,
           },
         ].map((item) => {
-          if (['SEND_MESSAGE', 'USER_ACTION'].includes(item.type) && item.sender === action.payload.payload.sender) {
+          if (['TEXT_MESSAGE', 'USER_ACTION'].includes(item.type) && item.sender === action.payload.payload.sender) {
             return {
               ...item,
               username: action.payload.payload.newUsername,
@@ -199,7 +188,7 @@ const activities = (state = initialState, action) => {
           return item
         }),
       }
-    case 'SEND_SOCKET_MESSAGE_USER_ACTION':
+    case 'SEND_ENCRYPTED_MESSAGE_USER_ACTION':
       return {
         ...state,
         items: [
@@ -210,7 +199,7 @@ const activities = (state = initialState, action) => {
           },
         ],
       }
-    case 'HANDLE_SOCKET_MESSAGE_USER_ACTION':
+    case 'RECEIVE_ENCRYPTED_MESSAGE_USER_ACTION':
       return {
         ...state,
         items: [

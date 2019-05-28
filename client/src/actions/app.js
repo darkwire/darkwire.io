@@ -18,3 +18,11 @@ export const toggleSoundEnabled = payload => async (dispatch) => {
 export const toggleSocketConnected = payload => async (dispatch) => {
   dispatch({ type: 'TOGGLE_SOCKET_CONNECTED', payload })
 }
+
+export const createUser = payload => async (dispatch) => {
+  dispatch({ type: 'CREATE_USER', payload })
+}
+
+export const clearActivities = () => async (dispatch) => {
+  dispatch({ type: 'CLEAR_ACTIVITIES' })
+}
