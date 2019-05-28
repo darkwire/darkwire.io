@@ -117,7 +117,7 @@ export default class Socket {
       })
     });
 
-    socket.on('disconnect', () => this.handleDisconnect(socket));
+    // socket.on('disconnect', () => this.handleDisconnect(socket));
 
     socket.on('USER_DISCONNECT', () => this.handleDisconnect(socket));
   }
