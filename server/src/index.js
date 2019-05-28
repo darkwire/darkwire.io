@@ -14,6 +14,7 @@ import crypto from 'crypto'
 import mailer from './utils/mailer';
 import koaStatic from 'koa-static';
 import koaSend from 'koa-send';
+import {pollForInactiveRooms} from './inactive_rooms';
 
 bluebird.promisifyAll(Redis.RedisClient.prototype);
 bluebird.promisifyAll(Redis.Multi.prototype);
@@ -146,6 +147,8 @@ const init = async () => {
   server.listen(PORT, () => {
     console.log(`Darkwire is online at port ${PORT}`);
   })
+
+  pollForInactiveRooms();
 }
 
 init()
