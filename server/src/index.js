@@ -103,7 +103,7 @@ const protocol = (process.env.PROTOCOL || 'http') === 'http' ? http : https;
 
 const server = protocol.createServer(app.callback());
 const io = Io(server, {
-  pingInterval: 5000,
+  pingInterval: 20000,
   pingTimeout: 5000
 });
 io.adapter(socketRedis(process.env.REDIS_URL));
