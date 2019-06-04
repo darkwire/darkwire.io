@@ -83,6 +83,9 @@ class Home extends Component {
           id: this.props.userId,
         },
       })
+      if (payload.users.length === 1) {
+        this.props.openModal('Welcome');
+      }
     })
 
     socket.on('USER_EXIT', (payload) => {
