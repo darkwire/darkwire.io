@@ -86,7 +86,9 @@ const clientDistDirectory = process.env.CLIENT_DIST_DIRECTORY;
 if (clientDistDirectory) {
   app.use(async (ctx, next) => {
     setStaticFileHeaders(ctx);
-    await koaStatic(clientDistDirectory)(ctx, next);
+    await koaStatic(clientDistDirectory, {
+      maxage: 365 * 24 * 60 * 60 * 1000 // one year in milliseconds
+    })(ctx, next);
   });
 
   app.use(async (ctx) => {
