@@ -33,8 +33,10 @@ import {
   toggleSocketConnected,
   receiveUnencryptedMessage,
   sendUnencryptedMessage,
-  sendEncryptedMessage
+  sendEncryptedMessage,
+  setLanguage
 } from 'actions'
+import T from 'components/T'
 
 import styles from './styles.module.scss'
 
@@ -177,22 +179,41 @@ class Home extends Component {
       case 'USER_ENTER':
         return (
           <Notice>
-            <div><Username username={activity.username} /> joined</div>
+            <div>
+              <T data={{
+                username: <Username key={0} username={activity.username} />
+              }} path='userJoined'/>
+            </div>
           </Notice>
         )
       case 'USER_EXIT':
         return (
           <Notice>
-            <div><Username username={activity.username} /> left</div>
+            <div>
+              <T data={{
+                username: <Username key={0} username={activity.username} />
+              }} path='userLeft'/>
+            </div>
           </Notice>
         )
       case 'TOGGLE_LOCK_ROOM':
-        const lockedWord = activity.locked ? 'locked' : 'unlocked'
-        return (
-          <Notice>
-            <div><Username username={activity.username} /> {lockedWord} the room</div>
-          </Notice>
-        )
+        if (activity.locked) {
+          return (
+            <Notice>
+              <div><T data={{
+                username: <Username key={0} username={activity.username} />
+              }} path='lockedRoom'/></div>
+            </Notice>
+          )
+        } else {
+          return (
+            <Notice>
+              <div><T data={{
+                username: <Username key={0} username={activity.username} />
+              }} path='unlockedRoom'/></div>
+            </Notice>
+          )
+        }
       case 'NOTICE':
         return (
           <Notice>
@@ -202,7 +223,11 @@ class Home extends Component {
       case 'CHANGE_USERNAME':
         return (
           <Notice>
-            <div><Username username={activity.currentUsername} /> changed their name to <Username username={activity.newUsername} /></div>
+            <div><T data={{
+              oldUsername: <Username key={0} username={activity.currentUsername} />,
+              newUsername: <Username key={1} username={activity.newUsername} />
+            }} path='nameChange'/>
+            </div>
           </Notice>
         )
       case 'USER_ACTION':
@@ -215,7 +240,15 @@ class Home extends Component {
         const downloadUrl = getObjectUrl(activity.encodedFile, activity.fileType)
         return (
           <div>
-            <Username username={activity.username} /> sent you a file. <a target="_blank" href={downloadUrl} rel="noopener noreferrer">Download {activity.fileName}</a>
+            <T data={{
+              username: <Username key={0} username={activity.username} />,
+            }} path='userSentFile'/>&nbsp;
+
+            <a target="_blank" href={downloadUrl} rel="noopener noreferrer">
+              <T data={{
+                filename: activity.fileName,
+              }} path='downloadFile'/>
+            </a>
             {this.getFileDisplay(activity)}
           </div>
         )
@@ -223,7 +256,11 @@ class Home extends Component {
         const url = getObjectUrl(activity.encodedFile, activity.fileType)
         return (
           <Notice>
-            <div>You sent <a target="_blank" href={url} rel="noopener noreferrer">{activity.fileName}</a></div>
+            <div>
+              <T data={{
+                filename: <a key={0} target="_blank" href={url} rel="noopener noreferrer">{activity.fileName}</a>,
+              }} path='sentFile'/>&nbsp;
+            </div>
             {this.getFileDisplay(activity)}
           </Notice>
         )
@@ -243,22 +280,22 @@ class Home extends Component {
       case 'About':
         return {
           component: <About roomId={this.props.roomId} />,
-          title: 'About',
+          title: this.props.translations.aboutHeader,
         }
       case 'Settings':
         return {
-          component: <Settings roomId={this.props.roomId} toggleSoundEnabled={this.props.toggleSoundEnabled} soundIsEnabled={this.props.soundIsEnabled} />,
-          title: 'Settings & Help',
+          component: <Settings roomId={this.props.roomId} toggleSoundEnabled={this.props.toggleSoundEnabled} soundIsEnabled={this.props.soundIsEnabled} setLanguage={this.props.setLanguage} language={this.props.language} translations={this.props.translations} />,
+          title: this.props.translations.settingsHeader,
         }
       case 'Welcome':
         return {
-          component: <Welcome roomId={this.props.roomId} close={this.props.closeModal} />,
-          title: 'Welcome to Darkwire v2.0',
+          component: <Welcome roomId={this.props.roomId} close={this.props.closeModal} translations={this.props.translations} />,
+          title: this.props.translations.welcomeHeader,
         }
       case 'Room Locked':
         return {
-          component: <RoomLocked />,
-          title: 'This room is locked',
+          component: <RoomLocked modalContent={this.props.translations.lockedRoomHeader} />,
+          title: this.props.translations.lockedRoomHeader,
           preventClose: true,
         }
       default:
@@ -348,12 +385,13 @@ class Home extends Component {
             openModal={this.props.openModal}
             iAmOwner={this.props.iAmOwner}
             userId={this.props.userId}
+            translations={this.props.translations}
           />
         </div>
         <div className="main-chat">
           <div onClick={this.handleChatClick.bind(this)} className="message-stream h-100" ref={el => this.messageStream = el}>
             <ul className="plain" ref={el => this.activitiesList = el}>
-              <li><p className={styles.tos}><button className='btn btn-link' onClick={this.props.openModal.bind(this, 'About')}> By using Darkwire, you are agreeing to our Acceptable Use Policy and Terms of Service.</button></p></li>
+              <li><p className={styles.tos}><button className='btn btn-link' onClick={this.props.openModal.bind(this, 'About')}> <T path='agreement'/></button></p></li>
               {this.props.activities.map((activity, index) => (
                 <li key={index} className={`activity-item ${activity.type}`}>
                   {this.getActivityComponent(activity)}
@@ -450,6 +488,8 @@ const mapStateToProps = (state) => {
     faviconCount: state.app.unreadMessageCount,
     soundIsEnabled: state.app.soundIsEnabled,
     socketConnected: state.app.socketConnected,
+    language: state.app.language,
+    translations: state.app.translations,
   }
 }
 
@@ -464,7 +504,8 @@ const mapDispatchToProps = {
   toggleSocketConnected,
   receiveUnencryptedMessage,
   sendUnencryptedMessage,
-  sendEncryptedMessage
+  sendEncryptedMessage,
+  setLanguage
 }
 
 export default connect(

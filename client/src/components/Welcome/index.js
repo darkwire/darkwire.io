@@ -28,9 +28,9 @@ class Welcome extends Component {
         </div>
         <br />
         <p className='mb-2'>Others can join this room using the following URL:</p>
-        <RoomLink roomId={this.props.roomId} />
+        <RoomLink roomId={this.props.roomId} translations={this.props.translations} />
         <div className="react-modal-footer">
-          <button className="btn btn-primary btn-lg" onClick={this.props.close}>Ok</button>
+          <button className="btn btn-primary btn-lg" onClick={this.props.close}>{this.props.translations.welcomeModalCTA}</button>
         </div>
       </div>
     )
@@ -40,6 +40,7 @@ class Welcome extends Component {
 Welcome.propTypes = {
   roomId: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
+  translations: PropTypes.object.isRequired,
 }
 
 export default Welcome

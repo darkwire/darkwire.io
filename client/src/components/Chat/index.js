@@ -254,7 +254,7 @@ export class Chat extends Component {
           autoFocus
           className="chat"
           value={this.state.message}
-          placeholder="Type here"
+          placeholder={this.props.translations.typePlaceholder}
           onChange={this.handleInputChange.bind(this)} />
         <div className="input-controls">
           <FileTransfer sendEncryptedMessage={this.props.sendEncryptedMessage} />
@@ -277,11 +277,13 @@ Chat.propTypes = {
   clearActivities: PropTypes.func.isRequired,
   focusChat: PropTypes.bool.isRequired,
   scrollToBottom: PropTypes.func.isRequired,
+  translations: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
   username: state.user.username,
   userId: state.user.id,
+  translations: state.app.translations,
 })
 
 const mapDispatchToProps = {
