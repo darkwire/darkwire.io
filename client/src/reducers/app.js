@@ -1,3 +1,8 @@
+import Cookie from 'js-cookie';
+import {getTranslations} from 'i18n';
+
+const language = Cookie.get('language') || 'en';
+
 const initialState = {
   modalComponent: null,
   scrolledToBottom: true,
@@ -5,6 +10,8 @@ const initialState = {
   unreadMessageCount: 0,
   soundIsEnabled: true,
   socketConnected: false,
+  language,
+  translations: getTranslations(language)
 }
 
 const app = (state = initialState, action) => {
@@ -44,6 +51,12 @@ const app = (state = initialState, action) => {
       return {
         ...state,
         socketConnected: action.payload,
+      }
+    case 'CHANGE_LANGUAGE':
+      return {
+        ...state,
+        language: action.payload,
+        translations: getTranslations(action.payload)
       }
     default:
       return state

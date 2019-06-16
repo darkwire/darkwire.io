@@ -4,7 +4,7 @@ export default class RoomLocked extends Component {
   render() {
     return (
       <div>
-        This room is locked.
+        {this.props.modalContent}
       </div>
     )
   }

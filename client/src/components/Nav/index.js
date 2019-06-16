@@ -69,7 +69,7 @@ class Nav extends Component {
           <button
             data-toggle="tooltip"
             data-placement="bottom"
-            title="Copied"
+            title={this.props.translations.copyButtonTooltip}
             data-clipboard-text={`${window.location.origin}/${this.props.roomId}`}
             className="btn btn-plain btn-link clipboard-trigger room-id ellipsis">
             {`/${this.props.roomId}`}
@@ -136,13 +136,14 @@ class Nav extends Component {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <button className="btn btn-plain nav-link" onClick={this.newRoom.bind(this)}target="blank"><PlusCircle /> <span>New Room</span></button>
+              <button className="btn btn-plain nav-link" onClick={this.newRoom.bind(this)}target="blank"><PlusCircle /> <span>{this.props.translations.newRoomButton}</span></button>
+            </li>
+            <li className="
+            nav-item">
+              <button onClick={this.handleSettingsClick.bind(this)} className="btn btn-plain nav-link"><Settings /> <span>{this.props.translations.settingsButton}</span></button>
             </li>
             <li className="nav-item">
-              <button onClick={this.handleSettingsClick.bind(this)} className="btn btn-plain nav-link"><Settings /> <span>Settings</span></button>
-            </li>
-            <li className="nav-item">
-              <button onClick={this.handleAboutClick.bind(this)} className="btn btn-plain nav-link"><Info /> <span>About</span></button>
+              <button onClick={this.handleAboutClick.bind(this)} className="btn btn-plain nav-link"><Info /> <span>{this.props.translations.aboutButton}</span></button>
             </li>
           </ul>
         </div>
@@ -159,6 +160,7 @@ Nav.propTypes = {
   toggleLockRoom: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
   iAmOwner: PropTypes.bool.isRequired,
+  translations: PropTypes.object.isRequired,
 }
 
 export default Nav

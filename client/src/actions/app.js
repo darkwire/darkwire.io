@@ -26,3 +26,7 @@ export const createUser = payload => async (dispatch) => {
 export const clearActivities = () => async (dispatch) => {
   dispatch({ type: 'CLEAR_ACTIVITIES' })
 }
+
+export const setLanguage = payload => async (dispatch) => {
+  dispatch({type: 'CHANGE_LANGUAGE', payload});
+}

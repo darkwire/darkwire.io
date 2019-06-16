@@ -46,7 +46,7 @@ class RoomLink extends Component {
                 data-toggle="tooltip"
                 data-placement="bottom"
                 data-clipboard-text={this.state.roomUrl}
-                title="Copied!"
+                title={this.props.translations.copyButtonTooltip}
               >
                 <Copy />
               </button>
@@ -60,6 +60,7 @@ class RoomLink extends Component {
 
 RoomLink.propTypes = {
   roomId: PropTypes.string.isRequired,
+  translations: PropTypes.object.isRequired,
 }
 
 export default RoomLink
