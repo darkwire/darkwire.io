@@ -38,7 +38,7 @@ class Settings extends Component {
 
         <section>
           <h4 className='mb-3'><T path='languageDropdownHeader'/></h4>
-          <p><a href="https://github.com/darkwire/darkwire.io/tree/master/client/src/i18n" target="_blank">Help us translate Darkwire!</a></p>
+          <p><a href="https://github.com/darkwire/darkwire.io/blob/master/client/README.md#translations" target="_blank">Help us translate Darkwire!</a></p>
           <div className="form-group">
             <select value={this.props.language} className="form-control" onChange={this.handleLanguageChange.bind(this)}>
               <option value="en">English</option>
