@@ -43,6 +43,7 @@ class Settings extends Component {
             <select value={this.props.language} className="form-control" onChange={this.handleLanguageChange.bind(this)}>
               <option value="en">English</option>
               <option value="fr">Français</option>
+              <option value="oc">Occitan</option>
             </select>
           </div>
         </section>
