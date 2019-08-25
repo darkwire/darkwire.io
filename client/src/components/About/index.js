@@ -60,7 +60,7 @@ class About extends Component {
 
         <section id='report-abuse'>
           <h4>Report Abuse</h4>
-          <p>We encourage you to report problematic content to us. Please keep in mind that to help ensure the safety, confidentiality and security of your messages, we generally don't have the contents of messages available to us, which limits our ability to verify the report and take action.</p>
+          <p>We encourage you to report problematic content to us. Please keep in mind that to help ensure the safety, confidentiality and security of your messages, we do not have the contents of messages available to us, which limits our ability to verify the report and take action.</p>
           <p>When needed, you can take a screenshot of the content and share it, along with any available contact info, with appropriate law enforcement authorities.</p>
           <p>To report any content, email us at abuse[at]darkwire.io or submit the room ID below to report anonymously.</p>
           <form onSubmit={this.handleReportAbuse.bind(this)}>
