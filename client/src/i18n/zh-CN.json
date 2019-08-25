@@ -18,7 +18,7 @@
   "settings": "设置",
   "settingsButton": "设置",
   "settingsHeader": "设置和帮助",
-  "slashCommandsBullets": "更改用户名，执行操作，清除消息历史记录，列出所有命令",
+  "slashCommandsBullets": ["更改用户名", "执行操作", "清除消息历史记录", "列出所有命令"],
   "slashCommandsHeader": "斜线命令",
   "slashCommandsText": "可以使用以下斜杠命令：",
   "sound": "声音",
