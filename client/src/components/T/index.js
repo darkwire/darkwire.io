@@ -9,7 +9,9 @@ const regex = /{(.*?)}/g;
 class T extends Component {
   render() {
     const t = getTranslations(this.props.language);
-    let string = _.get(t, this.props.path, '').split(regex);
+    const englishT = getTranslations('en');
+    const str = _.get(t, this.props.path, '') || _.get(englishT, this.props.path, '')
+    let string = str.split(regex);
     if (this.props.data) {
       string = string.map(word => {
         if (this.props.data[word]) {
@@ -20,11 +22,6 @@ class T extends Component {
       return <span>{string}</span>
     }
     return string;
-  }
-
-  t() {
-    const t = getTranslations(this.props.language);
-    return _.get(t, this.props.path);
   }
 }
 
