@@ -33,5 +33,6 @@
   ],
   "sound": "Sound",
   "welcomeModalCTA": "Ok",
-  "lockedRoomHeader": "This room is locked"
+  "lockedRoomHeader": "This room is locked",
+  "helpTranslate": "Help us translate Darkwire!"
 }
