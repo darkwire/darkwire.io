@@ -87,7 +87,7 @@ if (clientDistDirectory) {
   app.use(async (ctx, next) => {
     setStaticFileHeaders(ctx);
     await koaStatic(clientDistDirectory, {
-      maxage: 365 * 24 * 60 * 60 * 1000 // one year in milliseconds
+      maxage: ctx.req.url === '/' ? 60 * 1000 : 365 * 24 * 60 * 60 * 1000 // one minute in ms for html doc, one year for css, js, etc
     })(ctx, next);
   });
 
