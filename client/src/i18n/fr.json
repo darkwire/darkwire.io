@@ -22,7 +22,7 @@
   "roomOwnerHeader": "Propriété du Salon",
   "roomOwnerText": "La personne qui a créé le salon en est propriétaire et possède des privilèges spéciaux, comme la possibilité de verrouiller et déverrouiller le salon. Si le propriétaire quitte le salon, la deuxième personne à s'y joindre devient propriétaire. En cas de départ, la troisième personne devient propriétaire, et ainsi de suite. Le propriétaire du salon a une icône en forme d'étoile à côté de son nom d'utilisateur dans le menu déroulant des participants.",
   "lockRoomHeader": "Verrouiller le Salon",
-  "lockRoomText": "Si vous êtes le propriétaire du salon, vous pouvez le verrouiller et le déverrouiler en cliquant sur l'icône de cadenas dans situé dans la barre de navigation. Quand un salon est verrouillé, aucun autre participant ne peut rejoindre.",
+  "lockRoomText": "Si vous êtes le propriétaire du salon, vous pouvez le verrouiller et le déverrouiller en cliquant sur l'icône de cadenas située dans la barre de navigation. Quand un salon est verrouillé, aucun autre participant ne peut rejoindre.",
   "slashCommandsHeader": "Commandes",
   "slashCommandsText": "Les commandes suivantes sont disponibles :",
   "slashCommandsBullets": [
