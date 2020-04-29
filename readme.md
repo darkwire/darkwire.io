@@ -16,6 +16,15 @@ The Darkwire.io [web client](/client) is written in JavaScript with React JS and
 
 ### Development
 
+#### Prerequisite
+
+You need redis in order to make the server works. A simple way to achieve this
+if you have docker is to launch the next command:
+
+```
+docker run --name darkwire-redis --rm -p 6379:6379 -d redis redis-server --appendonly yes
+```
+
 #### Setup
 
 Install dependencies
@@ -58,7 +67,7 @@ Here's an overview of a chat between Alice and Bob (also applies to group chats)
 1. Bob creates a room and immediately creates a public/private key pair (RSA-OAEP).
 2. Alice joins the room and also creates a public/private key pair. She is sent Bob's public key and she sends Bob her public key.
 3. When Bob goes to send a message, three things are created: a session key (AES-CBC), a signing key (HMAC SHA-256) and an initialization vector (used in the encryption process).
-4. Bob's message is encrypted with the session key and initialization vector, and a signature is created using the signing key. 
+4. Bob's message is encrypted with the session key and initialization vector, and a signature is created using the signing key.
 5. The session key and signing key are encrypted with each recipient's public key (in this case only Alice, but in a group chat multiple).
 6. The encrypted message, initialization vector, signature, encrypted session key and encrypted signing key are sent to all recipients (in this case just Alice) as a package.
 7. Alice receives the package and decrypts the session key and signing key using her private key. She decrypts the message with the decrypted session key and vector, and verifies the signature with the decrypted signing key.
@@ -71,7 +80,7 @@ Darkwire does not provide any guarantee that the person you're communicating wit
 
 ## File Transfer
 
-Darkwire encodes documents (up to 1MB) into base64 using [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa) and is encrypted the same way chat messages are. 
+Darkwire encodes documents (up to 1MB) into base64 using [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa) and is encrypted the same way chat messages are.
 
 1. When a file is "uploaded", the document is encoded on the client and the server recieves the encrypted base64 string.
 2. The server sends the encrypted base64 string to clients in the same chat room.
