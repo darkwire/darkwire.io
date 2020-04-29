@@ -36,6 +36,7 @@ jest.mock('utils/crypto', () => {
   });
 });
 
+
 test('Home component is displaying', async () => {
   const { asFragment } = render(
     <Provider store={store}>
@@ -60,6 +61,8 @@ test('Home component is displaying', async () => {
         socketConnected={false}
         toggleSoundEnabled={() => {}}
         soundIsEnabled={false}
+        toggleNotificationEnabled={() => {}}
+        notificationIsEnabled={false}
         faviconCount={0}
         toggleWindowFocus={() => {}}
         closeModal={() => {}}

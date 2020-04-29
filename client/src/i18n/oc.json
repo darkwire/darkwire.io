@@ -25,13 +25,10 @@
   "lockRoomText": "Se sètz lo proprietari de la sala, podètz clavar e desclavar en clicar l’icòna del cadenat de la barra de navigacion. Quand una sala es clavada, cap de participant pòt pas la rejónher .",
   "slashCommandsHeader": "Comandas",
   "slashCommandsText": "Las comandas seguentas son disponiblas :",
-  "slashCommandsBullets": [
-    "càmbia d’escais-nom",
-    "realiza una accion",
-    "escafa l’istoric de conversacion",
-    "lista totas las comandas"
-  ],
+  "slashCommandsBullets": ["càmbia d’escais-nom", "realiza una accion", "escafa l’istoric de conversacion", "lista totas las comandas"],
   "sound": "Son",
+  "newMessageNotification": "New message notification",
+  "desktopNotification": "Desktop Notification",
   "welcomeModalCTA": "D’acòrdi",
   "lockedRoomHeader": "Aquesta sala es clavada",
   "helpTranslate": "Ajudatz-nos a traduire Darkwire !"

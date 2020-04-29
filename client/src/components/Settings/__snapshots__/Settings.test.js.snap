@@ -7,7 +7,7 @@ exports[`Settings component should display 1`] = `
   >
     <section>
       <h4>
-        soundCheck
+        New message notification
       </h4>
       <form>
         <div
@@ -23,7 +23,23 @@ exports[`Settings component should display 1`] = `
               id="sound-control"
               type="checkbox"
             />
-            soundCheck
+            Sound
+          </label>
+        </div>
+        <div
+          class="form-check"
+        >
+          <label
+            class="form-check-label"
+            for="notif-control"
+          >
+            <input
+              checked=""
+              class="form-check-input"
+              id="notif-control"
+              type="checkbox"
+            />
+            Desktop Notification
           </label>
         </div>
       </form>
@@ -32,14 +48,14 @@ exports[`Settings component should display 1`] = `
       <h4
         class="mb-3"
       >
-        default
+        This room
       </h4>
     </section>
     <section>
       <h4
         class="mb-3"
       >
-        default
+        Language
       </h4>
       <p>
         <a
@@ -47,7 +63,7 @@ exports[`Settings component should display 1`] = `
           rel="noopener noreferrer"
           target="_blank"
         >
-          default
+          Help us translate Darkwire!
         </a>
       </p>
       <div
@@ -96,26 +112,26 @@ exports[`Settings component should display 1`] = `
     </section>
     <section>
       <h4>
-        default
+        Room Ownership
       </h4>
       <p>
-        default
+        The person who created the room is the room owner and has special privileges, like the ability to lock and unlock the room. If the owner leaves the room, the second person to join assumes ownership. If they leave, the third person becomes owner, and so on. The room owner has a star icon next to their username in the participants dropdown.
       </p>
     </section>
     <section>
       <h4>
-        default
+        Lock Room
       </h4>
       <p>
-        default
+        If you are the room owner, you can lock and unlock the room by clicking the lock icon in the nav bar. When a room is locked, no other participants will be able to join.
       </p>
     </section>
     <section>
       <h4>
-        default
+        Slash Commands
       </h4>
       <p>
-        default
+        The following slash commands are available:
       </p>
       <ul>
         <li>
@@ -123,7 +139,7 @@ exports[`Settings component should display 1`] = `
           <span
             class="text-muted"
           >
-            default
+            changes username
           </span>
         </li>
         <li>
@@ -131,7 +147,7 @@ exports[`Settings component should display 1`] = `
           <span
             class="text-muted"
           >
-            default
+            performs an action
           </span>
         </li>
         <li>
@@ -139,7 +155,7 @@ exports[`Settings component should display 1`] = `
           <span
             class="text-muted"
           >
-            default
+            clears your message history
           </span>
         </li>
         <li>
@@ -147,7 +163,7 @@ exports[`Settings component should display 1`] = `
           <span
             class="text-muted"
           >
-            default
+            lists all commands
           </span>
         </li>
       </ul>

@@ -25,13 +25,10 @@
   "lockRoomText": "If you are the room owner, you can lock and unlock the room by clicking the lock icon in the nav bar. When a room is locked, no other participants will be able to join.",
   "slashCommandsHeader": "Slash Commands",
   "slashCommandsText": "The following slash commands are available:",
-  "slashCommandsBullets": [
-    "changes username",
-    "performs an action",
-    "clears your message history",
-    "lists all commands"
-  ],
+  "slashCommandsBullets": ["changes username", "performs an action", "clears your message history", "lists all commands"],
   "sound": "Sound",
+  "newMessageNotification": "New message notification",
+  "desktopNotification": "Desktop Notification",
   "welcomeModalCTA": "Ok",
   "lockedRoomHeader": "This room is locked",
   "helpTranslate": "Help us translate Darkwire!"

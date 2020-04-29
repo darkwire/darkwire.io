@@ -25,13 +25,10 @@
   "lockRoomText": "Si vous êtes le propriétaire du salon, vous pouvez le verrouiller et le déverrouiller en cliquant sur l'icône de cadenas située dans la barre de navigation. Quand un salon est verrouillé, aucun autre participant ne peut rejoindre.",
   "slashCommandsHeader": "Commandes",
   "slashCommandsText": "Les commandes suivantes sont disponibles :",
-  "slashCommandsBullets": [
-    "changer de pseudo",
-    "effectuer une action",
-    "effacer votre historique de messages",
-    "lister toutes les commandes"
-  ],
+  "slashCommandsBullets": ["changer de pseudo", "effectuer une action", "effacer votre historique de messages", "lister toutes les commandes"],
   "sound": "Son",
+  "newMessageNotification": "Notification lors d'un nouveau message",
+  "desktopNotification": "Notification Système",
   "welcomeModalCTA": "Ok",
   "lockedRoomHeader": "Ce salon est verrouillé",
   "helpTranslate": "Aidez-nous à traduire Darkwire!"

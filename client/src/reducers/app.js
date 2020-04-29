@@ -1,5 +1,5 @@
 import Cookie from 'js-cookie';
-import {getTranslations} from 'i18n';
+import { getTranslations } from 'i18n';
 
 const language = Cookie.get('language') || navigator.language || 'en';
 
@@ -9,6 +9,7 @@ const initialState = {
   windowIsFocused: true,
   unreadMessageCount: 0,
   soundIsEnabled: true,
+  notificationIsEnabled: true,
   socketConnected: false,
   language,
   translations: getTranslations(language)
@@ -46,6 +47,11 @@ const app = (state = initialState, action) => {
       return {
         ...state,
         soundIsEnabled: action.payload,
+      }
+    case 'TOGGLE_NOTIFICATION_ENABLED':
+      return {
+        ...state,
+        notificationIsEnabled: action.payload,
       }
     case 'TOGGLE_SOCKET_CONNECTED':
       return {
