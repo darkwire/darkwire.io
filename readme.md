@@ -16,14 +16,21 @@ The Darkwire.io [web client](/client) is written in JavaScript with React JS and
 
 ### Development
 
-#### Prerequisite
+#### Prerequisites
 
-You need redis in order to make the server works. A simple way to achieve this
-if you have docker is to launch the next command:
+Copy `.env.dist` files in `server/` and `client/` directoies without the `.dist`
+extensions and adapt them to your needs.
+
+You need [Redis](https://redis.io/) in order to make the server works.
+A simple way to achieve this, if you have docker, is to execute the following
+command:
 
 ```
 docker run --name darkwire-redis --rm -p 6379:6379 -d redis redis-server --appendonly yes
 ```
+
+Alternatively, you can select the _memory_ `STORE_BACKEND` instead of _redis_ and
+unset `REDIS_URL` in your server `.env` file to avoid Redis use.
 
 #### Setup
 
