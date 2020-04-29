@@ -7,12 +7,14 @@ import {
   closeModal,
   toggleWindowFocus,
   toggleSoundEnabled,
+  toggleNotificationEnabled,
   toggleSocketConnected,
   receiveUnencryptedMessage,
   sendUnencryptedMessage,
   sendEncryptedMessage,
   setLanguage
 } from 'actions'
+import WithNewMessageNotification from './WithNewMessageNotification'
 
 const mapStateToProps = (state) => {
   const me = state.room.members.find(m => m.id === state.user.id)
@@ -30,6 +32,7 @@ const mapStateToProps = (state) => {
     iAmOwner: Boolean(me && me.isOwner),
     faviconCount: state.app.unreadMessageCount,
     soundIsEnabled: state.app.soundIsEnabled,
+    notificationIsEnabled: state.app.notificationIsEnabled,
     socketConnected: state.app.socketConnected,
     language: state.app.language,
     translations: state.app.translations,
@@ -43,6 +46,7 @@ const mapDispatchToProps = {
   closeModal,
   toggleWindowFocus,
   toggleSoundEnabled,
+  toggleNotificationEnabled,
   toggleSocketConnected,
   receiveUnencryptedMessage,
   sendUnencryptedMessage,
@@ -50,7 +54,7 @@ const mapDispatchToProps = {
   setLanguage
 }
 
-export default connect(
+export default WithNewMessageNotification(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home)
+)(Home))

@@ -11,8 +11,6 @@ import Settings from 'components/Settings'
 import Welcome from 'components/Welcome'
 import RoomLocked from 'components/RoomLocked'
 import { X, AlertCircle } from 'react-feather'
-import Tinycon from 'tinycon'
-import beepFile from 'audio/beep.mp3'
 import classNames from 'classnames'
 import ActivityList from './ActivityList'
 
@@ -81,16 +79,6 @@ class Home extends Component {
 
   componentDidMount() {
     this.bindEvents()
-
-    this.beep = window.Audio && new window.Audio(beepFile)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    Tinycon.setBubble(nextProps.faviconCount)
-
-    if (nextProps.faviconCount !== 0 && nextProps.faviconCount !== this.props.faviconCount && this.props.soundIsEnabled) {
-      this.beep.play()
-    }
   }
 
   getModal() {
@@ -108,7 +96,16 @@ class Home extends Component {
         }
       case 'Settings':
         return {
-          component: <Settings roomId={this.props.roomId} toggleSoundEnabled={this.props.toggleSoundEnabled} soundIsEnabled={this.props.soundIsEnabled} setLanguage={this.props.setLanguage} language={this.props.language} translations={this.props.translations} />,
+          component: <Settings
+            roomId={this.props.roomId}
+            toggleSoundEnabled={this.props.toggleSoundEnabled}
+            soundIsEnabled={this.props.soundIsEnabled}
+            toggleNotificationEnabled={this.props.toggleNotificationEnabled}
+            notificationIsEnabled={this.props.notificationIsEnabled}
+            setLanguage={this.props.setLanguage}
+            language={this.props.language}
+            translations={this.props.translations}
+          />,
           title: this.props.translations.settingsHeader,
         }
       case 'Welcome':
@@ -251,6 +248,8 @@ Home.propTypes = {
   faviconCount: PropTypes.number.isRequired,
   soundIsEnabled: PropTypes.bool.isRequired,
   toggleSoundEnabled: PropTypes.func.isRequired,
+  notificationIsEnabled: PropTypes.bool.isRequired,
+  toggleNotificationEnabled: PropTypes.func.isRequired,
   toggleSocketConnected: PropTypes.func.isRequired,
   socketConnected: PropTypes.bool.isRequired,
   sendUnencryptedMessage: PropTypes.func.isRequired,

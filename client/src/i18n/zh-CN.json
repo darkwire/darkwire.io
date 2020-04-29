@@ -22,6 +22,8 @@
   "slashCommandsHeader": "斜线命令",
   "slashCommandsText": "可以使用以下斜杠命令：",
   "sound": "声音",
+  "newMessageNotification": "New message notification",
+  "desktopNotification": "Desktop Notification",
   "typePlaceholder": "在此输入",
   "unlockedRoom": "{username} 解锁了房间",
   "userJoined": "{username} 已加入",

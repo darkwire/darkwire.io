@@ -15,6 +15,10 @@ export const toggleSoundEnabled = payload => async (dispatch) => {
   dispatch({ type: 'TOGGLE_SOUND_ENABLED', payload })
 }
 
+export const toggleNotificationEnabled = payload => async (dispatch) => {
+  dispatch({ type: 'TOGGLE_NOTIFICATION_ENABLED', payload })
+}
+
 export const toggleSocketConnected = payload => async (dispatch) => {
   dispatch({ type: 'TOGGLE_SOCKET_CONNECTED', payload })
 }

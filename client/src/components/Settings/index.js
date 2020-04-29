@@ -11,6 +11,10 @@ class Settings extends Component {
     this.props.toggleSoundEnabled(!this.props.soundIsEnabled)
   }
 
+  handleNotificationToggle() {
+    this.props.toggleNotificationEnabled(!this.props.notificationIsEnabled)
+  }
+
   handleLanguageChange(evt) {
     const language = evt.target.value;
     Cookie.set('language', language);
@@ -21,7 +25,7 @@ class Settings extends Component {
     return (
       <div className={styles}>
         <section>
-          <h4><T path='sound'/></h4>
+          <h4><T path='newMessageNotification'/></h4>
           <form>
             <div className="form-check">
               <label className="form-check-label" htmlFor="sound-control">
@@ -29,8 +33,15 @@ class Settings extends Component {
                 <T path='sound'/>
               </label>
             </div>
+            <div className="form-check">
+              <label className="form-check-label" htmlFor="notif-control">
+                <input id="notif-control" onChange={this.handleNotificationToggle.bind(this)} className="form-check-input" type="checkbox" checked={this.props.notificationIsEnabled} />
+                <T path='desktopNotification'/>
+              </label>
+            </div>
           </form>
         </section>
+
         <section>
           <h4 className='mb-3'><T path='copyRoomHeader'/></h4>
           <RoomLink roomId={this.props.roomId} translations={this.props.translations} />
@@ -78,6 +89,8 @@ class Settings extends Component {
 Settings.propTypes = {
   soundIsEnabled: PropTypes.bool.isRequired,
   toggleSoundEnabled: PropTypes.func.isRequired,
+  notificationIsEnabled: PropTypes.bool.isRequired,
+  toggleNotificationEnabled: PropTypes.func.isRequired,
   roomId: PropTypes.string.isRequired,
   setLanguage: PropTypes.func.isRequired,
   translations: PropTypes.object.isRequired,

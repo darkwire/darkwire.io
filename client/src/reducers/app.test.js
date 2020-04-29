@@ -14,6 +14,7 @@ describe('App reducer', () => {
       modalComponent: null,
       scrolledToBottom: true,
       socketConnected: false,
+      notificationIsEnabled: true,
       soundIsEnabled: true,
       translations: { path: 'test' },
       unreadMessageCount: 0,

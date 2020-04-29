@@ -22,6 +22,8 @@
   "slashCommandsHeader": "Slash-Befehle",
   "slashCommandsText": "Die folgenden Schrägstrichbefehle sind verfügbar:",
   "sound": "Klingen",
+  "newMessageNotification": "New message notification",
+  "desktopNotification": "Desktop Notification",
   "typePlaceholder": "Tippen Sie hier",
   "unlockedRoom": "{username} hat den Raum freigeschaltet",
   "userJoined": "{username} ist beigetreten",
