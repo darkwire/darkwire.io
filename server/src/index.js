@@ -6,14 +6,14 @@ import Io from 'socket.io';
 import KoaBody from 'koa-body';
 import cors from 'kcors';
 import Router from 'koa-router';
-import socketRedis from 'socket.io-redis';
 import Socket from './socket';
 import crypto from 'crypto';
 import mailer from './utils/mailer';
 import koaStatic from 'koa-static';
 import koaSend from 'koa-send';
 import { pollForInactiveRooms } from './inactive_rooms';
-import { RedisStore, MemoryStore } from './utils/store';
+import RedisStore from './store/Redis';
+import MemoryStore from './store/Memory';
 
 const storeBackend = process.env.STORE_BACKEND || 'redis';
 
@@ -24,7 +24,7 @@ switch (storeBackend) {
     break;
   case 'redis':
   default:
-    store = new RedisStore(process.env.REDIS_URL);
+    store = new RedisStore(process.env.STORE_HOST);
     break;
 }
 
@@ -124,9 +124,9 @@ const io = Io(server, {
   pingTimeout: 5000,
 });
 
-// Only use redis if we have a REDIS_URL in config
-if (process.env.REDIS_URL !== undefined) {
-  io.adapter(socketRedis(process.env.REDIS_URL));
+// Only use socket adapter if store has one
+if (store.hasSocketAdapter) {
+  io.adapter(store.getSocketAdapter());
 }
 
 const roomHashSecret = process.env.ROOM_HASH_SECRET;

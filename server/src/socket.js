@@ -50,7 +50,7 @@ export default class Socket {
 
   joinRoom(roomId, socket) {
     return new Promise((resolve, reject) => {
-      if (process.env.REDIS_URL !== undefined) {
+      if (getStore().hasSocketAdapter) {
         getIO()
           .of('/')
           .adapter.remoteJoin(socket.id, roomId, (err) => {

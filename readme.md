@@ -29,8 +29,8 @@ command:
 docker run --name darkwire-redis --rm -p 6379:6379 -d redis redis-server --appendonly yes
 ```
 
-Alternatively, you can select the _memory_ `STORE_BACKEND` instead of _redis_ and
-unset `REDIS_URL` in your server `.env` file to avoid Redis use.
+Alternatively, you can select the _memory_ `STORE_BACKEND` instead of _redis_
+in your server `.env` file to avoid Redis use.
 
 #### Setup
 
