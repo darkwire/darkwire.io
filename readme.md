@@ -18,7 +18,7 @@ The Darkwire.io [web client](/client) is written in JavaScript with React JS and
 
 #### Prerequisites
 
-Copy `.env.dist` files in `server/` and `client/` directoies without the `.dist`
+Copy `.env.dist` files in `server/` and `client/` directories without the `.dist`
 extensions and adapt them to your needs.
 
 You need [Redis](https://redis.io/) in order to make the server works.
