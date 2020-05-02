@@ -9,7 +9,7 @@ export class MemoryStore {
 
   async get(key, field) {
     if (this.store[key] === undefined || this.store[key][field] === undefined) {
-      return '';
+      return null;
     }
     return this.store[key][field];
   }
@@ -27,17 +27,20 @@ export class MemoryStore {
       this.store[key] = {};
     }
     this.store[key][field] = value;
+    return 1;
   }
 
   async del(key, field) {
     if (this.store[key] === undefined || this.store[key][field] === undefined) {
-      return;
+      return 0;
     }
     delete this.store[key][field];
+    return 1;
   }
 
   async inc(key, field, inc = 1) {
     this.store[key][field] += inc;
+    return this.store[key][field];
   }
 
 }
