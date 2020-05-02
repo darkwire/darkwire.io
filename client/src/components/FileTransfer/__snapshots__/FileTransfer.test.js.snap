@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FileTransfer component is displaying 1`] = `
+exports[`FileTransfer tests FileTransfer component is displaying 1`] = `
 <DocumentFragment>
   <div
     class="styles icon file-transfer btn btn-link"
