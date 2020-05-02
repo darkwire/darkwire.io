@@ -2,89 +2,103 @@ import React from 'react';
 import { render, screen, fireEvent, createEvent } from '@testing-library/react';
 import FileTransfer from '.';
 
-test('FileTransfer component is displaying', async () => {
-  const { asFragment } = render(<FileTransfer sendEncryptedMessage={() => {}} />);
+// Fake date
+jest.spyOn(global.Date, 'now').mockImplementation(() => new Date('2020-03-14T11:01:58.135Z').valueOf());
 
-  expect(asFragment()).toMatchSnapshot();
-});
-
-// Skipped as broken in this component version. Should be fixed later.
-test.skip('FileTransfer component detect bad browser support', async () => {
+describe('FileTransfer tests', () => {
   const { File } = window;
 
-  // Remove one of component dependency
-  delete window.File;
+  beforeEach(() => {
+    // Restore original
+    window.File = File;
+  });
+  afterEach(() => {
+    // Restore original
+    window.File = File;
+  });
 
-  const { asFragment } = render(<FileTransfer sendEncryptedMessage={() => {}} />);
+  it('FileTransfer component is displaying', async () => {
+    const { asFragment } = render(<FileTransfer sendEncryptedMessage={() => {}} />);
 
-  expect(asFragment()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
+  });
 
-  window.File = File;
-});
+  // Skipped as broken in this component version. Should be fixed later.
+  it.skip('FileTransfer component detect bad browser support', () => {
+    const { asFragment } = render(<FileTransfer sendEncryptedMessage={() => {}} />);
 
-test('Try to send file', async done => {
-  const sendEncryptedMessage = data => {
-    try {
-      expect(data).toMatchObject({
-        payload: { encodedFile: 'dGV4dGZpbGU=', fileName: 'filename-png', fileType: 'text/plain' },
-        type: 'SEND_FILE',
-      });
-      done();
-    } catch (error) {
-      done(error);
-    }
-  };
+    expect(asFragment()).toMatchSnapshot();
+  });
 
-  render(<FileTransfer sendEncryptedMessage={sendEncryptedMessage} />);
+  it('Try to send file', async done => {
+    const sendEncryptedMessage = data => {
+      try {
+        expect(data).toMatchObject({
+          payload: {
+            encodedFile: 'dGV4dGZpbGU=',
+            fileName: 'filename.png',
+            fileType: 'text/plain',
+            timestamp: 1584183718135,
+          },
+          type: 'SEND_FILE',
+        });
+        done();
+      } catch (error) {
+        done(error);
+      }
+    };
 
-  const input = screen.getByPlaceholderText('Choose a file...');
+    render(<FileTransfer sendEncryptedMessage={sendEncryptedMessage} />);
 
-  const testFile = new File(['textfile'], 'filename.png', { type: 'text/plain' });
+    const input = screen.getByPlaceholderText('Choose a file...');
 
-  // Fire change event
-  fireEvent.change(input, { target: { files: [testFile] } });
-});
+    const testFile = new File(['textfile'], 'filename.png', { type: 'text/plain' });
 
-test('Try to send no file', async () => {
-  render(<FileTransfer sendEncryptedMessage={() => {}} />);
+    // Fire change event
+    fireEvent.change(input, { target: { files: [testFile] } });
+  });
 
-  const input = screen.getByPlaceholderText('Choose a file...');
+  it('Try to send no file', async () => {
+    render(<FileTransfer sendEncryptedMessage={() => {}} />);
 
-  // Fire change event
-  fireEvent.change(input, { target: { files: [] } });
-});
+    const input = screen.getByPlaceholderText('Choose a file...');
 
-test('Try to send unsupported file', async () => {
-  window.alert = jest.fn();
+    // Fire change event
+    fireEvent.change(input, { target: { files: [] } });
+  });
 
-  render(<FileTransfer sendEncryptedMessage={() => {}} />);
+  it('Try to send unsupported file', async () => {
+    window.alert = jest.fn();
 
-  const input = screen.getByPlaceholderText('Choose a file...');
+    render(<FileTransfer sendEncryptedMessage={() => {}} />);
 
-  const testFile = new File(['textfile'], 'filename.fake', { type: 'text/plain' });
+    const input = screen.getByPlaceholderText('Choose a file...');
 
-  // Create thange event with fake file
-  const changeEvent = createEvent.change(input, { target: { files: [testFile] } });
+    const testFile = new File(['textfile'], 'filename.fake', { type: 'text/plain' });
 
-  // Fire change event
-  fireEvent(input, changeEvent);
+    // Create thange event with fake file
+    const changeEvent = createEvent.change(input, { target: { files: [testFile] } });
 
-  expect(window.alert).toHaveBeenCalledWith('File type not supported');
-});
+    // Fire change event
+    fireEvent(input, changeEvent);
 
-test('Try to send too big file', async () => {
-  window.alert = jest.fn();
+    expect(window.alert).toHaveBeenCalledWith('File type not supported');
+  });
 
-  render(<FileTransfer sendEncryptedMessage={() => {}} />);
+  it('Try to send too big file', async () => {
+    window.alert = jest.fn();
 
-  const input = screen.getByPlaceholderText('Choose a file...');
+    render(<FileTransfer sendEncryptedMessage={() => {}} />);
 
-  var fileContent = new Uint8Array(4000001);
+    const input = screen.getByPlaceholderText('Choose a file...');
 
-  const testFile = new File([fileContent], 'filename.png', { type: 'text/plain' });
+    var fileContent = new Uint8Array(4000001);
 
-  // Fire change event
-  fireEvent.change(input, { target: { files: [testFile] } });
+    const testFile = new File([fileContent], 'filename.png', { type: 'text/plain' });
 
-  expect(window.alert).toHaveBeenCalledWith('Max filesize is 4MB');
+    // Fire change event
+    fireEvent.change(input, { target: { files: [testFile] } });
+
+    expect(window.alert).toHaveBeenCalledWith('Max filesize is 4MB');
+  });
 });

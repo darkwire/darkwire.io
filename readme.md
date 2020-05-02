@@ -87,11 +87,13 @@ Darkwire does not provide any guarantee that the person you're communicating wit
 
 ## File Transfer
 
-Darkwire encodes documents (up to 1MB) into base64 using [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa) and is encrypted the same way chat messages are.
+Darkwire encodes documents into base64 using [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa) and is encrypted the same way chat messages are.
 
 1. When a file is "uploaded", the document is encoded on the client and the server recieves the encrypted base64 string.
 2. The server sends the encrypted base64 string to clients in the same chat room.
 3. Clients recieving the encrypted base64 string then decrypts and decodes the base64 string using [atob](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/atob).
+
+The default transferable file size limit is 4MB, but can be changed in `.env` file with the `REACT_APP_MAX_FILE_SIZE` variable.
 
 ## Sockets & Server
 
