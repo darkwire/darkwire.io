@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import uuid from 'uuid/v4';
-import { getIO, getStore } from './index';
+import { getIO } from './index';
+import getStore from './store';
 
 export default class Socket {
   constructor(opts) {

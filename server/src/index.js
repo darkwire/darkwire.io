@@ -12,23 +12,7 @@ import mailer from './utils/mailer';
 import koaStatic from 'koa-static';
 import koaSend from 'koa-send';
 import { pollForInactiveRooms } from './inactive_rooms';
-import RedisStore from './store/Redis';
-import MemoryStore from './store/Memory';
-
-const storeBackend = process.env.STORE_BACKEND || 'redis';
-
-let store;
-switch (storeBackend) {
-  case 'memory':
-    store = new MemoryStore();
-    break;
-  case 'redis':
-  default:
-    store = new RedisStore(process.env.STORE_HOST);
-    break;
-}
-
-export const getStore = () => store;
+import getStore from './store';
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -41,6 +25,8 @@ const koaBody = new KoaBody();
 const appName = process.env.HEROKU_APP_NAME;
 const isReviewApp = /-pr-/.test(appName);
 const siteURL = process.env.SITE_URL;
+
+const store = getStore();
 
 if ((siteURL || env === 'development') && !isReviewApp) {
   app.use(
