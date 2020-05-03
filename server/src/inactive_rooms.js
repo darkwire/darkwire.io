@@ -7,16 +7,12 @@ export async function pollForInactiveRooms() {
   const rooms = (await store.getAll('rooms')) || {};
   console.log(`${Object.keys(rooms).length} rooms found`);
 
-  Object.keys(rooms).forEach(async (roomId) => {
+  Object.keys(rooms).forEach(async roomId => {
     const room = JSON.parse(rooms[roomId]);
     const timeSinceUpdatedInSeconds = (Date.now() - room.updatedAt) / 1000;
-    const timeSinceUpdatedInDays = Math.round(
-      timeSinceUpdatedInSeconds / 60 / 60 / 24
-    );
+    const timeSinceUpdatedInDays = Math.round(timeSinceUpdatedInSeconds / 60 / 60 / 24);
     if (timeSinceUpdatedInDays > 7) {
-      console.log(
-        `Deleting roomId ${roomId} which hasn't been used in ${timeSinceUpdatedInDays} days`
-      );
+      console.log(`Deleting roomId ${roomId} which hasn't been used in ${timeSinceUpdatedInDays} days`);
       await store.del('rooms', roomId);
     }
   });

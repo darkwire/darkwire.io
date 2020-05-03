@@ -53,14 +53,14 @@ export default class Socket {
       if (getStore().hasSocketAdapter) {
         getIO()
           .of('/')
-          .adapter.remoteJoin(socket.id, roomId, (err) => {
+          .adapter.remoteJoin(socket.id, roomId, err => {
             if (err) {
               reject();
             }
             resolve();
           });
       } else {
-        socket.join(roomId, (err) => {
+        socket.join(roomId, err => {
           if (err) {
             reject();
           }
@@ -71,11 +71,11 @@ export default class Socket {
   }
 
   async handleSocket(socket) {
-    socket.on('ENCRYPTED_MESSAGE', (payload) => {
+    socket.on('ENCRYPTED_MESSAGE', payload => {
       socket.to(this._roomId).emit('ENCRYPTED_MESSAGE', payload);
     });
 
-    socket.on('USER_ENTER', async (payload) => {
+    socket.on('USER_ENTER', async payload => {
       let room = await this.fetchRoom();
       if (_.isEmpty(room)) {
         room = {
@@ -109,9 +109,7 @@ export default class Socket {
 
     socket.on('TOGGLE_LOCK_ROOM', async (data, callback) => {
       const room = await this.fetchRoom();
-      const user = (room.users || []).find(
-        (u) => u.socketId === socket.id && u.isOwner
-      );
+      const user = (room.users || []).find(u => u.socketId === socket.id && u.isOwner);
 
       if (!user) {
         callback({
@@ -146,7 +144,7 @@ export default class Socket {
     const newRoom = {
       ...room,
       users: (room.users || [])
-        .filter((u) => u.socketId !== socket.id)
+        .filter(u => u.socketId !== socket.id)
         .map((u, index) => ({
           ...u,
           isOwner: index === 0,

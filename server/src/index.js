@@ -34,19 +34,16 @@ if ((siteURL || env === 'development') && !isReviewApp) {
       origin: env === 'development' ? '*' : siteURL,
       allowMethods: ['GET', 'HEAD', 'POST'],
       credentials: true,
-    })
+    }),
   );
 }
 
-router.post('/abuse/:roomId', koaBody, async (ctx) => {
+router.post('/abuse/:roomId', koaBody, async ctx => {
   let { roomId } = ctx.params;
 
   roomId = roomId.trim();
 
-  if (
-    process.env.ABUSE_FROM_EMAIL_ADDRESS &&
-    process.env.ABUSE_TO_EMAIL_ADDRESS
-  ) {
+  if (process.env.ABUSE_FROM_EMAIL_ADDRESS && process.env.ABUSE_TO_EMAIL_ADDRESS) {
     const abuseForRoomExists = await store.get('abuse', roomId);
     if (!abuseForRoomExists) {
       mailer.send({
@@ -66,9 +63,7 @@ router.post('/abuse/:roomId', koaBody, async (ctx) => {
 app.use(router.routes());
 
 const apiHost = process.env.API_HOST;
-const cspDefaultSrc = `'self'${
-  apiHost ? ` https://${apiHost} wss://${apiHost}` : ''
-}`;
+const cspDefaultSrc = `'self'${apiHost ? ` https://${apiHost} wss://${apiHost}` : ''}`;
 
 function setStaticFileHeaders(ctx) {
   ctx.set({
@@ -78,8 +73,7 @@ function setStaticFileHeaders(ctx) {
     'X-XSS-Protection': '1; mode=block',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'no-referrer',
-    'Feature-Policy':
-      "geolocation 'none'; vr 'none'; payment 'none'; microphone 'none'",
+    'Feature-Policy': "geolocation 'none'; vr 'none'; payment 'none'; microphone 'none'",
   });
 }
 
@@ -92,12 +86,12 @@ if (clientDistDirectory) {
     })(ctx, next);
   });
 
-  app.use(async (ctx) => {
+  app.use(async ctx => {
     setStaticFileHeaders(ctx);
     await koaSend(ctx, 'index.html', { root: clientDistDirectory });
   });
 } else {
-  app.use(async (ctx) => {
+  app.use(async ctx => {
     ctx.body = { ready: true };
   });
 }
@@ -117,7 +111,7 @@ if (store.hasSocketAdapter) {
 
 const roomHashSecret = process.env.ROOM_HASH_SECRET;
 
-const getRoomIdHash = (id) => {
+const getRoomIdHash = id => {
   if (env === 'development') {
     return id;
   }
@@ -131,7 +125,7 @@ const getRoomIdHash = (id) => {
 
 export const getIO = () => io;
 
-io.on('connection', async (socket) => {
+io.on('connection', async socket => {
   const roomId = socket.handshake.query.roomId;
 
   const roomIdHash = getRoomIdHash(roomId);

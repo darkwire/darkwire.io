@@ -34,9 +34,9 @@ export class RedisStore {
     return this.redis.incrbyAsync(key, field, inc);
   }
 
-  getSocketAdapter() { 
+  getSocketAdapter() {
     return socketRedis(this.redisUrl);
   }
 }
 
-export default RedisStore
+export default RedisStore;
