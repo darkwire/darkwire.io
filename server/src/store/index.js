@@ -2,6 +2,7 @@ import MemoryStore from './Memory';
 import RedisStore from './Redis';
 
 const storeBackend = process.env.STORE_BACKEND || 'redis';
+const storeHost = process.env.STORE_HOST || process.env.REDIS_URL;
 
 let store;
 switch (storeBackend) {
@@ -10,7 +11,7 @@ switch (storeBackend) {
     break;
   case 'redis':
   default:
-    store = new RedisStore(process.env.STORE_HOST);
+    store = new RedisStore(storeHost);
     break;
 }
 
