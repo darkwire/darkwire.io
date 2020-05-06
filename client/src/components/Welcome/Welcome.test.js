@@ -1,12 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Notice from '.';
 
-test('Notice component is displaying', async () => {
+import Welcome from '.';
+
+test('Welcome component is displaying', async () => {
   const { asFragment } = render(
-    <Notice level={'warning'}>
-      <div>Hello world</div>
-    </Notice>
+    <Welcome roomId='roomtest' close={() => {}} translations={{}} />
   );
 
   expect(asFragment()).toMatchSnapshot();

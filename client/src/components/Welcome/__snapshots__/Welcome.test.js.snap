@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Welcome component is displaying 1`] = `
+<DocumentFragment>
+  <div>
+    <div>
+      v2.0 is a complete rewrite and includes several new features. Here are some highlights:
+      <ul
+        class="native"
+      >
+        <li>
+          Support on all modern browsers (Chrome, Firefox, Safari, Safari iOS, Android)
+        </li>
+        <li>
+          Slash commands (/nick, /me, /clear)
+        </li>
+        <li>
+          Room owners can lock the room, preventing anyone else from joining
+        </li>
+        <li>
+          Front-end rewritten in React.js and Redux
+        </li>
+        <li>
+          Send files up to 4 MB
+        </li>
+      </ul>
+      <div>
+        You can learn more 
+        <a
+          href="https://github.com/darkwire/darkwire.io"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          here
+        </a>
+        .
+      </div>
+    </div>
+    <br />
+    <p
+      class="mb-2"
+    >
+      Others can join this room using the following URL:
+    </p>
+    <form>
+      <div
+        class="form-group"
+      >
+        <div
+          class="input-group"
+        >
+          <input
+            class="form-control"
+            id="room-url"
+            readonly=""
+            type="text"
+            value="http://localhost/roomtest"
+          />
+          <div
+            class="input-group-append"
+          >
+            <button
+              class="copy-room btn btn-secondary"
+              data-clipboard-text="http://localhost/roomtest"
+              data-placement="bottom"
+              data-toggle="tooltip"
+              type="button"
+            >
+              <svg
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="13"
+                  rx="2"
+                  ry="2"
+                  width="13"
+                  x="9"
+                  y="9"
+                />
+                <path
+                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div
+      class="react-modal-footer"
+    >
+      <button
+        class="btn btn-primary btn-lg"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
