@@ -244,7 +244,7 @@ class Home extends Component {
               username: <Username key={0} username={activity.username} />,
             }} path='userSentFile'/>&nbsp;
 
-            <a target="_blank" href={downloadUrl} rel="noopener noreferrer">
+            <a target="_blank" href={downloadUrl} rel="noopener noreferrer" download={activity.fileName}>
               <T data={{
                 filename: activity.fileName,
               }} path='downloadFile'/>
@@ -258,7 +258,7 @@ class Home extends Component {
           <Notice>
             <div>
               <T data={{
-                filename: <a key={0} target="_blank" href={url} rel="noopener noreferrer">{activity.fileName}</a>,
+                filename: <a key={0} target="_blank" href={url} rel="noopener noreferrer" download={activity.fileName}>{activity.fileName}</a>,
               }} path='sentFile'/>&nbsp;
             </div>
             {this.getFileDisplay(activity)}
