@@ -42,7 +42,6 @@ export class MemoryStore {
     this.store[key][field] += inc;
     return this.store[key][field];
   }
-
 }
 
-export default MemoryStore
+export default MemoryStore;
