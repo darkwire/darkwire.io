@@ -207,7 +207,7 @@ class About extends Component {
           <strong>Bitcoin</strong>
           <p>189sPnHGcjP5uteg2UuNgcJ5eoaRAP4Bw4</p>
           <strong>Ethereum</strong>
-          <p>0xD6e3D881036903999E2c0480fe9d2c20600C1c28</p>
+          <p>0x36dc407bB28aA1EE6AafBee0379Fe6Cff881758E</p>
           <strong>Litecoin</strong>
           <p>LUViQeSggBBtYoN2qNtXSuxYoRMzRY8CSX</p>
           <strong>PayPal:</strong>
