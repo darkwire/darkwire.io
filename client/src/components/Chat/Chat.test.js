@@ -7,7 +7,7 @@ const sendEncryptedMessage = jest.fn()
 
 test('Chat Component', () => {
   const component = mount(
-    <Chat scrollToBottom={() => {}} focusChat={false} userId="foo" username="user" showNotice={() => {}} clearActivities={() => {}} sendEncryptedMessage={sendEncryptedMessage} />
+    <Chat scrollToBottom={() => {}} focusChat={false} userId="foo" username="user" showNotice={() => {}} clearActivities={() => {}} sendEncryptedMessage={sendEncryptedMessage} translations={{}}/>
   )
 
   const componentJSON = toJson(component)

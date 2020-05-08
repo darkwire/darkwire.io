@@ -1,7 +1,7 @@
 import Cookie from 'js-cookie';
 import {getTranslations} from 'i18n';
 
-const language = Cookie.get('language') || 'en';
+const language = Cookie.get('language') || navigator.language || 'en';
 
 const initialState = {
   modalComponent: null,
