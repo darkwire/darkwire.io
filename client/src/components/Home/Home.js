@@ -249,6 +249,7 @@ Home.defaultProps = {
 
 Home.propTypes = {
   receiveEncryptedMessage: PropTypes.func.isRequired,
+  receiveUnencryptedMessage: PropTypes.func.isRequired,
   createUser: PropTypes.func.isRequired,
   activities: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
