@@ -111,6 +111,7 @@ exports[`Home component is displaying 1`] = `
             >
               <button
                 class="btn btn-link btn-plain members-action"
+                title="Users"
               >
                 <svg
                   class="users-icon"

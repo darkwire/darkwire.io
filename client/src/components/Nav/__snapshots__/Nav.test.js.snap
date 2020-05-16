@@ -64,6 +64,7 @@ exports[`Nav component is displaying 1`] = `
         >
           <button
             class="btn btn-link btn-plain members-action"
+            title="Users"
           >
             <svg
               class="users-icon"
@@ -241,7 +242,7 @@ exports[`Nav component is displaying 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Nav component is displaying with another configuration 1`] = `
+exports[`Nav component is displaying with another configuration and can rerender 1`] = `
 <DocumentFragment>
   <nav
     class="navbar navbar-expand-md navbar-dark"
@@ -304,6 +305,7 @@ exports[`Nav component is displaying with another configuration 1`] = `
         >
           <button
             class="btn btn-link btn-plain members-action"
+            title="Users"
           >
             <svg
               class="users-icon"
