@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RoomLink component is displaying 1`] = `
+exports[`RoomLink should display 1`] = `
 <DocumentFragment>
   <form>
     <div
@@ -24,6 +24,7 @@ exports[`RoomLink component is displaying 1`] = `
             data-clipboard-text="http://localhost/roomId"
             data-placement="bottom"
             data-toggle="tooltip"
+            title="copyButton"
             type="button"
           >
             <svg
