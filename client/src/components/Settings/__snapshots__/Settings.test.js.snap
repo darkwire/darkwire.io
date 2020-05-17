@@ -1,12 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Settings component is displaying 1`] = `
+exports[`Settings component should display 1`] = `
 <DocumentFragment>
   <div
     class="styles"
   >
     <section>
-      <h4 />
+      <h4>
+        soundCheck
+      </h4>
       <form>
         <div
           class="form-check"
@@ -21,6 +23,7 @@ exports[`Settings component is displaying 1`] = `
               id="sound-control"
               type="checkbox"
             />
+            soundCheck
           </label>
         </div>
       </form>
@@ -28,70 +31,24 @@ exports[`Settings component is displaying 1`] = `
     <section>
       <h4
         class="mb-3"
-      />
-      <form>
-        <div
-          class="form-group"
-        >
-          <div
-            class="input-group"
-          >
-            <input
-              class="form-control"
-              id="room-url"
-              readonly=""
-              type="text"
-              value="http://localhost/roomId"
-            />
-            <div
-              class="input-group-append"
-            >
-              <button
-                class="copy-room btn btn-secondary"
-                data-clipboard-text="http://localhost/roomId"
-                data-placement="bottom"
-                data-toggle="tooltip"
-                type="button"
-              >
-                <svg
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    height="13"
-                    rx="2"
-                    ry="2"
-                    width="13"
-                    x="9"
-                    y="9"
-                  />
-                  <path
-                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
+      >
+        default
+      </h4>
     </section>
     <section>
       <h4
         class="mb-3"
-      />
+      >
+        default
+      </h4>
       <p>
         <a
           href="https://github.com/darkwire/darkwire.io/blob/master/client/README.md#translations"
           rel="noopener noreferrer"
           target="_blank"
-        />
+        >
+          default
+        </a>
       </p>
       <div
         class="form-group"
@@ -138,40 +95,60 @@ exports[`Settings component is displaying 1`] = `
       </div>
     </section>
     <section>
-      <h4 />
-      <p />
+      <h4>
+        default
+      </h4>
+      <p>
+        default
+      </p>
     </section>
     <section>
-      <h4 />
-      <p />
+      <h4>
+        default
+      </h4>
+      <p>
+        default
+      </p>
     </section>
     <section>
-      <h4 />
-      <p />
+      <h4>
+        default
+      </h4>
+      <p>
+        default
+      </p>
       <ul>
         <li>
           /nick [username] 
           <span
             class="text-muted"
-          />
+          >
+            default
+          </span>
         </li>
         <li>
           /me [action] 
           <span
             class="text-muted"
-          />
+          >
+            default
+          </span>
         </li>
         <li>
           /clear 
           <span
             class="text-muted"
-          />
+          >
+            default
+          </span>
         </li>
         <li>
           /help 
           <span
             class="text-muted"
-          />
+          >
+            default
+          </span>
         </li>
       </ul>
     </section>
