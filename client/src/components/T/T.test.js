@@ -7,7 +7,27 @@ import T from './T';
 jest.mock('components/T');
 
 test('T component is displaying', async () => {
-  const { asFragment } = render(<T path='test' />);
+  const { asFragment, rerender } = render(<T path="welcomeHeader" language="en" />);
+
+  expect(asFragment()).toMatchSnapshot();
+
+  rerender(<T path="welcomeHeader" language="fr" />);
+
+  expect(asFragment()).toMatchSnapshot();
+
+  rerender(<T path="welcomeHeader" language="xx" />);
+
+  expect(asFragment()).toMatchSnapshot();
+
+  rerender(<T path="missingKey" language="en" />);
+
+  expect(asFragment()).toMatchSnapshot();
+
+  rerender(<T path="userJoined" language="en" data={{ username: 'Alan' }} />);
+
+  expect(asFragment()).toMatchSnapshot();
+
+  rerender(<T path="userJoined" language="en" />);
 
   expect(asFragment()).toMatchSnapshot();
 });
