@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Chat Component is displaying 1`] = `
+exports[`Chat component should display 1`] = `
 <DocumentFragment>
   <form
     class="chat-preflight-container"

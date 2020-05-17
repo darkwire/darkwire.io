@@ -272,6 +272,7 @@ export class Chat extends Component {
             <button
               onClick={this.handleSendClick.bind(this)}
               className={`icon is-right send btn btn-link ${this.canSend() ? 'active' : ''}`}
+              title="Send"
             >
               <CornerDownRight className={this.canSend() ? '' : 'disabled'} />
             </button>
