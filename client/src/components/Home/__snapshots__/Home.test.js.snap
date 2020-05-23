@@ -292,6 +292,7 @@ exports[`Home component is displaying 1`] = `
     >
       <div
         class="message-stream h-100"
+        data-testid="main-div"
       >
         <ul
           class="plain"
@@ -303,7 +304,7 @@ exports[`Home component is displaying 1`] = `
               <button
                 class="btn btn-link"
               >
-                 
+                 By using Darkwire, you are agreeing to our Acceptable Use Policy and Terms of Service
               </button>
             </p>
           </li>
@@ -311,7 +312,53 @@ exports[`Home component is displaying 1`] = `
       </div>
       <div
         class="chat-container"
-      />
+      >
+        <form
+          class="chat-preflight-container"
+        >
+          <textarea
+            class="chat"
+            placeholder="Type here"
+            rows="1"
+          />
+          <div
+            class="input-controls"
+          >
+            <div
+              class="styles icon file-transfer btn btn-link"
+            >
+              <input
+                id="fileInput"
+                name="fileUploader"
+                placeholder="Choose a file..."
+                type="file"
+              />
+              <label
+                for="fileInput"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  stroke="#fff"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"
+                  />
+                  <polyline
+                    points="13 2 13 9 20 9"
+                  />
+                </svg>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </DocumentFragment>
