@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 
 import { Chat } from './Chat';
 
-//import {} from '../../utils/dom';
 import * as dom from 'utils/dom';
 
 const translations = {
