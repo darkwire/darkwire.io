@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { combineReducers } from 'redux'
 import app from './app'
 import activities from './activities'

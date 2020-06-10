@@ -1,14 +1,13 @@
-import React from 'react'
-import renderer from 'react-test-renderer'
-import Notice from './index.js'
-import { mount } from 'enzyme'
+import React from 'react';
+import { render } from '@testing-library/react';
+import Notice from '.';
 
-test.skip('Notice Component', () => {
-  const component = mount(
-    <Notice>
+test('Notice component is displaying', async () => {
+  const { asFragment } = render(
+    <Notice level={'warning'}>
       <div>Hello world</div>
     </Notice>
-  )
+  );
 
-  expect(component).toMatchSnapshot()
-})
+  expect(asFragment()).toMatchSnapshot();
+});

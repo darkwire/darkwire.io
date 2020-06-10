@@ -72,7 +72,7 @@ class ActivityList extends Component {
   render() {
     return (
       <div className="main-chat">
-        <div onClick={this.handleChatClick.bind(this)} className="message-stream h-100" ref={el => this.messageStream = el}>
+        <div onClick={this.handleChatClick.bind(this)} className="message-stream h-100" ref={el => this.messageStream = el} data-testid="main-div">
           <ul className="plain" ref={el => this.activitiesList = el}>
             <li><p className={styles.tos}><button className='btn btn-link' onClick={this.props.openModal.bind(this, 'About')}> <T path='agreement'/></button></p></li>
             {this.props.activities.map((activity, index) => (

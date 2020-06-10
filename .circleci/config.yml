@@ -1,18 +1,10 @@
 # Javascript Node CircleCI 2.0 configuration file
 #
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 2
-jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:8.10
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
+jobs:
+  test-job:
+    docker:
+      - image: 'circleci/node:lts'
 
     working_directory: ~/repo
 
@@ -22,15 +14,34 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "yarn.lock" }}
+            - dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - dependencies-
 
-      - run: yarn install
+      - run: yarn setup
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "yarn.lock" }}
+            - client/node_modules
+            - server/node_modules
+          key: dependencies-{{ checksum "yarn.lock" }}
 
-      - run: yarn test
+      - run:
+          command: yarn test
+          environment:
+            TZ: UTC
+            REACT_APP_COMMIT_SHA: some_sha
+
+      - store_artifacts: # For coverage report
+          path: client/coverage
+
+orbs: # declare what orbs we are going to use
+  node: circleci/node@2.0.2 # the node orb provides common node-related configuration
+
+version: 2.1
+
+workflows:
+  tests:
+    jobs:
+      - test-job
