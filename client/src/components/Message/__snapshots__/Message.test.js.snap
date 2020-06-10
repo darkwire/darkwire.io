@@ -15,7 +15,7 @@ exports[`Message component is displaying 1`] = `
       <span
         class="muted timestamp"
       >
-        9:44 PM
+        7:44 PM
       </span>
     </div>
     <div

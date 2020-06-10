@@ -143,7 +143,7 @@ exports[`Activity component should display TEXT_MESSAGE 1`] = `
       <span
         class="muted timestamp"
       >
-        12:01 PM
+        11:01 AM
       </span>
     </div>
     <div
