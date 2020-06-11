@@ -11,7 +11,6 @@ import Settings from 'components/Settings'
 import Welcome from 'components/Welcome'
 import RoomLocked from 'components/RoomLocked'
 import { X, AlertCircle } from 'react-feather'
-import { defer } from 'lodash'
 import Tinycon from 'tinycon'
 import beepFile from 'audio/beep.mp3'
 import classNames from 'classnames'
@@ -24,13 +23,6 @@ const crypto = new Crypto()
 Modal.setAppElement('#root');
 
 class Home extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      zoomableImages: []
-    }
-  }
 
   async componentWillMount() {
     const roomId = encodeURI(this.props.match.params.roomId)
@@ -145,7 +137,6 @@ class Home extends Component {
   }
 
   bindEvents() {
-
     window.onfocus = () => {
       this.props.toggleWindowFocus(true)
     }
@@ -175,11 +166,6 @@ class Home extends Component {
     })
   }
 
-  handleChatClick() {
-    this.setState({ focusChat: true })
-    defer(() => this.setState({ focusChat: false }))
-  }
-
   render() {
     const modalOpts = this.getModal()
     return (
@@ -201,11 +187,9 @@ class Home extends Component {
             translations={this.props.translations}
           />
         </div>
-        <ActivityList 
+        <ActivityList
           openModal={this.props.openModal}
           activities={this.props.activities}
-          setScrolledToBottom={this.props.setScrolledToBottom}
-          scrolledToBottom={this.props.scrolledToBottom}
         />
         <Modal
           isOpen={Boolean(this.props.modalComponent)}
@@ -261,8 +245,6 @@ Home.propTypes = {
   modalComponent: PropTypes.string,
   openModal: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
-  setScrolledToBottom: PropTypes.func.isRequired,
-  scrolledToBottom: PropTypes.bool.isRequired,
   iAmOwner: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
   toggleWindowFocus: PropTypes.func.isRequired,
