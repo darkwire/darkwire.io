@@ -6,7 +6,7 @@ test('Notice component is displaying', async () => {
   const { asFragment } = render(
     <Notice level={'warning'}>
       <div>Hello world</div>
-    </Notice>
+    </Notice>,
   );
 
   expect(asFragment()).toMatchSnapshot();

@@ -18,7 +18,12 @@
   "settings": "instellingen",
   "settingsButton": "instellingen",
   "settingsHeader": "Instellingen & Help",
-  "slashCommandsBullets": ["wijzigt gebruikersnaam", "voert een actie uit", "wist uw berichtgeschiedenis", "geeft alle opdrachten weer"],
+  "slashCommandsBullets": [
+    "wijzigt gebruikersnaam",
+    "voert een actie uit",
+    "wist uw berichtgeschiedenis",
+    "geeft alle opdrachten weer"
+  ],
   "slashCommandsHeader": "Slash-opdrachten",
   "slashCommandsText": "De volgende slash-opdrachten zijn beschikbaar:",
   "sound": "Geluid",

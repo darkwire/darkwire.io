@@ -1,16 +1,16 @@
-import socketIO from 'socket.io-client'
+import socketIO from 'socket.io-client';
 import generateUrl from '../api/generator';
 
-let socket
+let socket;
 
-export const connect = (roomId) => {
+export const connect = roomId => {
   socket = socketIO(generateUrl(), {
     query: {
       roomId,
     },
     forceNew: true,
-  })
-  return socket
-}
+  });
+  return socket;
+};
 
-export const getSocket = () => socket
+export const getSocket = () => socket;

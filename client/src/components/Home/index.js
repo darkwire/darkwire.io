@@ -1,5 +1,5 @@
-import Home from './Home'
-import { connect } from 'react-redux'
+import Home from './Home';
+import { connect } from 'react-redux';
 import {
   receiveEncryptedMessage,
   createUser,
@@ -13,12 +13,12 @@ import {
   receiveUnencryptedMessage,
   sendUnencryptedMessage,
   sendEncryptedMessage,
-  setLanguage
-} from 'actions'
-import WithNewMessageNotification from './WithNewMessageNotification'
+  setLanguage,
+} from 'actions';
+import WithNewMessageNotification from './WithNewMessageNotification';
 
-const mapStateToProps = (state) => {
-  const me = state.room.members.find(m => m.id === state.user.id)
+const mapStateToProps = state => {
+  const me = state.room.members.find(m => m.id === state.user.id);
 
   return {
     activities: state.activities.items,
@@ -38,8 +38,8 @@ const mapStateToProps = (state) => {
     socketConnected: state.app.socketConnected,
     language: state.app.language,
     translations: state.app.translations,
-  }
-}
+  };
+};
 
 const mapDispatchToProps = {
   receiveEncryptedMessage,
@@ -54,10 +54,7 @@ const mapDispatchToProps = {
   receiveUnencryptedMessage,
   sendUnencryptedMessage,
   sendEncryptedMessage,
-  setLanguage
-}
+  setLanguage,
+};
 
-export default WithNewMessageNotification(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home))
+export default WithNewMessageNotification(connect(mapStateToProps, mapDispatchToProps)(Home));

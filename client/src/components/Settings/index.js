@@ -50,7 +50,7 @@ class Settings extends Component {
             </div>
             <div className="form-check">
               <label className="form-check-label" htmlFor="notif-control">
-                {this.props.notificationIsAllowed !== false && 
+                {this.props.notificationIsAllowed !== false && (
                   <>
                     <input
                       id="notif-control"
@@ -62,7 +62,7 @@ class Settings extends Component {
                     />
                     <T path="desktopNotification" />
                   </>
-                }
+                )}
                 {this.props.notificationIsAllowed === false && <T path="desktopNotificationBlocked" />}
               </label>
             </div>

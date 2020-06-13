@@ -18,7 +18,12 @@
   "settings": "impostazioni",
   "settingsButton": "impostazioni",
   "settingsHeader": "Impostazioni e aiuto",
-  "slashCommandsBullets": ["cambia nome utente", "esegue un'azione", "cancella la cronologia dei messaggi", "elenca tutti i comandi"],
+  "slashCommandsBullets": [
+    "cambia nome utente",
+    "esegue un'azione",
+    "cancella la cronologia dei messaggi",
+    "elenca tutti i comandi"
+  ],
   "slashCommandsHeader": "Comandi",
   "slashCommandsText": "Sono disponibili i seguenti comandi:",
   "sound": "Suono",

@@ -36,7 +36,6 @@ jest.mock('utils/crypto', () => {
   });
 });
 
-
 test('Home component is displaying', async () => {
   const { asFragment } = render(
     <Provider store={store}>
