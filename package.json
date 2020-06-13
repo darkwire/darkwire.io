@@ -21,7 +21,8 @@
     "start": "cd server && CLIENT_DIST_DIRECTORY='../client/build' yarn start",
     "setup": "yarn && cd client && yarn && cd ../server && yarn",
     "dev": "concurrently 'cd client && yarn start' 'cd server && yarn dev'",
-    "test": "concurrently 'cd client && yarn coverage' 'cd server && yarn test --watchAll=false'"
+    "test": "concurrently 'cd client && yarn coverage' 'cd server && yarn test --watchAll=false'",
+    "lint": "cd server && yarn lint && cd ../client && yarn lint"
   },
   "devDependencies": {
     "concurrently": "^4.1.0"
