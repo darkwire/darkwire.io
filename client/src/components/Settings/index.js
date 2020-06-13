@@ -12,7 +12,6 @@ class Settings extends Component {
 
   handleNotificationToggle() {
     Notification.requestPermission().then(permission => {
-      this.props.toggleNotificationEnabled(true);
       if (permission === 'granted') {
         this.props.toggleNotificationEnabled(!this.props.notificationIsEnabled);
         this.props.toggleNotificationAllowed(true);
