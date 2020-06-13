@@ -13,15 +13,15 @@ const languagesMap = {
   de,
   it,
   zhCN,
-  nl
-}
+  nl,
+};
 
 /**
  * Return best match for lang and variant.
  * @param {string} language string from navigator configuration or cookie.
  * @returns the translation dict
  */
-export function getTranslations(language = "") {
+export function getTranslations(language = '') {
   const [lang, variant] = language.split('-');
 
   if (languagesMap.hasOwnProperty(`${lang}${variant}`)) {

@@ -18,7 +18,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   toggleNotificationAllowed,
-  toggleNotificationEnabled
+  toggleNotificationEnabled,
 };
 
 const WithNewMessageNotification = WrappedComponent => {

@@ -36,21 +36,15 @@ class RoomLink extends Component {
   render() {
     return (
       <form>
-        <div className='form-group'>
-          <div className='input-group'>
-            <input
-              id='room-url'
-              className='form-control'
-              type='text'
-              readOnly
-              value={this.state.roomUrl}
-            />
-            <div className='input-group-append'>
+        <div className="form-group">
+          <div className="input-group">
+            <input id="room-url" className="form-control" type="text" readOnly value={this.state.roomUrl} />
+            <div className="input-group-append">
               <button
-                className='copy-room btn btn-secondary'
-                type='button'
-                data-toggle='tooltip'
-                data-placement='bottom'
+                className="copy-room btn btn-secondary"
+                type="button"
+                data-toggle="tooltip"
+                data-placement="bottom"
                 data-clipboard-text={this.state.roomUrl}
                 title={this.props.translations.copyButtonTooltip}
               >

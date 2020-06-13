@@ -18,7 +18,12 @@
   "settings": "die Einstellungen",
   "settingsButton": "die Einstellungen",
   "settingsHeader": "Einstellungen & Hilfe",
-  "slashCommandsBullets": ["Ändert den Benutzernamen", "führt eine Aktion aus", "löscht den Nachrichtenverlauf", "listet alle Befehle auf"],
+  "slashCommandsBullets": [
+    "Ändert den Benutzernamen",
+    "führt eine Aktion aus",
+    "löscht den Nachrichtenverlauf",
+    "listet alle Befehle auf"
+  ],
   "slashCommandsHeader": "Slash-Befehle",
   "slashCommandsText": "Die folgenden Schrägstrichbefehle sind verfügbar:",
   "sound": "Klingen",

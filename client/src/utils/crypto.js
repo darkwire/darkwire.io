@@ -1,32 +1,32 @@
 export default class Crypto {
   constructor() {
-    this._crypto = window.crypto || false
+    this._crypto = window.crypto || false;
 
     if (!this._crypto || (!this._crypto.subtle && !this._crypto.webkitSubtle)) {
-      return false
+      return false;
     }
   }
 
   get crypto() {
-    return this._crypto
+    return this._crypto;
   }
 
   convertStringToArrayBufferView(str) {
-    const bytes = new Uint8Array(str.length)
+    const bytes = new Uint8Array(str.length);
     for (let i = 0; i < str.length; i++) {
-      bytes[i] = str.charCodeAt(i)
+      bytes[i] = str.charCodeAt(i);
     }
 
-    return bytes
+    return bytes;
   }
 
   convertArrayBufferViewToString(buffer) {
-    let str = ''
+    let str = '';
     for (let i = 0; i < buffer.byteLength; i++) {
-      str += String.fromCharCode(buffer[i])
+      str += String.fromCharCode(buffer[i]);
     }
 
-    return str
+    return str;
   }
 
   createEncryptDecryptKeys() {
@@ -38,8 +38,8 @@ export default class Crypto {
         hash: { name: 'SHA-1' },
       },
       true, // whether the key is extractable (i.e. can be used in exportKey)
-      ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'] // must be ['encrypt', 'decrypt'] or ['wrapKey', 'unwrapKey']
-    )
+      ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey'], // must be ['encrypt', 'decrypt'] or ['wrapKey', 'unwrapKey']
+    );
   }
 
   createSecretKey() {
@@ -49,8 +49,8 @@ export default class Crypto {
         length: 256, // can be  128, 192, or 256
       },
       true, // whether the key is extractable (i.e. can be used in exportKey)
-      ['encrypt', 'decrypt'] // can be 'encrypt', 'decrypt', 'wrapKey', or 'unwrapKey'
-    )
+      ['encrypt', 'decrypt'], // can be 'encrypt', 'decrypt', 'wrapKey', or 'unwrapKey'
+    );
   }
 
   createSigningKey() {
@@ -60,8 +60,8 @@ export default class Crypto {
         hash: { name: 'SHA-256' },
       },
       true, // whether the key is extractable (i.e. can be used in exportKey)
-      ['sign', 'verify'] // can be 'encrypt', 'decrypt', 'wrapKey', or 'unwrapKey'
-    )
+      ['sign', 'verify'], // can be 'encrypt', 'decrypt', 'wrapKey', or 'unwrapKey'
+    );
   }
 
   encryptMessage(data, secretKey, iv) {
@@ -73,8 +73,8 @@ export default class Crypto {
         iv,
       },
       secretKey, // from generateKey or importKey above
-      data // ArrayBuffer of data you want to encrypt
-    )
+      data, // ArrayBuffer of data you want to encrypt
+    );
   }
 
   decryptMessage(data, secretKey, iv) {
@@ -84,31 +84,31 @@ export default class Crypto {
         iv, // The initialization vector you used to encrypt
       },
       secretKey, // from generateKey or importKey above
-      data // ArrayBuffer of the data
-    )
+      data, // ArrayBuffer of the data
+    );
   }
 
   importEncryptDecryptKey(jwkData, format = 'jwk', ops) {
     const hashObj = {
       name: 'RSA-OAEP',
       hash: { name: 'SHA-1' },
-    }
+    };
 
     return this.crypto.subtle.importKey(
       format, // can be 'jwk' (public or private), 'spki' (public only), or 'pkcs8' (private only)
       jwkData,
       hashObj,
       true, // whether the key is extractable (i.e. can be used in exportKey)
-      ops || ['encrypt', 'wrapKey'] // 'encrypt' or 'wrapKey' for public key import or
+      ops || ['encrypt', 'wrapKey'], // 'encrypt' or 'wrapKey' for public key import or
       // 'decrypt' or 'unwrapKey' for private key imports
-    )
+    );
   }
 
   exportKey(key, format) {
     return this.crypto.subtle.exportKey(
       format || 'jwk', // can be 'jwk' (public or private), 'spki' (public only), or 'pkcs8' (private only)
-      key // can be a publicKey or privateKey, as long as extractable was true
-    )
+      key, // can be a publicKey or privateKey, as long as extractable was true
+    );
   }
 
   signMessage(data, keyToSignWith) {
@@ -118,8 +118,8 @@ export default class Crypto {
         hash: { name: 'SHA-256' },
       },
       keyToSignWith, // from generateKey or importKey above
-      data // ArrayBuffer of data you want to sign
-    )
+      data, // ArrayBuffer of data you want to sign
+    );
   }
 
   verifyPayload(signature, data, keyToVerifyWith) {
@@ -131,20 +131,15 @@ export default class Crypto {
       },
       keyToVerifyWith, // from generateKey or importKey above
       signature, // ArrayBuffer of the signature
-      data // ArrayBuffer of the data
-    )
+      data, // ArrayBuffer of the data
+    );
   }
 
   wrapKey(keyToWrap, keyToWrapWith, format = 'jwk') {
-    return this.crypto.subtle.wrapKey(
-      format,
-      keyToWrap,
-      keyToWrapWith,
-      {
-        name: 'RSA-OAEP',
-        hash: { name: 'SHA-1' },
-      }
-    )
+    return this.crypto.subtle.wrapKey(format, keyToWrap, keyToWrapWith, {
+      name: 'RSA-OAEP',
+      hash: { name: 'SHA-1' },
+    });
   }
 
   unwrapKey(
@@ -154,7 +149,7 @@ export default class Crypto {
     unwrapAlgo,
     unwrappedKeyAlgo, // AES-CBC for session, HMAC for signing
     extractable = true,
-    keyUsages// verify for signing // decrypt for session
+    keyUsages, // verify for signing // decrypt for session
   ) {
     return this.crypto.subtle.unwrapKey(
       format,
@@ -163,7 +158,7 @@ export default class Crypto {
       unwrapAlgo,
       unwrappedKeyAlgo,
       extractable,
-      keyUsages
-    )
+      keyUsages,
+    );
   }
 }

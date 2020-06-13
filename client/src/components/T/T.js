@@ -9,11 +9,10 @@ class T extends Component {
   render() {
     const t = getTranslations(this.props.language);
     const englishT = getTranslations('en');
-    const str =
-      _.get(t, this.props.path, '') || _.get(englishT, this.props.path, '');
+    const str = _.get(t, this.props.path, '') || _.get(englishT, this.props.path, '');
     let string = str.split(regex);
     if (this.props.data) {
-      string = string.map((word) => {
+      string = string.map(word => {
         if (this.props.data[word]) {
           return this.props.data[word];
         }

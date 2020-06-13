@@ -1,84 +1,106 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import uuid from 'uuid'
-import { File } from 'react-feather'
-import { sanitize } from 'utils'
-import { styles } from './styles.module.scss'
+import React from 'react';
+import PropTypes from 'prop-types';
+import uuid from 'uuid';
+import { File } from 'react-feather';
+import { sanitize } from 'utils';
+import { styles } from './styles.module.scss';
 
-const VALID_FILE_TYPES = ['png', 'jpg', 'jpeg', 'gif', 'zip', 'rar', 'gzip', 'pdf', 'txt', 'json', 'doc', 'docx', 'csv', 'js', 'html', 'css']
+const VALID_FILE_TYPES = [
+  'png',
+  'jpg',
+  'jpeg',
+  'gif',
+  'zip',
+  'rar',
+  'gzip',
+  'pdf',
+  'txt',
+  'json',
+  'doc',
+  'docx',
+  'csv',
+  'js',
+  'html',
+  'css',
+];
 
-const MAX_FILE_SIZE = process.env.REACT_APP_MAX_FILE_SIZE || 4
+const MAX_FILE_SIZE = process.env.REACT_APP_MAX_FILE_SIZE || 4;
 
 /**
  * Encode the given file to binary string
  * @param {File} file
  */
-const encodeFile = (file) => {
+const encodeFile = file => {
   return new Promise((resolve, reject) => {
-    const reader = new window.FileReader()
+    const reader = new window.FileReader();
 
     if (!file) {
-      reject()
-      return
+      reject();
+      return;
     }
 
-    reader.onload = (readerEvent) => {
-      resolve(window.btoa(readerEvent.target.result))
-    }
+    reader.onload = readerEvent => {
+      resolve(window.btoa(readerEvent.target.result));
+    };
 
-    reader.readAsBinaryString(file)
-  })
-}
+    reader.readAsBinaryString(file);
+  });
+};
 
 export const FileTransfer = ({ sendEncryptedMessage }) => {
   const fileInput = React.useRef(null);
 
-  const supported = React.useMemo(() =>
-    Boolean(window.File) && Boolean(window.FileReader) && Boolean(window.FileList) && Boolean(window.Blob) &&
-      Boolean(window.btoa) && Boolean(window.atob) && Boolean(window.URL),
-    []
-  )
+  const supported = React.useMemo(
+    () =>
+      Boolean(window.File) &&
+      Boolean(window.FileReader) &&
+      Boolean(window.FileList) &&
+      Boolean(window.Blob) &&
+      Boolean(window.btoa) &&
+      Boolean(window.atob) &&
+      Boolean(window.URL),
+    [],
+  );
 
   React.useEffect(() => {
-    const currentFileInput = fileInput.current
+    const currentFileInput = fileInput.current;
     let isMounted = true;
 
-    const handleFileTransfer = async (event) => {
-
-      const file = event.target.files && event.target.files[0]
+    const handleFileTransfer = async event => {
+      const file = event.target.files && event.target.files[0];
 
       if (file) {
-        const fileType = file.type || 'file'
-        const fileName = sanitize(file.name)
-        const fileExtension = file.name.split('.').pop().toLowerCase()
+        const fileType = file.type || 'file';
+        const fileName = sanitize(file.name);
+        const fileExtension = file.name.split('.').pop().toLowerCase();
 
         if (VALID_FILE_TYPES.indexOf(fileExtension) <= -1) {
           // eslint-disable-next-line no-alert
-          alert('File type not supported')
-          return false
+          alert('File type not supported');
+          return false;
         }
 
         if (file.size > MAX_FILE_SIZE * 1000000) {
           // eslint-disable-next-line no-alert
-          alert(`Max filesize is ${MAX_FILE_SIZE}MB`)
-          return false
+          alert(`Max filesize is ${MAX_FILE_SIZE}MB`);
+          return false;
         }
 
-        const fileId = uuid.v4()
+        const fileId = uuid.v4();
         const fileData = {
           id: fileId,
           file,
           fileName,
           fileType,
           encodedFile: await encodeFile(file),
-        }
+        };
 
         // Mounted component guard
         if (!isMounted) {
-          return
+          return;
         }
 
-        fileInput.current.value = ''
+        fileInput.current.value = '';
 
         sendEncryptedMessage({
           type: 'SEND_FILE',
@@ -88,22 +110,22 @@ export const FileTransfer = ({ sendEncryptedMessage }) => {
             fileType: fileData.fileType,
             timestamp: Date.now(),
           },
-        })
+        });
       }
 
-      return false
-    }
+      return false;
+    };
 
-    currentFileInput.addEventListener('change', handleFileTransfer)
+    currentFileInput.addEventListener('change', handleFileTransfer);
 
     return () => {
-      isMounted = false
-      currentFileInput.removeEventListener('change', handleFileTransfer)
-    }
-  }, [sendEncryptedMessage])
+      isMounted = false;
+      currentFileInput.removeEventListener('change', handleFileTransfer);
+    };
+  }, [sendEncryptedMessage]);
 
   if (!supported) {
-    return null
+    return null;
   }
 
   return (
@@ -114,10 +136,10 @@ export const FileTransfer = ({ sendEncryptedMessage }) => {
       </label>
     </div>
   );
-}
+};
 
 FileTransfer.propTypes = {
   sendEncryptedMessage: PropTypes.func.isRequired,
-}
+};
 
-export default FileTransfer
+export default FileTransfer;

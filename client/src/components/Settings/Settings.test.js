@@ -51,7 +51,6 @@ describe('Settings component', () => {
     );
 
     expect(asFragment()).toMatchSnapshot();
-
   });
 
   it('should toggle sound', async () => {
@@ -106,8 +105,7 @@ describe('Settings component', () => {
 
     delete global.Notification;
 
-    waitFor(() =>expect(toggleNotifications).toHaveBeenCalledWith(false));
-
+    waitFor(() => expect(toggleNotifications).toHaveBeenCalledWith(false));
   });
 
   it('should not toggle notifications', async () => {
@@ -139,10 +137,9 @@ describe('Settings component', () => {
 
     delete global.Notification;
 
-    waitFor(() =>expect(toggleAllowed).toHaveBeenCalledWith(false));
-    waitFor(() =>expect(toggleNotifications).not.toHaveBeenCalled());
+    waitFor(() => expect(toggleAllowed).toHaveBeenCalledWith(false));
+    waitFor(() => expect(toggleNotifications).not.toHaveBeenCalled());
   });
-
 
   it('should change lang', async () => {
     const changeLang = jest.fn();

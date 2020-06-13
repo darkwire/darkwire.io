@@ -1,6 +1,6 @@
 const initialState = {
   items: [],
-}
+};
 
 const activities = (state = initialState, action) => {
   switch (action.type) {
@@ -8,7 +8,7 @@ const activities = (state = initialState, action) => {
       return {
         ...state,
         items: [],
-      }
+      };
     case 'SEND_ENCRYPTED_MESSAGE_SLASH_COMMAND':
       return {
         ...state,
@@ -19,7 +19,7 @@ const activities = (state = initialState, action) => {
             type: 'SLASH_COMMAND',
           },
         ],
-      }
+      };
     case 'SEND_ENCRYPTED_MESSAGE_FILE_TRANSFER':
       return {
         ...state,
@@ -30,7 +30,7 @@ const activities = (state = initialState, action) => {
             type: 'FILE',
           },
         ],
-      }
+      };
     case 'SEND_ENCRYPTED_MESSAGE_TEXT_MESSAGE':
       return {
         ...state,
@@ -41,7 +41,7 @@ const activities = (state = initialState, action) => {
             type: 'TEXT_MESSAGE',
           },
         ],
-      }
+      };
     case 'RECEIVE_ENCRYPTED_MESSAGE_TEXT_MESSAGE':
       return {
         ...state,
@@ -52,7 +52,7 @@ const activities = (state = initialState, action) => {
             type: 'TEXT_MESSAGE',
           },
         ],
-      }
+      };
     case 'SEND_ENCRYPTED_MESSAGE_SEND_FILE':
       return {
         ...state,
@@ -63,7 +63,7 @@ const activities = (state = initialState, action) => {
             type: 'SEND_FILE',
           },
         ],
-      }
+      };
     case 'RECEIVE_ENCRYPTED_MESSAGE_SEND_FILE':
       return {
         ...state,
@@ -74,13 +74,13 @@ const activities = (state = initialState, action) => {
             type: 'RECEIVE_FILE',
           },
         ],
-      }
+      };
     case 'RECEIVE_ENCRYPTED_MESSAGE_ADD_USER':
-      const newUserId = action.payload.payload.id
+      const newUserId = action.payload.payload.id;
 
-      const haveUser = action.payload.state.room.members.find(m => m.id === newUserId)
+      const haveUser = action.payload.state.room.members.find(m => m.id === newUserId);
       if (haveUser) {
-        return state
+        return state;
       }
 
       return {
@@ -93,10 +93,10 @@ const activities = (state = initialState, action) => {
             username: action.payload.payload.username,
           },
         ],
-      }
+      };
     case 'USER_EXIT':
       if (!action.payload.id) {
-        return state
+        return state;
       }
       return {
         ...state,
@@ -108,7 +108,7 @@ const activities = (state = initialState, action) => {
             username: action.payload.username,
           },
         ],
-      }
+      };
     case 'TOGGLE_LOCK_ROOM':
       return {
         ...state,
@@ -122,7 +122,7 @@ const activities = (state = initialState, action) => {
             sender: action.payload.sender,
           },
         ],
-      }
+      };
     case 'RECEIVE_TOGGLE_LOCK_ROOM':
       return {
         ...state,
@@ -136,7 +136,7 @@ const activities = (state = initialState, action) => {
             sender: action.payload.sender,
           },
         ],
-      }
+      };
     case 'SHOW_NOTICE':
       return {
         ...state,
@@ -147,7 +147,7 @@ const activities = (state = initialState, action) => {
             message: action.payload.message,
           },
         ],
-      }
+      };
     case 'SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
       return {
         ...state,
@@ -158,16 +158,16 @@ const activities = (state = initialState, action) => {
             currentUsername: action.payload.currentUsername,
             newUsername: action.payload.newUsername,
           },
-        ].map((item) => {
+        ].map(item => {
           if (item.sender === action.payload.sender && item.type !== 'CHANGE_USERNAME') {
             return {
               ...item,
               username: action.payload.newUsername,
-            }
+            };
           }
-          return item
+          return item;
         }),
-      }
+      };
     case 'RECEIVE_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
       return {
         ...state,
@@ -178,16 +178,16 @@ const activities = (state = initialState, action) => {
             currentUsername: action.payload.payload.currentUsername,
             newUsername: action.payload.payload.newUsername,
           },
-        ].map((item) => {
+        ].map(item => {
           if (['TEXT_MESSAGE', 'USER_ACTION'].includes(item.type) && item.sender === action.payload.payload.sender) {
             return {
               ...item,
               username: action.payload.payload.newUsername,
-            }
+            };
           }
-          return item
+          return item;
         }),
-      }
+      };
     case 'SEND_ENCRYPTED_MESSAGE_USER_ACTION':
       return {
         ...state,
@@ -198,7 +198,7 @@ const activities = (state = initialState, action) => {
             ...action.payload,
           },
         ],
-      }
+      };
     case 'RECEIVE_ENCRYPTED_MESSAGE_USER_ACTION':
       return {
         ...state,
@@ -209,10 +209,10 @@ const activities = (state = initialState, action) => {
             ...action.payload.payload,
           },
         ],
-      }
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default activities
+export default activities;

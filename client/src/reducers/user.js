@@ -3,7 +3,7 @@ const initialState = {
   publicKey: {},
   username: '',
   id: '',
-}
+};
 
 const user = (state = initialState, action) => {
   switch (action.type) {
@@ -11,15 +11,15 @@ const user = (state = initialState, action) => {
       return {
         ...action.payload,
         id: action.payload.publicKey.n,
-      }
+      };
     case 'SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
       return {
         ...state,
         username: action.payload.newUsername,
-      }
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default user
+export default user;
