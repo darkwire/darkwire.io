@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { notify, beep } from 'utils/notifications';
 import Tinycon from 'tinycon';
+import { toggleNotificationAllowed, toggleNotificationEnabled } from 'actions';
 
 const mapStateToProps = state => {
   return {
@@ -10,12 +11,21 @@ const mapStateToProps = state => {
     windowIsFocused: state.app.windowIsFocused,
     soundIsEnabled: state.app.soundIsEnabled,
     notificationIsEnabled: state.app.notificationIsEnabled,
+    notificationIsAllowed: state.app.notificationIsAllowed,
     room: state.room,
   };
 };
 
+const mapDispatchToProps = {
+  toggleNotificationAllowed,
+  toggleNotificationEnabled
+};
+
 const WithNewMessageNotification = WrappedComponent => {
-  return connect(mapStateToProps)(
+  return connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(
     class WithNotificationHOC extends Component {
       state = { lastMessage: null, unreadMessageCount: 0 };
 
@@ -24,6 +34,7 @@ const WithNewMessageNotification = WrappedComponent => {
           room: { id: roomId },
           activities,
           notificationIsEnabled,
+          notificationIsAllowed,
           soundIsEnabled,
           unreadMessageCount,
           windowIsFocused,
@@ -38,7 +49,7 @@ const WithNewMessageNotification = WrappedComponent => {
 
         if (lastMessage !== prevState.lastMessage && !windowIsFocused) {
           const title = `Message from ${username} (${roomId})`;
-          if (notificationIsEnabled) notify(title, text);
+          if (notificationIsAllowed && notificationIsEnabled) notify(title, text);
           if (soundIsEnabled) beep.play();
         }
 
@@ -49,15 +60,32 @@ const WithNewMessageNotification = WrappedComponent => {
         return { lastMessage, unreadMessageCount };
       }
 
+      componentDidMount() {
+        switch (Notification.permission) {
+          case 'granted':
+            this.props.toggleNotificationAllowed(true);
+            this.props.toggleNotificationEnabled(true);
+            break;
+          case 'denied':
+            this.props.toggleNotificationAllowed(false);
+            break;
+          default:
+            this.props.toggleNotificationAllowed(null);
+        }
+      }
+
       render() {
         // Filter props
         const {
           room,
           activities,
           notificationIsEnabled,
+          motificationIsAllowed,
           soundIsEnabled,
           unreadMessageCount,
           windowIsFocused,
+          toggleNotificationAllowed,
+          toggleNotificationnEnabled,
           ...rest
         } = this.props;
         return <WrappedComponent {...rest} />;

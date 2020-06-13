@@ -29,6 +29,7 @@
   "sound": "Son",
   "newMessageNotification": "Notification lors d'un nouveau message",
   "desktopNotification": "Notification Système",
+  "desktopNotificationBlocked": "Les notifications systèmes ont été refusée",
   "welcomeModalCTA": "Ok",
   "lockedRoomHeader": "Ce salon est verrouillé",
   "helpTranslate": "Aidez-nous à traduire Darkwire!"
