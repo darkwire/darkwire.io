@@ -1,5 +1,4 @@
-import beepFile from 'audio/beep.mp3'
-
+import beepFile from 'audio/beep.mp3';
 
 const showNotification = (title, message, avatarUrl) => {
   const notifBody = {
@@ -45,6 +44,6 @@ export const notify = (title, content) => {
   }
 };
 
-export const beep = (window.Audio && new window.Audio(beepFile)) || { play: () => { }}
+export const beep = (window.Audio && new window.Audio(beepFile)) || { play: () => {} };
 
 export default { notify, beep };

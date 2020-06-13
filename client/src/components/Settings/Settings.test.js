@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'store';
 
@@ -11,17 +11,20 @@ const mockTranslations = {
   sound: 'soundCheck',
 };
 
+jest.useFakeTimers();
+
 jest.mock('components/RoomLink');
 
 describe('Settings component', () => {
   it('should display', async () => {
-    const { asFragment } = render(
+    const { asFragment, rerender } = render(
       <Provider store={store}>
         <Settings
           soundIsEnabled={true}
           toggleSoundEnabled={() => {}}
           notificationIsEnabled={true}
           toggleNotificationEnabled={() => {}}
+          toggleNotificationAllowed={jest.fn()}
           roomId="roomId"
           setLanguage={() => {}}
           translations={{}}
@@ -30,6 +33,25 @@ describe('Settings component', () => {
     );
 
     expect(asFragment()).toMatchSnapshot();
+
+    rerender(
+      <Provider store={store}>
+        <Settings
+          soundIsEnabled={true}
+          toggleSoundEnabled={() => {}}
+          notificationIsEnabled={true}
+          notificationIsAllowed={false}
+          toggleNotificationEnabled={() => {}}
+          toggleNotificationAllowed={jest.fn()}
+          roomId="roomId"
+          setLanguage={() => {}}
+          translations={{}}
+        />
+      </Provider>,
+    );
+
+    expect(asFragment()).toMatchSnapshot();
+
   });
 
   it('should toggle sound', async () => {
@@ -40,7 +62,9 @@ describe('Settings component', () => {
           soundIsEnabled={true}
           toggleSoundEnabled={toggleSound}
           notificationIsEnabled={true}
+          notificationIsAllowed={true}
           toggleNotificationEnabled={() => {}}
+          toggleNotificationAllowed={jest.fn()}
           roomId="roomId"
           setLanguage={() => {}}
           translations={{}}
@@ -55,6 +79,10 @@ describe('Settings component', () => {
   });
 
   it('should toggle notifications', async () => {
+    global.Notification = {
+      requestPermission: jest.fn().mockResolvedValue('granted'),
+    };
+
     const toggleNotifications = jest.fn();
     const { getByText } = render(
       <Provider store={store}>
@@ -62,7 +90,9 @@ describe('Settings component', () => {
           soundIsEnabled={true}
           toggleSoundEnabled={() => {}}
           notificationIsEnabled={true}
+          notificationIsAllowed={true}
           toggleNotificationEnabled={toggleNotifications}
+          toggleNotificationAllowed={jest.fn()}
           roomId="roomId"
           setLanguage={() => {}}
           translations={{}}
@@ -72,8 +102,47 @@ describe('Settings component', () => {
 
     fireEvent.click(getByText('Desktop Notification'));
 
-    expect(toggleNotifications).toHaveBeenCalledWith(false);
+    jest.runAllTimers();
+
+    delete global.Notification;
+
+    waitFor(() =>expect(toggleNotifications).toHaveBeenCalledWith(false));
+
   });
+
+  it('should not toggle notifications', async () => {
+    global.Notification = {
+      requestPermission: jest.fn().mockResolvedValue('denied'),
+    };
+
+    const toggleNotifications = jest.fn();
+    const toggleAllowed = jest.fn();
+    const { getByText } = render(
+      <Provider store={store}>
+        <Settings
+          soundIsEnabled={true}
+          toggleSoundEnabled={() => {}}
+          notificationIsEnabled={true}
+          notificationIsAllowed={true}
+          toggleNotificationEnabled={toggleNotifications}
+          toggleNotificationAllowed={toggleAllowed}
+          roomId="roomId"
+          setLanguage={() => {}}
+          translations={{}}
+        />
+      </Provider>,
+    );
+
+    fireEvent.click(getByText('Desktop Notification'));
+
+    jest.runAllTimers();
+
+    delete global.Notification;
+
+    waitFor(() =>expect(toggleAllowed).toHaveBeenCalledWith(false));
+    waitFor(() =>expect(toggleNotifications).not.toHaveBeenCalled());
+  });
+
 
   it('should change lang', async () => {
     const changeLang = jest.fn();
@@ -85,6 +154,7 @@ describe('Settings component', () => {
           toggleSoundEnabled={() => {}}
           notificationIsEnabled={true}
           toggleNotificationEnabled={() => {}}
+          toggleNotificationAllowed={jest.fn()}
           roomId="roomId"
           setLanguage={changeLang}
           translations={{}}

@@ -21,10 +21,13 @@ const room = (state = initialState, action) => {
           .filter(member => memberPubKeys.includes(member.publicKey.n))
           .map(member => {
             const thisMember = action.payload.members.find(mem => mem.publicKey.n === member.id)
-            return {
-              ...member,
-              isOwner: thisMember.isOwner
+            if (thisMember){
+              return {
+                ...member,
+                isOwner: thisMember.isOwner
+              }
             }
+            return {...member}
           })
       }
     case 'RECEIVE_ENCRYPTED_MESSAGE_ADD_USER':

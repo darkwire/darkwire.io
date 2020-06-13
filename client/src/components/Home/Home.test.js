@@ -62,6 +62,7 @@ test('Home component is displaying', async () => {
         toggleSoundEnabled={() => {}}
         soundIsEnabled={false}
         toggleNotificationEnabled={() => {}}
+        toggleNotificationAllowed={() => {}}
         notificationIsEnabled={false}
         faviconCount={0}
         toggleWindowFocus={() => {}}

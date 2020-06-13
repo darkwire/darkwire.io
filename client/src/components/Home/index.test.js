@@ -87,6 +87,16 @@ jest.mock('tinycon', () => {
 });
 
 describe('Connected Home component', () => {
+  beforeEach(()=>{
+    global.Notification = {
+      permission: 'granted'
+    }
+  })
+
+  afterEach(()=>{
+    delete global.Notification
+  })
+
   it('should display', () => {
     const { asFragment } = render(
       <Provider store={store}>
@@ -95,6 +105,43 @@ describe('Connected Home component', () => {
     );
 
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should set notification', () => {
+    render(
+      <Provider store={store}>
+        <ConnectedHome match={{ params: { roomId: 'roomTest' } }} userId="testUserId" />
+      </Provider>,
+    );
+
+    expect(store.getState().app.notificationIsAllowed).toBe(true);
+    expect(store.getState().app.notificationIsEnabled).toBe(true);
+
+    global.Notification = {
+      permission: 'denied'
+    }
+
+    render(
+      <Provider store={store}>
+        <ConnectedHome match={{ params: { roomId: 'roomTest' } }} userId="testUserId" />
+      </Provider>,
+    );
+
+    expect(store.getState().app.notificationIsAllowed).toBe(false);
+
+    global.Notification = {
+      permission: 'default'
+    }
+
+    render(
+      <Provider store={store}>
+        <ConnectedHome match={{ params: { roomId: 'roomTest' } }} userId="testUserId" />
+      </Provider>,
+    );
+
+    expect(store.getState().app.notificationIsAllowed).toBe(null);
+
+
   });
 
   it('should send notifications', async () => {

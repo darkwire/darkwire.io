@@ -29,6 +29,7 @@
   "sound": "Sound",
   "newMessageNotification": "New message notification",
   "desktopNotification": "Desktop Notification",
+  "desktopNotificationBlocked": "Desktop notifications have been denied",
   "welcomeModalCTA": "Ok",
   "lockedRoomHeader": "This room is locked",
   "helpTranslate": "Help us translate Darkwire!"
