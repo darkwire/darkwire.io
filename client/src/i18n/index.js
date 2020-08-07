@@ -5,6 +5,7 @@ import de from './de';
 import it from './it';
 import zhCN from './zh-CN';
 import nl from './nl';
+import ru from './ru';
 
 const languagesMap = {
   en,
@@ -14,6 +15,7 @@ const languagesMap = {
   it,
   zhCN,
   nl,
+  ru,
 };
 
 /**
