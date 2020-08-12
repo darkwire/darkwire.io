@@ -15,7 +15,7 @@ ENV MAILGUN_API_KEY=api-key \
     ROOM_HASH_SECRET='some-uuid'\
     SITE_URL=https://darkwire.io \
     STORE_BACKEND=redis \
-    STORE_HOST=redis://localhost:6379
+    STORE_HOST=redis://redis:6379
 
 # Client configuration will be put into client/.env
 ENV TZ=UTC \
