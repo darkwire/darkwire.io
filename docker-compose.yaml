@@ -1,0 +1,17 @@
+version: '3.0'
+services:
+  redis:
+    image: redis:6.0.6
+    networks:
+      - db
+  darkwire.io:
+    build:
+      context: .
+    environment:
+      - STORE_HOST=redis://redis:6379
+    networks:
+      - db
+    ports:
+      - 3001:3001
+networks:
+  db:
