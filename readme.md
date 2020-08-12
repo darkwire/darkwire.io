@@ -47,6 +47,16 @@ $ yarn setup
 $ yarn dev
 ```
 
+#### Using docker-compose
+
+Just run the following:
+
+```
+$ docker-compose up
+```
+
+This will automatically create the default `.env` files, and run redis for you.
+
 ### Production
 
 Create server and client production builds
@@ -60,6 +70,22 @@ Start server
 ```
 $ yarn start
 ```
+
+#### Using Docker
+
+Build it.
+
+```
+$ docker build --tag darkwire.io:latest .
+```
+
+Then run it. Example:
+
+```
+$ docker run --name darkwire.io --env STORE_HOST=redis://redis.host:6379 darkwire.io
+```
+
+You are able to use any of the enviroment variables available in `server/.env.dist` and `client/.env.dist`. The defaults are available in [Dockerfile](Dockerfile)
 
 ### Security
 
