@@ -15,7 +15,7 @@ ENV MAILGUN_API_KEY=api-key \
     ROOM_HASH_SECRET='some-uuid'\
     SITE_URL=https://darkwire.io \
     STORE_BACKEND=redis \
-    STORE_HOST=redis://localhost:6379
+    STORE_HOST=redis://redis:6379
 
 # Client configuration will be put into client/.env
 ENV TZ=UTC \
@@ -30,7 +30,7 @@ COPY --chown=node:node . .
 
 RUN yarn build
 
-STOPSIGNAL SIGNINT
+STOPSIGNAL SIGINT
 EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \ 
     CMD [ "curl", "-f", "${REACT_APP_API_PROTOCOL}://localhost:${REACT_APP_API_PORT}", "||", "exit", "1" ]
