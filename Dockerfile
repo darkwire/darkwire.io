@@ -30,7 +30,7 @@ COPY --chown=node:node . .
 
 RUN yarn build
 
-STOPSIGNAL SIGNINT
+STOPSIGNAL SIGINT
 EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \ 
     CMD [ "curl", "-f", "${REACT_APP_API_PROTOCOL}://localhost:${REACT_APP_API_PORT}", "||", "exit", "1" ]
