@@ -99,6 +99,7 @@ class Settings extends Component {
               <option value="fr">Français</option>
               <option value="oc">Occitan</option>
               <option value="de">Deutsch</option>
+              <option value="esAR">Español (Argentina)</option>
               <option value="nl">Nederlands</option>
               <option value="it">Italiano</option>
               <option value="ru">Русский</option>

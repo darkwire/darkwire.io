@@ -93,6 +93,11 @@ exports[`Settings component should display 1`] = `
             Deutsch
           </option>
           <option
+            value="esAR"
+          >
+            Español (Argentina)
+          </option>
+          <option
             value="nl"
           >
             Nederlands
@@ -262,6 +267,11 @@ exports[`Settings component should display 2`] = `
             value="de"
           >
             Deutsch
+          </option>
+          <option
+            value="esAR"
+          >
+            Español (Argentina)
           </option>
           <option
             value="nl"
