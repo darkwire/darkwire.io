@@ -23,7 +23,7 @@ const showNotification = (title, message, avatarUrl) => {
   document.addEventListener('visibilitychange', handleVisibilityChange);
 };
 
-export const notify = (title, content) => {
+export const notify = (title, content = '') => {
   if (!('Notification' in window)) {
     alert('This browser does not support desktop notification');
   }
