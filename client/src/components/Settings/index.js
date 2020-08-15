@@ -101,6 +101,7 @@ class Settings extends Component {
               <option value="de">Deutsch</option>
               <option value="nl">Nederlands</option>
               <option value="it">Italiano</option>
+              <option value="ru">Русский</option>
               <option value="zhCN">中文</option>
             </select>
           </div>
