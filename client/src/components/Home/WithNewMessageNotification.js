@@ -45,11 +45,41 @@ const WithNewMessageNotification = WrappedComponent => {
         }
 
         const lastMessage = activities[activities.length - 1];
-        const { username, text } = lastMessage;
+        const { username, type, text, fileName, locked, newUsername, currentUsername, action } = lastMessage;
 
         if (lastMessage !== prevState.lastMessage && !windowIsFocused) {
-          const title = `Message from ${username} (${roomId})`;
-          if (notificationIsAllowed && notificationIsEnabled) notify(title, text);
+          if (notificationIsAllowed && notificationIsEnabled) {
+            // Generate the proper notification according to the message type
+            switch (type) {
+              case 'USER_ENTER':
+                notify(`User ${username} joined`);
+                break;
+              case 'USER_EXIT':
+                notify(`User ${username} left`);
+                break;
+              case 'RECEIVE_FILE':
+                notify(`${username} sent file <${fileName}>`);
+                break;
+              case 'TEXT_MESSAGE':
+                notify(`${username} said:`, text);
+                break;
+              case 'USER_ACTION':
+                notify(`${username} ${action}`);
+                break;
+              case 'CHANGE_USERNAME':
+                notify(`${currentUsername} changed their name to ${newUsername}`);
+                break;
+              case 'TOGGLE_LOCK_ROOM':
+                if (locked) {
+                  notify(`Room ${roomId} is now locked`);
+                } else {
+                  notify(`Room ${roomId} is now unlocked`);
+                }
+                break;
+              default:
+                break;
+            }
+          }
           if (soundIsEnabled) beep.play();
         }
 

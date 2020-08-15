@@ -180,7 +180,7 @@ describe('Connected Home component', () => {
       </Provider>,
     );
     expect(store.getState().app.unreadMessageCount).toBe(1);
-    expect(notify).toHaveBeenLastCalledWith('Message from sender ()', 'new message');
+    expect(notify).toHaveBeenLastCalledWith('sender said:', 'new message');
     expect(beep.play).toHaveBeenLastCalledWith();
     expect(Tinycon.setBubble).toHaveBeenLastCalledWith(1);
 
