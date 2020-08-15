@@ -25,6 +25,9 @@ describe('User reducer', () => {
   it('should handle SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME', () => {
     const payload = { newUsername: 'alice' };
     expect(reducer({ username: 'polux' }, { type: 'SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME', payload })).toEqual({
+      id: '',
+      privateKey: {},
+      publicKey: {},
       username: 'alice',
     });
   });

@@ -5,7 +5,9 @@ const initialState = {
   id: '',
 };
 
-const user = (state = initialState, action) => {
+const user = (receivedState, action) => {
+  const state = { ...initialState, ...receivedState };
+
   switch (action.type) {
     case 'CREATE_USER':
       return {

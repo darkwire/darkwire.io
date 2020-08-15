@@ -17,7 +17,6 @@
     "classnames": "^2.3.2",
     "clipboard": "^2.0.11",
     "jquery": "3",
-    "js-cookie": "^3.0.1",
     "moment": "^2.29.4",
     "nanoid": "^4.0.0",
     "randomcolor": "^0.6.2",

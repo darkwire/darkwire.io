@@ -42,6 +42,21 @@ exports[`Settings component > should display 1`] = `
             Desktop Notification
           </label>
         </div>
+        <div
+          class="form-check"
+        >
+          <label
+            class="form-check-label"
+            for="persistence-control"
+          >
+            <input
+              class="form-check-input"
+              id="persistence-control"
+              type="checkbox"
+            />
+            Persist configuration
+          </label>
+        </div>
       </form>
     </section>
     <section>
@@ -231,6 +246,21 @@ exports[`Settings component > should display 2`] = `
             for="notif-control"
           >
             Desktop notifications have been denied
+          </label>
+        </div>
+        <div
+          class="form-check"
+        >
+          <label
+            class="form-check-label"
+            for="persistence-control"
+          >
+            <input
+              class="form-check-input"
+              id="persistence-control"
+              type="checkbox"
+            />
+            Persist configuration
           </label>
         </div>
       </form>

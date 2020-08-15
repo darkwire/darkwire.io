@@ -32,6 +32,7 @@
     "lists all commands"
   ],
   "sound": "Sound",
+  "persistence": "Persist configuration",
   "newMessageNotification": "New message notification",
   "desktopNotification": "Desktop Notification",
   "desktopNotificationBlocked": "Desktop notifications have been denied",

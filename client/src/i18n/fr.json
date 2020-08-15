@@ -32,6 +32,7 @@
     "lister toutes les commandes"
   ],
   "sound": "Son",
+  "persistence": "Mémoriser la configuration",
   "newMessageNotification": "Notification lors d'un nouveau message",
   "desktopNotification": "Notification Système",
   "desktopNotificationBlocked": "Les notifications systèmes ont été refusée",
