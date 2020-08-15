@@ -100,7 +100,9 @@ class Home extends Component {
             <Settings
               roomId={this.props.roomId}
               toggleSoundEnabled={this.props.toggleSoundEnabled}
+              togglePersistenceEnabled={this.props.togglePersistenceEnabled}
               soundIsEnabled={this.props.soundIsEnabled}
+              persistenceIsEnabled={this.props.persistenceIsEnabled}
               toggleNotificationEnabled={this.props.toggleNotificationEnabled}
               toggleNotificationAllowed={this.props.toggleNotificationAllowed}
               notificationIsEnabled={this.props.notificationIsEnabled}
@@ -151,7 +153,7 @@ class Home extends Component {
 
   createUser() {
     return new Promise(async resolve => {
-      const username = nanoid();
+      const username = this.props.username || nanoid();
 
       const encryptDecryptKeys = await crypto.createEncryptDecryptKeys();
       const exportedEncryptDecryptPrivateKey = await crypto.exportKey(encryptDecryptKeys.privateKey);
@@ -238,7 +240,7 @@ Home.propTypes = {
   username: PropTypes.string.isRequired,
   publicKey: PropTypes.object.isRequired,
   members: PropTypes.array.isRequired,
-  socketId: PropTypes.object.isRequired,
+  socketId: PropTypes.string.isRequired,
   roomId: PropTypes.string.isRequired,
   roomLocked: PropTypes.bool.isRequired,
   modalComponent: PropTypes.string,
@@ -249,7 +251,9 @@ Home.propTypes = {
   toggleWindowFocus: PropTypes.func.isRequired,
   faviconCount: PropTypes.number.isRequired,
   soundIsEnabled: PropTypes.bool.isRequired,
+  persistenceIsEnabled: PropTypes.bool.isRequired,
   toggleSoundEnabled: PropTypes.func.isRequired,
+  togglePersistenceEnabled: PropTypes.func.isRequired,
   notificationIsEnabled: PropTypes.bool.isRequired,
   notificationIsAllowed: PropTypes.bool,
   toggleNotificationEnabled: PropTypes.func.isRequired,

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Cookie from 'js-cookie';
 
 import RoomLink from '@/components/RoomLink';
 import T from '@/components/T';
@@ -10,6 +9,10 @@ import classes from './styles.module.scss';
 class Settings extends Component {
   handleSoundToggle() {
     this.props.toggleSoundEnabled(!this.props.soundIsEnabled);
+  }
+
+  handlePersistenceToggle() {
+    this.props.togglePersistenceEnabled(!this.props.persistenceIsEnabled);
   }
 
   handleNotificationToggle() {
@@ -26,7 +29,6 @@ class Settings extends Component {
 
   handleLanguageChange(evt) {
     const language = evt.target.value;
-    Cookie.set('language', language);
     this.props.setLanguage(language);
   }
 
@@ -66,6 +68,18 @@ class Settings extends Component {
                   </>
                 )}
                 {this.props.notificationIsAllowed === false && <T path="desktopNotificationBlocked" />}
+              </label>
+            </div>
+            <div className="form-check">
+              <label className="form-check-label" htmlFor="persistence-control">
+                <input
+                  id="persistence-control"
+                  onChange={this.handlePersistenceToggle.bind(this)}
+                  className="form-check-input"
+                  type="checkbox"
+                  checked={this.props.persistenceIsEnabled}
+                />
+                <T path="persistence" />
               </label>
             </div>
           </form>
@@ -170,6 +184,7 @@ class Settings extends Component {
 
 Settings.propTypes = {
   soundIsEnabled: PropTypes.bool.isRequired,
+  persistenceIsEnabled: PropTypes.bool.isRequired,
   toggleSoundEnabled: PropTypes.func.isRequired,
   notificationIsEnabled: PropTypes.bool.isRequired,
   notificationIsAllowed: PropTypes.bool,
