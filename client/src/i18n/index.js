@@ -15,7 +15,7 @@ const languagesMap = {
   it,
   zhCN,
   nl,
-  ru,
+  ru
 };
 
 /**
