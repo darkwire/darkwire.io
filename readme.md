@@ -14,6 +14,13 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cr
 
 The Darkwire.io [web client](/client) is written in JavaScript with React JS and Redux.
 
+### Need to run **darkwire.io** on `http` without buying a domain name, configuring SSL and running `https` server?
+
+You can have a look at [this fork](https://github.com/pavlobu/darkwire.io) of darkwire.io that is using
+[Forge](https://github.com/digitalbazaar/forge) crypto library instead of `window.crypto.subtle`. It allows you
+to run darkwire.io on `http` with NO need for `https` configuring SSL certificates and buying a domain name for your server!
+More details [here](https://github.com/pavlobu/darkwire.io/tree/master/client#what-is-forge-for-)
+
 ### Development
 
 #### Prerequisites
