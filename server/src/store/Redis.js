@@ -27,7 +27,7 @@ export class RedisStore {
   }
 
   del(key, field) {
-    return this.hdelAsync(key, field);
+    return this.redis.hdelAsync(key, field);
   }
 
   inc(key, field, inc = 1) {
