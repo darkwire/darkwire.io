@@ -9,7 +9,6 @@ import ru from './ru';
 import esAR from './es-AR';
 import ja from './ja';
 
-
 const languagesMap = {
   en,
   fr,
