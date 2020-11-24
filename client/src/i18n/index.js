@@ -7,6 +7,7 @@ import zhCN from './zh-CN';
 import nl from './nl';
 import ru from './ru';
 import esAR from './es-AR';
+import tr from './tr';
 
 const languagesMap = {
   en,
