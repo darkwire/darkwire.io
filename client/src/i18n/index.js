@@ -19,6 +19,7 @@ const languagesMap = {
   nl,
   ru,
   esAR,
+  tr,
 };
 
 /**
