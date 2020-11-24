@@ -20,6 +20,7 @@ const languagesMap = {
   ru,
   esAR,
   ja,
+  tr,
 };
 
 /**
