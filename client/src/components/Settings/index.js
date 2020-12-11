@@ -104,11 +104,8 @@ class Settings extends Component {
               <option value="it">Italiano</option>
               <option value="ru">Русский</option>
               <option value="zhCN">中文</option>
-<<<<<<< HEAD
               <option value="ja">日本語</option>
-=======
               <option value="tr">Türkçe</option>
->>>>>>> bd7bad5... Update index.js
             </select>
           </div>
         </section>
