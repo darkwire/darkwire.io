@@ -20,7 +20,7 @@
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.20",
     "moment": "^2.24.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "popper.js": "^1.15.0",
     "randomcolor": "^0.5.4",
     "react": "^16.8.6",
