@@ -122,6 +122,11 @@ exports[`Settings component should display 1`] = `
           >
             日本語
           </option>
+          <option
+            value="tr"
+          >
+            Türkçe
+          </option>
         </select>
       </div>
     </section>
@@ -302,6 +307,11 @@ exports[`Settings component should display 2`] = `
             value="ja"
           >
             日本語
+          </option>
+          <option
+            value="tr"
+          >
+            Türkçe
           </option>
         </select>
       </div>
