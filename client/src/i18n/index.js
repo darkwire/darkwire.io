@@ -8,6 +8,7 @@ import nl from './nl';
 import ru from './ru';
 import esAR from './es-AR';
 import ja from './ja';
+import tr from './tr';
 
 const languagesMap = {
   en,
@@ -20,6 +21,7 @@ const languagesMap = {
   ru,
   esAR,
   ja,
+  tr,
 };
 
 /**
