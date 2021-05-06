@@ -34,7 +34,7 @@
     "react-simple-dropdown": "^3.2.3",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "sanitize-html": "^1.20.1",
+    "sanitize-html": "^2.3.2",
     "shortid": "^2.2.14",
     "socket.io-client": "^2.2.0",
     "tinycon": "^0.6.8",
