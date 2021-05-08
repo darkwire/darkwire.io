@@ -18,7 +18,7 @@
     "feather-icons": "^4.21.0",
     "jquery": "^3.5.0",
     "js-cookie": "^2.2.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "node-sass": "^4.13.1",
     "popper.js": "^1.15.0",
