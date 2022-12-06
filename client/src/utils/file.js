@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 export const getObjectUrl = (encodedFile, fileType) => {
   const b64 = unescape(encodedFile);
   const sliceSize = 1024;

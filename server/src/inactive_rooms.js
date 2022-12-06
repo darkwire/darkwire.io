@@ -1,4 +1,4 @@
-import getStore from './store';
+import getStore from './store/index.js';
 
 export async function pollForInactiveRooms() {
   const store = getStore();

@@ -2,6 +2,7 @@
   "name": "darkwire-client",
   "version": "2.0.0-beta.12",
   "main": "index.js",
+  "type": "module",
   "contributors": [
     {
       "name": "Daniel Seripap"
@@ -12,44 +13,55 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "autosize": "^4.0.2",
-    "bootstrap": "^4.3.1",
-    "clipboard": "^2.0.4",
-    "feather-icons": "^4.21.0",
-    "jquery": "^3.5.0",
-    "js-cookie": "^2.2.0",
-    "lodash": "^4.17.20",
-    "moment": "^2.24.0",
-    "node-sass": "^4.13.1",
-    "popper.js": "^1.15.0",
-    "randomcolor": "^0.5.4",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-feather": "^1.1.6",
-    "react-linkify": "^0.2.2",
-    "react-modal": "^3.8.1",
-    "react-redux": "^7.0.3",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "3.0.0",
+    "bootstrap": "^4.6.2",
+    "classnames": "^2.3.2",
+    "clipboard": "^2.0.11",
+    "jquery": "3",
+    "js-cookie": "^3.0.1",
+    "moment": "^2.29.4",
+    "nanoid": "^4.0.0",
+    "randomcolor": "^0.6.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-feather": "^2.0.10",
+    "react-linkify": "^1.0.0-alpha",
+    "react-modal": "^3.16.1",
+    "react-redux": "^8.0.5",
+    "react-router": "^6.4.4",
+    "react-router-dom": "^6.4.4",
     "react-simple-dropdown": "^3.2.3",
-    "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
-    "sanitize-html": "^1.20.1",
-    "shortid": "^2.2.14",
-    "socket.io-client": "^2.2.0",
-    "tinycon": "^0.6.8",
-    "webcrypto-shim": "^0.1.4"
+    "redux": "^4.2.0",
+    "redux-thunk": "^2.4.2",
+    "sanitize-html": "^2.7.3",
+    "socket.io-client": "^4.5.4",
+    "tinycon": "^0.6.8"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "coverage": "react-scripts test --env=jest-environment-jsdom-sixteen --coverage --watchAll=false",
-    "eject": "react-scripts eject",
-    "lint": "eslint src"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "TZ=UTC vitest",
+    "lint": "eslint src",
+    "coverage": "TZ=UTC vitest --coverage --watch=false"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "@vitejs/plugin-react": "^3.0.0",
+    "@vitest/coverage-istanbul": "^0.25.7",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "jest-fetch-mock": "^3.0.3",
+    "prettier": "^2.0.5",
+    "sass": "^1.56.2",
+    "typescript": "^4.9.4",
+    "vitest": "^0.25.7",
+    "vitest-fetch-mock": "^0.2.1"
   },
   "browserslist": {
     "production": [
@@ -62,18 +74,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@peculiar/webcrypto": "^1.1.1",
-    "@testing-library/jest-dom": "^5.5.0",
-    "@testing-library/react": "^10.0.4",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.12.1",
-    "enzyme-to-json": "^3.3.5",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "jest-environment-jsdom-sixteen": "^1.0.3",
-    "jest-fetch-mock": "^3.0.3",
-    "prettier": "^2.0.5"
   }
 }

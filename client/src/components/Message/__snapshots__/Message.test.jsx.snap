@@ -1,0 +1,28 @@
+// Vitest Snapshot v1
+
+exports[`Message component is displaying 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="chat-meta"
+    >
+      <span
+        class="username"
+        style="color: rgb(131, 239, 135);"
+      >
+        linus
+      </span>
+      <span
+        class="muted timestamp"
+      >
+        7:44 PM
+      </span>
+    </div>
+    <div
+      class="chat"
+    >
+      we come in peace
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,8 +1,14 @@
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-// this adds jest-dom's custom assertions
-import '@testing-library/jest-dom/extend-expect';
-import { enableFetchMocks } from 'jest-fetch-mock';
+import { expect, afterEach, vi } from 'vitest';
+import { cleanup } from '@testing-library/react';
+import matchers from '@testing-library/jest-dom/extend-expect';
+import createFetchMock from 'vitest-fetch-mock';
 
-configure({ adapter: new Adapter() });
-enableFetchMocks();
+const fetchMock = createFetchMock(vi);
+fetchMock.enableMocks();
+
+expect.extend(matchers);
+
+// runs a cleanup after each test case (e.g. clearing jsdom)
+afterEach(() => {
+  cleanup();
+});

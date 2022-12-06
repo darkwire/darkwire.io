@@ -1,4 +1,6 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const { MAILGUN_API_KEY, MAILGUN_DOMAIN } = process.env;
 
@@ -7,13 +9,13 @@ const domain = MAILGUN_DOMAIN;
 
 let mailgun;
 
-if (apiKey && domain) {
-  mailgun = require('mailgun-js')({ apiKey, domain });
-}
-
-module.exports.send = data => {
+export default async data => {
   if (!mailgun) {
-    return;
+    if (apiKey && domain) {
+      mailgun = (await import('mailgun-js'))({ apiKey, domain });
+    } else {
+      return;
+    }
   }
   mailgun.messages().send(data, function (error, body) {});
 };

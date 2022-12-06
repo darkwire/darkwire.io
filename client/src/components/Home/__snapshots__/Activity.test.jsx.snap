@@ -1,0 +1,265 @@
+// Vitest Snapshot v1
+
+exports[`Activity component > should display 1`] = `<DocumentFragment />`;
+
+exports[`Activity component > should display CHANGE_USERNAME 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="info"
+    >
+      <div>
+        <span>
+          <span
+            class="username"
+            style="color: rgb(204, 241, 255);"
+          >
+            alice
+          </span>
+           changed their name to 
+          <span
+            class="username"
+            style="color: rgb(235, 162, 242);"
+          >
+            alicette
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display NOTICE 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="info"
+    >
+      <div>
+        Hello world!
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display RECEIVE_FILE 1`] = `
+<DocumentFragment>
+  <div>
+    <span>
+      <span
+        class="username"
+        style="color: rgb(204, 241, 255);"
+      >
+        alice
+      </span>
+       sent you a file.
+    </span>
+     
+    <a
+      download="alice.pdf"
+      href="url:[object Blob]"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span>
+        Download alice.pdf
+      </span>
+    </a>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display RECEIVE_FILE with image 1`] = `
+<DocumentFragment>
+  <div>
+    <span>
+      <span
+        class="username"
+        style="color: rgb(204, 241, 255);"
+      >
+        alice
+      </span>
+       sent you a file.
+    </span>
+     
+    <a
+      download="alice.jpg"
+      href="url:[object Blob]"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span>
+        Download alice.jpg
+      </span>
+    </a>
+    <img
+      alt="alice.jpg from alice"
+      class="image-transfer zoomable"
+      src="data:image/jpg;base64,dGV4dGZpbGU="
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display SEND_FILE 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="info"
+    >
+      <div>
+        <span>
+          You sent 
+          <a
+            download="alice.pdf"
+            href="url:[object Blob]"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            alice.pdf
+          </a>
+        </span>
+         
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display TEXT_MESSAGE 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="chat-meta"
+    >
+      <span
+        class="username"
+        style="color: rgb(204, 241, 255);"
+      >
+        alice
+      </span>
+      <span
+        class="muted timestamp"
+      >
+        11:01 AM
+      </span>
+    </div>
+    <div
+      class="chat"
+    >
+      Hi!
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display TOGGLE_LOCK_ROOM 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="info"
+    >
+      <div>
+        <span>
+          <span
+            class="username"
+            style="color: rgb(204, 241, 255);"
+          >
+            alice
+          </span>
+           locked the room
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display TOGGLE_LOCK_ROOM 2`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="info"
+    >
+      <div>
+        <span>
+          <span
+            class="username"
+            style="color: rgb(204, 241, 255);"
+          >
+            alice
+          </span>
+           unlocked the room
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display USER_ACTION 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="info"
+    >
+      <div>
+        * 
+        <span
+          class="username"
+          style="color: rgb(204, 241, 255);"
+        >
+          alice
+        </span>
+         did right!
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display USER_ENTER 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="info"
+    >
+      <div>
+        <span>
+          <span
+            class="username"
+            style="color: rgb(204, 241, 255);"
+          >
+            alice
+          </span>
+           joined
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Activity component > should display USER_EXIT 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="info"
+    >
+      <div>
+        <span>
+          <span
+            class="username"
+            style="color: rgb(204, 241, 255);"
+          >
+            alice
+          </span>
+           left
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

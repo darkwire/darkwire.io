@@ -1,18 +1,21 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
 import http from 'http';
 import https from 'https';
 import Koa from 'koa';
-import Io from 'socket.io';
+import { Server } from 'socket.io';
 import KoaBody from 'koa-body';
 import cors from 'kcors';
 import Router from 'koa-router';
-import Socket from './socket';
 import crypto from 'crypto';
-import mailer from './utils/mailer';
 import koaStatic from 'koa-static';
 import koaSend from 'koa-send';
-import { pollForInactiveRooms } from './inactive_rooms';
-import getStore from './store';
+
+import Socket from './socket.js';
+import mailer from './utils/mailer.js';
+import { pollForInactiveRooms } from './inactive_rooms.js';
+import getStore from './store/index.js';
+
+dotenv.config();
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -98,10 +101,16 @@ if (clientDistDirectory) {
 
 const protocol = (process.env.PROTOCOL || 'http') === 'http' ? http : https;
 
-const server = protocol.createServer(app.callback());
-const io = Io(server, {
+const httpServer = protocol.createServer(app.callback());
+
+const io = new Server(httpServer, {
   pingInterval: 20000,
-  pingTimeout: 5000,
+  pingTimeout: 60000,
+  maxHttpBufferSize: 5 * 1e8,
+  cors: {
+    origin: true,
+    credentials: true,
+  },
 });
 
 // Only use socket adapter if store has one
@@ -123,8 +132,6 @@ const getRoomIdHash = id => {
   return crypto.createHash('sha256').update(id).digest('hex');
 };
 
-export const getIO = () => io;
-
 io.on('connection', async socket => {
   const roomId = socket.handshake.query.roomId;
 
@@ -141,8 +148,10 @@ io.on('connection', async socket => {
   });
 });
 
+export const getIO = () => io;
+
 const init = async () => {
-  server.listen(PORT, () => {
+  httpServer.listen(PORT, () => {
     console.log(`Darkwire is online at port ${PORT}`);
   });
 

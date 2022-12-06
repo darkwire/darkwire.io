@@ -1,21 +1,23 @@
 import * as actions from './encrypted_messages';
-import { getSocket } from 'utils/socket';
-import { prepare as prepareMessage, process as processMessage } from 'utils/message';
+import { getSocket } from '@/utils/socket';
+import { prepare as prepareMessage, process as processMessage } from '@/utils/message';
 
-jest.mock('utils/message', () => {
+import { describe, it, expect, vi } from 'vitest';
+
+vi.mock('@/utils/message', () => {
   return {
-    prepare: jest
+    prepare: vi
       .fn()
       .mockResolvedValue({ original: { type: 'messageType', payload: 'test' }, toSend: 'encryptedpayload' }),
-    process: jest.fn().mockResolvedValue({ type: 'messageType', payload: 'test' }),
+    process: vi.fn().mockResolvedValue({ type: 'messageType', payload: 'test' }),
   };
 });
 
-const mockEmit = jest.fn();
+const mockEmit = vi.fn();
 
-jest.mock('utils/socket', () => {
+vi.mock('@/utils/socket', () => {
   return {
-    getSocket: jest.fn().mockImplementation(() => ({
+    getSocket: vi.fn().mockImplementation(() => ({
       emit: mockEmit,
     })),
   };
@@ -23,9 +25,9 @@ jest.mock('utils/socket', () => {
 
 describe('Encrypted messages actions', () => {
   it('should create an action to send message', async () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
 
-    await actions.sendEncryptedMessage({ payload: 'payload' })(mockDispatch, jest.fn().mockReturnValue({ state: {} }));
+    await actions.sendEncryptedMessage({ payload: 'payload' })(mockDispatch, vi.fn().mockReturnValue({ state: {} }));
 
     expect(prepareMessage).toHaveBeenLastCalledWith({ payload: 'payload' }, { state: {} });
     expect(mockDispatch).toHaveBeenLastCalledWith({ payload: 'test', type: 'SEND_ENCRYPTED_MESSAGE_messageType' });
@@ -33,11 +35,11 @@ describe('Encrypted messages actions', () => {
   });
 
   it('should create an action to receive message', async () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
 
     await actions.receiveEncryptedMessage({ payload: 'encrypted' })(
       mockDispatch,
-      jest.fn().mockReturnValue({ state: {} }),
+      vi.fn().mockReturnValue({ state: {} }),
     );
 
     expect(processMessage).toHaveBeenLastCalledWith({ payload: 'encrypted' }, { state: {} });

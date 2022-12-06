@@ -1,33 +1,34 @@
 import * as actions from './unencrypted_messages';
-import { getSocket } from 'utils/socket';
 
-const mockEmit = jest.fn((_type, _null, callback) => {
+import { describe, it, expect, vi } from 'vitest';
+
+const mockEmit = vi.fn((_type, _null, callback) => {
   callback({ isLocked: true });
 });
 
-jest.mock('utils/socket', () => {
+vi.mock('@/utils/socket', () => {
   return {
-    getSocket: jest.fn().mockImplementation(() => ({
+    getSocket: vi.fn().mockImplementation(() => ({
       emit: mockEmit,
     })),
   };
 });
 
-describe('Reveice unencrypted message actions', () => {
+describe('Receive unencrypted message actions', () => {
   it('should create no action', () => {
-    const mockDispatch = jest.fn();
-    actions.receiveUnencryptedMessage('FAKE')(mockDispatch, jest.fn().mockReturnValue({}));
+    const mockDispatch = vi.fn();
+    actions.receiveUnencryptedMessage('FAKE')(mockDispatch, vi.fn().mockReturnValue({}));
     expect(mockDispatch).not.toHaveBeenCalled();
   });
 
   it('should create user enter action', () => {
-    const mockDispatch = jest.fn();
-    actions.receiveUnencryptedMessage('USER_ENTER', 'test')(mockDispatch, jest.fn().mockReturnValue({ state: {} }));
+    const mockDispatch = vi.fn();
+    actions.receiveUnencryptedMessage('USER_ENTER', 'test')(mockDispatch, vi.fn().mockReturnValue({ state: {} }));
     expect(mockDispatch).toHaveBeenLastCalledWith({ type: 'USER_ENTER', payload: 'test' });
   });
 
   it('should create user exit action', () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
     const state = {
       room: {
         members: [
@@ -37,7 +38,7 @@ describe('Reveice unencrypted message actions', () => {
         ],
       },
     };
-    const mockGetState = jest.fn().mockReturnValue(state);
+    const mockGetState = vi.fn().mockReturnValue(state);
     const payload1 = [
       { publicKey: { n: 'alankey' } },
       { publicKey: { n: 'dankey' } },
@@ -62,7 +63,7 @@ describe('Reveice unencrypted message actions', () => {
   });
 
   it('should create receive toggle lock room action', () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
     const state = {
       room: {
         members: [
@@ -71,7 +72,7 @@ describe('Reveice unencrypted message actions', () => {
         ],
       },
     };
-    const mockGetState = jest.fn().mockReturnValue(state);
+    const mockGetState = vi.fn().mockReturnValue(state);
     const payload = { publicKey: { n: 'alankey' } };
 
     actions.receiveUnencryptedMessage('TOGGLE_LOCK_ROOM', payload)(mockDispatch, mockGetState);
@@ -82,14 +83,14 @@ describe('Reveice unencrypted message actions', () => {
   });
 
   it('should create receive toggle lock room action', () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
     const state = {
       user: {
         username: 'alan',
         id: 'idalan',
       },
     };
-    const mockGetState = jest.fn().mockReturnValue(state);
+    const mockGetState = vi.fn().mockReturnValue(state);
 
     actions.sendUnencryptedMessage('TOGGLE_LOCK_ROOM')(mockDispatch, mockGetState);
     expect(mockDispatch).toHaveBeenLastCalledWith({
@@ -101,20 +102,20 @@ describe('Reveice unencrypted message actions', () => {
 
 describe('Send unencrypted message actions', () => {
   it('should create no action', () => {
-    const mockDispatch = jest.fn();
-    actions.sendUnencryptedMessage('FAKE')(mockDispatch, jest.fn().mockReturnValue({}));
+    const mockDispatch = vi.fn();
+    actions.sendUnencryptedMessage('FAKE')(mockDispatch, vi.fn().mockReturnValue({}));
     expect(mockDispatch).not.toHaveBeenCalled();
   });
 
   it('should create toggle lock room action', () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
     const state = {
       user: {
         username: 'alan',
         id: 'idalan',
       },
     };
-    const mockGetState = jest.fn().mockReturnValue(state);
+    const mockGetState = vi.fn().mockReturnValue(state);
 
     actions.sendUnencryptedMessage('TOGGLE_LOCK_ROOM')(mockDispatch, mockGetState);
     expect(mockDispatch).toHaveBeenLastCalledWith({

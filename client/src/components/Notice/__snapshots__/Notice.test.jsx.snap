@@ -1,0 +1,15 @@
+// Vitest Snapshot v1
+
+exports[`Notice component is displaying 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="warning"
+    >
+      <div>
+        Hello world
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

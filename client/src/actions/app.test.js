@@ -1,5 +1,7 @@
 import * as actions from './app';
 
+import { describe, it, expect, vi } from 'vitest';
+
 describe('App actions', () => {
   it('should create an action to scroll to bottom', () => {
     expect(actions.setScrolledToBottom('test')).toEqual({
@@ -22,7 +24,7 @@ describe('App actions', () => {
   });
 
   it('should create an action to clear activities', () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
 
     actions.clearActivities()(mockDispatch);
 
@@ -31,7 +33,7 @@ describe('App actions', () => {
     });
   });
   it('should create all actions', () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
 
     const actionsResults = [
       [actions.toggleWindowFocus('test'), 'TOGGLE_WINDOW_FOCUS'],

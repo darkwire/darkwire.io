@@ -1,0 +1,54 @@
+// Vitest Snapshot v1
+
+exports[`Welcome component is displaying 1`] = `
+<DocumentFragment>
+  <div>
+    <div>
+      v2.0 is a complete rewrite and includes several new features. Here are some highlights:
+      <ul
+        class="native"
+      >
+        <li>
+          Support on all modern browsers (Chrome, Firefox, Safari, Safari iOS, Android)
+        </li>
+        <li>
+          Slash commands (/nick, /me, /clear)
+        </li>
+        <li>
+          Room owners can lock the room, preventing anyone else from joining
+        </li>
+        <li>
+          Front-end rewritten in React.js and Redux
+        </li>
+        <li>
+          Send files up to 4 MB
+        </li>
+      </ul>
+      <div>
+        You can learn more 
+        <a
+          href="https://github.com/darkwire/darkwire.io"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          here
+        </a>
+        .
+      </div>
+    </div>
+    <br />
+    <p
+      class="mb-2"
+    >
+      Others can join this room using the following URL:
+    </p>
+    <div
+      class="react-modal-footer"
+    >
+      <button
+        class="btn btn-primary btn-lg"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

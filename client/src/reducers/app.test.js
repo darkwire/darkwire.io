@@ -1,9 +1,11 @@
-import reducer from './app';
-import { getTranslations } from 'i18n';
+import { describe, it, expect, vi } from 'vitest';
 
-jest.mock('i18n', () => {
+import reducer from './app';
+import { getTranslations } from '@/i18n';
+
+vi.mock('@/i18n', () => {
   return {
-    getTranslations: jest.fn().mockReturnValue({ path: 'test' }),
+    getTranslations: vi.fn().mockReturnValue({ path: 'test' }),
   };
 });
 
