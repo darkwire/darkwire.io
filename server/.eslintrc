@@ -1,7 +1,10 @@
 {
   "extends": ["plugin:prettier/recommended"],
-  "parser": "babel-eslint",
   "rules": {
     "prettier/prettier": "error"
+  },   
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2020
   }
 }

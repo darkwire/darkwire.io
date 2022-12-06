@@ -34,11 +34,11 @@ const languagesMap = {
 export function getTranslations(language = '') {
   const [lang, variant] = language.split('-');
 
-  if (languagesMap.hasOwnProperty(`${lang}${variant}`)) {
+  if (Object.prototype.hasOwnProperty.call(languagesMap, `${lang}${variant}`)) {
     return languagesMap[`${lang}${variant}`];
   }
 
-  if (languagesMap.hasOwnProperty(lang)) {
+  if (Object.prototype.hasOwnProperty.call(languagesMap, `${lang}`)) {
     return languagesMap[lang];
   }
 

@@ -4,7 +4,7 @@
 jobs:
   test-job:
     docker:
-      - image: "circleci/node:lts"
+      - image: "cimg/node:lts"
 
     working_directory: ~/repo
 
@@ -33,7 +33,7 @@ jobs:
           command: yarn test
           environment:
             TZ: UTC
-            REACT_APP_COMMIT_SHA: some_sha
+            VITE_COMMIT_SHA: some_sha
 
       - store_artifacts: # For coverage report
           path: client/coverage

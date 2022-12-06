@@ -1,4 +1,6 @@
-import { getTranslations } from './index.js';
+import { getTranslations } from './';
+
+import { test, expect } from 'vitest';
 
 test('Get translation', () => {
   expect(getTranslations('en').welcomeHeader).toBe('Welcome to Darkwire v2.0');

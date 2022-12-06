@@ -10,10 +10,10 @@ fi
 echo "building client..."
 cd client
 yarn  --production=false
-REACT_APP_COMMIT_SHA=$SOURCE_VERSION \
-REACT_APP_API_HOST=$api_host \
-REACT_APP_API_PROTOCOL=$API_PROTOCOL \
-REACT_APP_API_PORT=$API_PORT \
+VITE_COMMIT_SHA=$SOURCE_VERSION \
+VITE_API_HOST=$api_host \
+VITE_API_PROTOCOL=$API_PROTOCOL \
+VITE_API_PORT=$API_PORT \
 yarn build
 cd ../
 

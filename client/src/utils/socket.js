@@ -1,5 +1,5 @@
 import socketIO from 'socket.io-client';
-import generateUrl from '../api/generator';
+import generateUrl from '@/api/generator';
 
 let socket;
 

@@ -76,10 +76,7 @@ const activities = (state = initialState, action) => {
         ],
       };
     case 'RECEIVE_ENCRYPTED_MESSAGE_ADD_USER':
-      const newUserId = action.payload.payload.id;
-
-      const haveUser = action.payload.state.room.members.find(m => m.id === newUserId);
-      if (haveUser) {
+      if (action.payload.state.room.members.find(m => m.id === action.payload.payload.id)) {
         return state;
       }
 
@@ -88,7 +85,7 @@ const activities = (state = initialState, action) => {
         items: [
           ...state.items,
           {
-            userId: newUserId,
+            userId: action.payload.payload.id,
             type: 'USER_ENTER',
             username: action.payload.payload.username,
           },

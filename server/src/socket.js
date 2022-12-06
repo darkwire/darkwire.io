@@ -1,6 +1,5 @@
-import _ from 'lodash';
-import { getIO } from './index';
-import getStore from './store';
+import { getIO } from './index.js';
+import getStore from './store/index.js';
 
 export default class Socket {
   constructor(opts) {
@@ -51,21 +50,10 @@ export default class Socket {
   joinRoom(roomId, socket) {
     return new Promise((resolve, reject) => {
       if (getStore().hasSocketAdapter) {
-        getIO()
-          .of('/')
-          .adapter.remoteJoin(socket.id, roomId, err => {
-            if (err) {
-              reject();
-            }
-            resolve();
-          });
+        getIO().of('/').adapter.remoteJoin(socket.id);
       } else {
-        socket.join(roomId, err => {
-          if (err) {
-            reject();
-          }
-          resolve();
-        });
+        socket.join(roomId);
+        resolve();
       }
     });
   }
@@ -77,7 +65,7 @@ export default class Socket {
 
     socket.on('USER_ENTER', async payload => {
       let room = await this.fetchRoom();
-      if (_.isEmpty(room)) {
+      if (Object.entries(room).length === 0) {
         room = {
           id: this._roomId,
           users: [],

@@ -1,0 +1,128 @@
+// Vitest Snapshot v1
+
+exports[`Home component is displaying 1`] = `
+<DocumentFragment>
+  <div
+    class="_styles_0b54d3 h-100"
+  >
+    <div
+      class="nav-container"
+    >
+      <div
+        class="alert-banner"
+      >
+        <span
+          class="icon"
+        >
+          <svg
+            fill="none"
+            height="15"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="15"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="8"
+              y2="12"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="16"
+              y2="16"
+            />
+          </svg>
+        </span>
+         
+        <span>
+          Disconnected
+        </span>
+      </div>
+    </div>
+    <div
+      class="main-chat"
+    >
+      <div
+        class="message-stream h-100"
+        data-testid="main-div"
+      >
+        <ul
+          class="plain"
+        >
+          <li>
+            <p
+              class="_tos_0b54d3"
+            >
+              <button
+                class="btn btn-link"
+              >
+                 By using Darkwire, you are agreeing to our Acceptable Use Policy and Terms of Service
+              </button>
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="chat-container"
+      >
+        <form
+          class="chat-preflight-container"
+        >
+          <textarea
+            class="chat"
+            placeholder="Type here"
+            rows="1"
+          />
+          <div
+            class="input-controls"
+          >
+            <div
+              class="_styles_374fdd icon file-transfer btn btn-link"
+            >
+              <input
+                id="fileInput"
+                name="fileUploader"
+                placeholder="Choose a file..."
+                type="file"
+              />
+              <label
+                for="fileInput"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  stroke="#fff"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"
+                  />
+                  <polyline
+                    points="13 2 13 9 20 9"
+                  />
+                </svg>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

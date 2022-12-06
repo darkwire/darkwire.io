@@ -1,0 +1,9 @@
+// Vitest Snapshot v1
+
+exports[`Connecting component is displaying 1`] = `
+<DocumentFragment>
+  <div>
+    Please wait while we secure a connection to Darkwire...
+  </div>
+</DocumentFragment>
+`;

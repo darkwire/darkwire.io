@@ -1,0 +1,231 @@
+// Vitest Snapshot v1
+
+exports[`ActivityList component > should display 1`] = `
+<DocumentFragment>
+  <div
+    class="main-chat"
+  >
+    <div
+      class="message-stream h-100"
+      data-testid="main-div"
+    >
+      <ul
+        class="plain"
+      >
+        <li>
+          <p
+            class="_tos_0b54d3"
+          >
+            <button
+              class="btn btn-link"
+            >
+               By using Darkwire, you are agreeing to our Acceptable Use Policy and Terms of Service
+            </button>
+          </p>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="chat-container"
+    >
+      <form
+        class="chat-preflight-container"
+      >
+        <textarea
+          class="chat"
+          placeholder="Type here"
+          rows="1"
+        />
+        <div
+          class="input-controls"
+        >
+          <div
+            class="_styles_374fdd icon file-transfer btn btn-link"
+          >
+            <input
+              id="fileInput"
+              name="fileUploader"
+              placeholder="Choose a file..."
+              type="file"
+            />
+            <label
+              for="fileInput"
+            >
+              <svg
+                fill="none"
+                height="24"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"
+                />
+                <polyline
+                  points="13 2 13 9 20 9"
+                />
+              </svg>
+            </label>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`ActivityList component > should display with activities 1`] = `
+<DocumentFragment>
+  <div
+    class="main-chat"
+  >
+    <div
+      class="message-stream h-100"
+      data-testid="main-div"
+    >
+      <ul
+        class="plain"
+      >
+        <li>
+          <p
+            class="_tos_0b54d3"
+          >
+            <button
+              class="btn btn-link"
+            >
+               By using Darkwire, you are agreeing to our Acceptable Use Policy and Terms of Service
+            </button>
+          </p>
+        </li>
+        <li
+          class="activity-item TEXT_MESSAGE"
+        >
+          <div>
+            <div
+              class="chat-meta"
+            >
+              <span
+                class="username"
+                style="color: rgb(204, 241, 255);"
+              >
+                alice
+              </span>
+              <span
+                class="muted timestamp"
+              >
+                11:01 AM
+              </span>
+            </div>
+            <div
+              class="chat"
+            >
+              Hi!
+            </div>
+          </div>
+        </li>
+        <li
+          class="activity-item USER_ENTER"
+        >
+          <div>
+            <div
+              class="info"
+            >
+              <div>
+                <span>
+                  <span
+                    class="username"
+                    style="color: rgb(204, 241, 255);"
+                  >
+                    alice
+                  </span>
+                   joined
+                </span>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li
+          class="activity-item CHANGE_USERNAME"
+        >
+          <div>
+            <div
+              class="info"
+            >
+              <div>
+                <span>
+                  <span
+                    class="username"
+                    style="color: rgb(204, 241, 255);"
+                  >
+                    alice
+                  </span>
+                   changed their name to 
+                  <span
+                    class="username"
+                    style="color: rgb(235, 162, 242);"
+                  >
+                    alicette
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="chat-container"
+    >
+      <form
+        class="chat-preflight-container"
+      >
+        <textarea
+          class="chat"
+          placeholder="Type here"
+          rows="1"
+        />
+        <div
+          class="input-controls"
+        >
+          <div
+            class="_styles_374fdd icon file-transfer btn btn-link"
+          >
+            <input
+              id="fileInput"
+              name="fileUploader"
+              placeholder="Choose a file..."
+              type="file"
+            />
+            <label
+              for="fileInput"
+            >
+              <svg
+                fill="none"
+                height="24"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"
+                />
+                <polyline
+                  points="13 2 13 9 20 9"
+                />
+              </svg>
+            </label>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</DocumentFragment>
+`;

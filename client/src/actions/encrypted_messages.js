@@ -1,5 +1,5 @@
-import { getSocket } from 'utils/socket';
-import { prepare as prepareMessage, process as processMessage } from 'utils/message';
+import { getSocket } from '@/utils/socket';
+import { prepare as prepareMessage, process as processMessage } from '@/utils/message';
 
 export const sendEncryptedMessage = payload => async (dispatch, getState) => {
   const state = getState();

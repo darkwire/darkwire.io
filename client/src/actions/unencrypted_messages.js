@@ -1,4 +1,4 @@
-import { getSocket } from 'utils/socket';
+import { getSocket } from '@/utils/socket';
 
 const receiveUserEnter = (payload, dispatch) => {
   dispatch({ type: 'USER_ENTER', payload });
@@ -70,7 +70,7 @@ const sendToggleLockRoom = (dispatch, getState) => {
   });
 };
 
-export const sendUnencryptedMessage = (type, payload) => async (dispatch, getState) => {
+export const sendUnencryptedMessage = type => async (dispatch, getState) => {
   switch (type) {
     case 'TOGGLE_LOCK_ROOM':
       return sendToggleLockRoom(dispatch, getState);

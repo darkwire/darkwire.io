@@ -1,0 +1,35 @@
+// Vitest Snapshot v1
+
+exports[`T component is displaying 1`] = `
+<DocumentFragment>
+  Welcome to Darkwire v2.0
+</DocumentFragment>
+`;
+
+exports[`T component is displaying 2`] = `
+<DocumentFragment>
+  Bienvenue sur Darkwire v2.0
+</DocumentFragment>
+`;
+
+exports[`T component is displaying 3`] = `
+<DocumentFragment>
+  Welcome to Darkwire v2.0
+</DocumentFragment>
+`;
+
+exports[`T component is displaying 4`] = `<DocumentFragment />`;
+
+exports[`T component is displaying 5`] = `
+<DocumentFragment>
+  <span>
+    Alan joined
+  </span>
+</DocumentFragment>
+`;
+
+exports[`T component is displaying 6`] = `
+<DocumentFragment>
+  username joined
+</DocumentFragment>
+`;

@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 export const getSelectedText = () => {
   let text = '';
   if (typeof window.getSelection !== 'undefined') {

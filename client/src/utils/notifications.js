@@ -1,6 +1,6 @@
-import beepFile from 'audio/beep.mp3';
+import beepFile from '@/audio/beep.mp3';
 
-const showNotification = (title, message, avatarUrl) => {
+const showNotification = (title, message) => {
   const notifBody = {
     body: message,
     tag: 'darkwire',
@@ -44,6 +44,21 @@ export const notify = (title, content = '') => {
   }
 };
 
-export const beep = (window.Audio && new window.Audio(beepFile)) || { play: () => {} };
+let theBeep;
+
+export const beep = {
+  async play() {
+    if (window.Audio) {
+      if (theBeep === undefined) {
+        theBeep = new window.Audio(beepFile);
+      }
+      try {
+        await theBeep.play();
+      } catch (e) {
+        console.log("Can't play sound.");
+      }
+    }
+  },
+};
 
 export default { notify, beep };
