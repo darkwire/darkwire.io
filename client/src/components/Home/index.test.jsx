@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import Tinycon from 'tinycon';
@@ -11,6 +10,8 @@ import { receiveEncryptedMessage } from '@/actions/encrypted_messages';
 import { notify, beep } from '@/utils/notifications';
 
 import { ConnectedHome } from './';
+
+import { act } from 'react-dom/test-utils';
 
 const store = configureStore();
 
@@ -45,12 +46,14 @@ vi.mock('@/utils/socket', () => {
       return {
         on: vi.fn(),
         emit: vi.fn(),
+        close: vi.fn(),
       };
     }),
     getSocket: vi.fn().mockImplementation(() => {
       return {
         on: vi.fn(),
         emit: vi.fn(),
+        close: vi.fn(),
       };
     }),
   };
@@ -102,22 +105,26 @@ describe('Connected Home component', () => {
     delete global.Notification;
   });
 
-  it('should display', () => {
-    const { asFragment } = render(
+  it('should display', async () => {
+    const { asFragment, findByText } = render(
       <Provider store={store}>
-        <ConnectedHome match={{ params: { roomId: 'roomTest' } }} userId="testUserId" />
+        <ConnectedHome userId="testUserId" socketId="roomTest" />
       </Provider>,
     );
+
+    await findByText('Disconnected');
 
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('should set notification', () => {
-    render(
+  it('should set notification', async () => {
+    const { findByText } = render(
       <Provider store={store}>
-        <ConnectedHome match={{ params: { roomId: 'roomTest' } }} userId="testUserId" />
+        <ConnectedHome userId="testUserId" socketId="roomTest" />
       </Provider>,
     );
+
+    await findByText('Disconnected');
 
     expect(store.getState().app.notificationIsAllowed).toBe(true);
     expect(store.getState().app.notificationIsEnabled).toBe(true);
@@ -126,11 +133,13 @@ describe('Connected Home component', () => {
       permission: 'denied',
     };
 
-    render(
+    const { findByText: findByText2 } = render(
       <Provider store={store}>
-        <ConnectedHome match={{ params: { roomId: 'roomTest' } }} userId="testUserId" />
+        <ConnectedHome userId="testUserId" socketId="roomTest" />
       </Provider>,
     );
+
+    await findByText2('Disconnected');
 
     expect(store.getState().app.notificationIsAllowed).toBe(false);
 
@@ -138,11 +147,13 @@ describe('Connected Home component', () => {
       permission: 'default',
     };
 
-    render(
+    const { findByText: findByText3 } = render(
       <Provider store={store}>
-        <ConnectedHome match={{ params: { roomId: 'roomTest' } }} userId="testUserId" />
+        <ConnectedHome match={{ params: { roomId: 'roomTest' } }} userId="testUserId" socketId="roomTest" />
       </Provider>,
     );
+
+    await findByText3('Disconnected');
 
     expect(store.getState().app.notificationIsAllowed).toBe(null);
   });
