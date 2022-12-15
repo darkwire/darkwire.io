@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { describe, it, expect, vi } from 'vitest';
@@ -8,10 +7,6 @@ import configureStore from '@/store';
 import Settings from '.';
 
 const store = configureStore();
-
-const mockTranslations = {
-  sound: 'soundCheck',
-};
 
 vi.useFakeTimers();
 
@@ -39,11 +34,14 @@ describe('Settings component', () => {
         <Settings
           soundIsEnabled={true}
           toggleSoundEnabled={() => {}}
+          persistenceIsEnabled={true}
+          togglePersistenceEnabled={() => {}}
           notificationIsEnabled={true}
           toggleNotificationEnabled={() => {}}
           toggleNotificationAllowed={vi.fn()}
           roomId="roomId"
           setLanguage={() => {}}
+          language="en"
           translations={{}}
         />
       </Provider>,
@@ -56,12 +54,15 @@ describe('Settings component', () => {
         <Settings
           soundIsEnabled={true}
           toggleSoundEnabled={() => {}}
+          persistenceIsEnabled={true}
+          togglePersistenceEnabled={() => {}}
           notificationIsEnabled={true}
           notificationIsAllowed={false}
           toggleNotificationEnabled={() => {}}
           toggleNotificationAllowed={vi.fn()}
           roomId="roomId"
           setLanguage={() => {}}
+          language="en"
           translations={{}}
         />
       </Provider>,
@@ -77,18 +78,20 @@ describe('Settings component', () => {
         <Settings
           soundIsEnabled={true}
           toggleSoundEnabled={toggleSound}
+          persistenceIsEnabled={true}
+          togglePersistenceEnabled={() => {}}
           notificationIsEnabled={true}
           notificationIsAllowed={true}
           toggleNotificationEnabled={() => {}}
           toggleNotificationAllowed={vi.fn()}
           roomId="roomId"
           setLanguage={() => {}}
+          language="en"
           translations={{}}
         />
       </Provider>,
     );
 
-    //console.log(getAllByText(mockTranslations.sound)[1]);
     fireEvent.click(getByText('Sound'));
 
     expect(toggleSound).toHaveBeenCalledWith(false);
@@ -105,12 +108,15 @@ describe('Settings component', () => {
         <Settings
           soundIsEnabled={true}
           toggleSoundEnabled={() => {}}
+          persistenceIsEnabled={true}
+          togglePersistenceEnabled={() => {}}
           notificationIsEnabled={true}
           notificationIsAllowed={true}
           toggleNotificationEnabled={toggleNotifications}
           toggleNotificationAllowed={vi.fn()}
           roomId="roomId"
           setLanguage={() => {}}
+          language="en"
           translations={{}}
         />
       </Provider>,
@@ -137,12 +143,15 @@ describe('Settings component', () => {
         <Settings
           soundIsEnabled={true}
           toggleSoundEnabled={() => {}}
+          persistenceIsEnabled={true}
+          togglePersistenceEnabled={() => {}}
           notificationIsEnabled={true}
           notificationIsAllowed={true}
           toggleNotificationEnabled={toggleNotifications}
           toggleNotificationAllowed={toggleAllowed}
           roomId="roomId"
           setLanguage={() => {}}
+          language="en"
           translations={{}}
         />
       </Provider>,
@@ -166,11 +175,14 @@ describe('Settings component', () => {
         <Settings
           soundIsEnabled={true}
           toggleSoundEnabled={() => {}}
+          persistenceIsEnabled={true}
+          togglePersistenceEnabled={() => {}}
           notificationIsEnabled={true}
           toggleNotificationEnabled={() => {}}
           toggleNotificationAllowed={vi.fn()}
           roomId="roomId"
           setLanguage={changeLang}
+          language="en"
           translations={{}}
         />
       </Provider>,

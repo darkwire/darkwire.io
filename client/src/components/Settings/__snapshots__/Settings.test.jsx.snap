@@ -50,6 +50,7 @@ exports[`Settings component > should display 1`] = `
             for="persistence-control"
           >
             <input
+              checked=""
               class="form-check-input"
               id="persistence-control"
               type="checkbox"
@@ -261,6 +262,7 @@ exports[`Settings component > should display 2`] = `
             for="persistence-control"
           >
             <input
+              checked=""
               class="form-check-input"
               id="persistence-control"
               type="checkbox"
