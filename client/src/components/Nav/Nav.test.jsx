@@ -99,8 +99,7 @@ test('Nav component is displaying with another configuration and can rerender', 
     />,
   );
 
-  expect(mock$).toHaveBeenCalledWith('.me-icon-wrap');
-  expect(mock$).toHaveBeenLastCalledWith('.owner-icon-wrap');
+  expect(asFragment()).toMatchSnapshot();
 });
 
 test('Can copy room url', async () => {
@@ -127,13 +126,13 @@ test('Can copy room url', async () => {
   fireEvent.click(getByText(`/testRoom`));
 
   expect(document.execCommand).toHaveBeenLastCalledWith('copy');
-  expect(mock$).toHaveBeenCalledTimes(15);
+  expect(mock$).toHaveBeenCalledTimes(12);
   expect(mockTooltip).toHaveBeenLastCalledWith('show');
 
   // Wait tooltip closing
   vi.runAllTimers();
 
-  expect(mock$).toHaveBeenCalledTimes(18);
+  expect(mock$).toHaveBeenCalledTimes(15);
   expect(mockTooltip).toHaveBeenLastCalledWith('hide');
 });
 
