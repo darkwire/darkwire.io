@@ -4,15 +4,10 @@ import { Copy } from 'react-feather';
 import Clipboard from 'clipboard';
 import $ from 'jquery';
 
-class RoomLink extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      roomUrl: `${window.location.origin}/${props.roomId}`,
-    };
-  }
+const RoomLink = ({ roomId, translations }) => {
+  const roomUrl = `${window.location.origin}/${roomId}`;
 
-  componentDidMount() {
+  React.useEffect(() => {
     const clip = new Clipboard('.copy-room');
 
     clip.on('success', () => {
@@ -27,36 +22,34 @@ class RoomLink extends Component {
         trigger: 'manual',
       });
     });
-  }
 
-  componentWillUnmount() {
-    if ($('.copy-room').tooltip) $('.copy-room').tooltip('hide');
-  }
+    return () => {
+      if ($('.copy-room').tooltip) $('.copy-room').tooltip('hide');
+    };
+  }, []);
 
-  render() {
-    return (
-      <form>
-        <div className="form-group">
-          <div className="input-group">
-            <input id="room-url" className="form-control" type="text" readOnly value={this.state.roomUrl} />
-            <div className="input-group-append">
-              <button
-                className="copy-room btn btn-secondary"
-                type="button"
-                data-toggle="tooltip"
-                data-placement="bottom"
-                data-clipboard-text={this.state.roomUrl}
-                title={this.props.translations.copyButtonTooltip}
-              >
-                <Copy />
-              </button>
-            </div>
+  return (
+    <form>
+      <div className="form-group">
+        <div className="input-group">
+          <input id="room-url" className="form-control" type="text" readOnly value={roomUrl} />
+          <div className="input-group-append">
+            <button
+              className="copy-room btn btn-secondary"
+              type="button"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              data-clipboard-text={roomUrl}
+              title={translations.copyButtonTooltip}
+            >
+              <Copy />
+            </button>
           </div>
         </div>
-      </form>
-    );
-  }
-}
+      </div>
+    </form>
+  );
+};
 
 RoomLink.propTypes = {
   roomId: PropTypes.string.isRequired,

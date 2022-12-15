@@ -316,7 +316,7 @@ const User = ({ createUser, username, ...rest }) => {
       setLoaded(true);
     };
 
-    if (!loaded && !loading.current) {
+    if (!loaded) {
       loading.current = true;
       createUserLocal();
     }
