@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Copy } from 'react-feather';
 import Clipboard from 'clipboard';

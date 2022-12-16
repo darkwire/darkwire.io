@@ -63,11 +63,16 @@ const mapDispatchToProps = {
   setLanguage,
 };
 
-export const ConnectedHome = WithNewMessageNotification(connect(mapStateToProps, mapDispatchToProps)(Home));
+export const ConnectedHome = connect(mapStateToProps, mapDispatchToProps)(Home);
 
 const HomeWithParams = ({ ...props }) => {
   const socketId = useLoaderData();
-  return <ConnectedHome socketId={socketId} {...props} />;
+  return (
+    <WithNewMessageNotification>
+      <ConnectedHome socketId={socketId} {...props} />
+    </WithNewMessageNotification>
+  );
+  // return <WithNewMessageNotification wrappedComponent={} />;
 };
 
 export default HomeWithParams;

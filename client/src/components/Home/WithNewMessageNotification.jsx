@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import Tinycon from 'tinycon';
 
 import { notify, beep } from '@/utils/notifications';
-import { toggleNotificationAllowed, toggleNotificationEnabled } from '@/actions';
+import { toggleNotificationAllowed } from '@/actions';
 
 const mapStateToProps = state => {
   return {
@@ -19,109 +19,98 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   toggleNotificationAllowed,
-  toggleNotificationEnabled,
 };
 
-const WithNewMessageNotification = WrappedComponent => {
-  return connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(
-    class WithNotificationHOC extends Component {
-      state = { lastMessage: null, unreadMessageCount: 0 };
+const WithNewMessageNotification = ({
+  room: { id: roomId },
+  activities,
+  notificationIsEnabled,
+  notificationIsAllowed,
+  soundIsEnabled,
+  unreadMessageCount,
+  windowIsFocused,
+  toggleNotificationAllowed,
+  children,
+}) => {
+  const [lastMessage, setLastMessage] = React.useState(null);
+  const [lastUnreadMessageCount, setLastUnreadMessageCount] = React.useState(0);
 
-      static getDerivedStateFromProps(nextProps, prevState) {
-        const {
-          room: { id: roomId },
-          activities,
-          notificationIsEnabled,
-          notificationIsAllowed,
-          soundIsEnabled,
-          unreadMessageCount,
-          windowIsFocused,
-        } = nextProps;
+  React.useEffect(() => {
+    if (activities.length === 0) {
+      return;
+    }
+    const currentLastMessage = activities[activities.length - 1];
+    const { username, type, text, fileName, locked, newUsername, currentUsername, action } = currentLastMessage;
 
-        if (activities.length === 0) {
-          return null;
-        }
-
-        const lastMessage = activities[activities.length - 1];
-        const { username, type, text, fileName, locked, newUsername, currentUsername, action } = lastMessage;
-
-        if (lastMessage !== prevState.lastMessage && !windowIsFocused) {
-          if (notificationIsAllowed && notificationIsEnabled) {
-            // Generate the proper notification according to the message type
-            switch (type) {
-              case 'USER_ENTER':
-                notify(`User ${username} joined`);
-                break;
-              case 'USER_EXIT':
-                notify(`User ${username} left`);
-                break;
-              case 'RECEIVE_FILE':
-                notify(`${username} sent file <${fileName}>`);
-                break;
-              case 'TEXT_MESSAGE':
-                notify(`${username} said:`, text);
-                break;
-              case 'USER_ACTION':
-                notify(`${username} ${action}`);
-                break;
-              case 'CHANGE_USERNAME':
-                notify(`${currentUsername} changed their name to ${newUsername}`);
-                break;
-              case 'TOGGLE_LOCK_ROOM':
-                if (locked) {
-                  notify(`Room ${roomId} is now locked`);
-                } else {
-                  notify(`Room ${roomId} is now unlocked`);
-                }
-                break;
-              default:
-                break;
-            }
-          }
-          if (soundIsEnabled) beep.play();
-        }
-
-        if (unreadMessageCount !== prevState.unreadMessageCount) {
-          Tinycon.setBubble(unreadMessageCount);
-        }
-
-        return { lastMessage, unreadMessageCount };
-      }
-
-      componentDidMount() {
-        switch (Notification.permission) {
-          case 'granted':
-            this.props.toggleNotificationAllowed(true);
+    if (currentLastMessage !== lastMessage && !windowIsFocused) {
+      setLastMessage(currentLastMessage);
+      if (notificationIsAllowed && notificationIsEnabled) {
+        // Generate the proper notification according to the message type
+        switch (type) {
+          case 'USER_ENTER':
+            notify(`User ${username} joined`);
             break;
-          case 'denied':
-            this.props.toggleNotificationAllowed(false);
+          case 'USER_EXIT':
+            notify(`User ${username} left`);
+            break;
+          case 'RECEIVE_FILE':
+            notify(`${username} sent file <${fileName}>`);
+            break;
+          case 'TEXT_MESSAGE':
+            notify(`${username} said:`, text);
+            break;
+          case 'USER_ACTION':
+            notify(`${username} ${action}`);
+            break;
+          case 'CHANGE_USERNAME':
+            notify(`${currentUsername} changed their name to ${newUsername}`);
+            break;
+          case 'TOGGLE_LOCK_ROOM':
+            if (locked) {
+              notify(`Room ${roomId} is now locked`);
+            } else {
+              notify(`Room ${roomId} is now unlocked`);
+            }
             break;
           default:
-            this.props.toggleNotificationAllowed(null);
+            break;
         }
       }
+      if (soundIsEnabled) beep.play();
+    }
 
-      render() {
-        // Filter props
-        const {
-          room,
-          activities,
-          notificationIsEnabled,
-          motificationIsAllowed,
-          soundIsEnabled,
-          unreadMessageCount,
-          windowIsFocused,
-          toggleNotificationAllowed,
-          toggleNotificationnEnabled,
-          ...rest
-        } = this.props;
-        return <WrappedComponent {...rest} />;
-      }
-    },
-  );
+    if (unreadMessageCount !== lastUnreadMessageCount) {
+      setLastUnreadMessageCount(unreadMessageCount);
+      Tinycon.setBubble(unreadMessageCount);
+    }
+  }, [
+    activities,
+    lastMessage,
+    lastUnreadMessageCount,
+    notificationIsAllowed,
+    notificationIsEnabled,
+    roomId,
+    soundIsEnabled,
+    unreadMessageCount,
+    windowIsFocused,
+  ]);
+
+  React.useEffect(() => {
+    switch (Notification.permission) {
+      case 'granted':
+        toggleNotificationAllowed(true);
+        break;
+      case 'denied':
+        toggleNotificationAllowed(false);
+        break;
+      default:
+        toggleNotificationAllowed(null);
+    }
+  }, [toggleNotificationAllowed]);
+
+  return <>{children}</>;
 };
 
-export default WithNewMessageNotification;
+const ConnectedWithNewMessageNotification = connect(mapStateToProps, mapDispatchToProps)(WithNewMessageNotification);
+
+export default ConnectedWithNewMessageNotification;
