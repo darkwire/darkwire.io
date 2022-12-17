@@ -207,7 +207,7 @@ describe('Chat component', () => {
     fireEvent.keyDown(textarea, { key: 'Enter' });
   });
 
-  it('should work with touch support', () => {
+  it('should work with touch support', async () => {
     // Enable touch support
     dom.hasTouchSupport = true;
 
@@ -239,15 +239,15 @@ describe('Chat component', () => {
     fireEvent.change(textarea, { target: { value: 'test' } });
 
     // Touch send button
-    fireEvent.click(getByTitle('Send'));
+    await fireEvent.click(getByTitle('Send'));
 
     expect(sendEncryptedMessage).toHaveBeenLastCalledWith({
       payload: { text: 'test', timestamp: 1584183718135 },
       type: 'TEXT_MESSAGE',
     });
 
-    // Should not send message
-    fireEvent.click(getByTitle('Send'));
+    // Should not send message because of the empty message
+    await fireEvent.click(getByTitle('Send'));
 
     expect(sendEncryptedMessage).toHaveBeenCalledTimes(1);
   });

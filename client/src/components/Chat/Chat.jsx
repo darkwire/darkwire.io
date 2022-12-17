@@ -140,7 +140,8 @@ export const Chat = ({ sendEncryptedMessage, showNotice, userId, username, clear
     return null;
   };
 
-  const handleSendClick = () => {
+  const handleSendClick = evt => {
+    evt.preventDefault();
     sendMessage();
     textInputRef.current.focus();
   };

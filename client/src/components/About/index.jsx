@@ -1,5 +1,5 @@
 /* eslint-disable */
-import Reactfrom 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { COMMIT_SHA } from '@/config/env';

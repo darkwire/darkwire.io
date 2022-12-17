@@ -65,14 +65,17 @@ const mapDispatchToProps = {
 
 export const ConnectedHome = connect(mapStateToProps, mapDispatchToProps)(Home);
 
-const HomeWithParams = ({ ...props }) => {
-  const socketId = useLoaderData();
+export const ConnectedHomeWithNotification = ({ socketId, ...props }) => {
   return (
     <WithNewMessageNotification>
       <ConnectedHome socketId={socketId} {...props} />
     </WithNewMessageNotification>
   );
-  // return <WithNewMessageNotification wrappedComponent={} />;
+};
+
+const HomeWithParams = ({ ...props }) => {
+  const socketId = useLoaderData();
+  return <ConnectedHomeWithNotification socketId={socketId} {...props} />;
 };
 
 export default HomeWithParams;

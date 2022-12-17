@@ -1,4 +1,3 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import { test, expect, vi } from 'vitest';
@@ -20,10 +19,18 @@ vi.mock('@/utils/socket', () => {
       return {
         on: vi.fn(),
         emit: vi.fn(),
+        close: vi.fn(),
+      };
+    }),
+    getSocket: vi.fn().mockImplementation(() => {
+      return {
+        on: vi.fn(),
+        emit: vi.fn(),
+        close: vi.fn(),
       };
     }),
   };
-}); //
+});
 
 vi.mock('../../utils/crypto', () => {
   // Need window.crytpo.subtle
@@ -45,14 +52,13 @@ vi.mock('../../utils/crypto', () => {
 });
 
 test('Home component is displaying', async () => {
-  const { asFragment } = render(
+  const { asFragment, findByText } = render(
     <Provider store={store}>
       <Home
         translations={{}}
         members={[]}
         openModal={() => {}}
         activities={[]}
-        match={{ params: { roomId: 'roomTest' } }}
         createUser={() => {}}
         toggleSocketConnected={() => {}}
         receiveEncryptedMessage={() => {}}
@@ -76,9 +82,16 @@ test('Home component is displaying', async () => {
         closeModal={() => {}}
         publicKey={{}}
         username={'linus'}
+        socketId={'roomTest'}
+        persistenceIsEnabled={false}
+        togglePersistenceEnabled={() => {}}
+        setLanguage={() => {}}
+        language={'en'}
       />
     </Provider>,
   );
+
+  await findByText('Disconnected');
 
   expect(asFragment()).toMatchSnapshot();
 });

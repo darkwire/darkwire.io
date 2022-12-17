@@ -290,7 +290,7 @@ const Home = ({
   );
 };
 
-const User = ({ createUser, username, ...rest }) => {
+export const WithUser = ({ createUser, username, ...rest }) => {
   const [loaded, setLoaded] = React.useState(false);
   const loading = React.useRef(false);
 
@@ -305,6 +305,7 @@ const User = ({ createUser, username, ...rest }) => {
       const exportedEncryptDecryptPublicKey = await crypto.exportKey(encryptDecryptKeys.publicKey);
 
       if (!mounted) {
+        loading.current = false;
         return;
       }
 
@@ -313,15 +314,18 @@ const User = ({ createUser, username, ...rest }) => {
         publicKey: exportedEncryptDecryptPublicKey,
         privateKey: exportedEncryptDecryptPrivateKey,
       });
+
+      loading.current = false;
       setLoaded(true);
     };
 
-    if (!loaded) {
+    if (!loaded && !loading.current) {
       loading.current = true;
       createUserLocal();
     }
 
     return () => {
+      loading.current = false;
       mounted = false;
     };
   }, [createUser, loaded, username]);
@@ -332,11 +336,11 @@ const User = ({ createUser, username, ...rest }) => {
   return <Home username={username} {...rest} />;
 };
 
-User.defaultProps = {
+WithUser.defaultProps = {
   modalComponent: null,
 };
 
-User.propTypes = {
+WithUser.propTypes = {
   receiveEncryptedMessage: PropTypes.func.isRequired,
   receiveUnencryptedMessage: PropTypes.func.isRequired,
   createUser: PropTypes.func.isRequired,
@@ -370,4 +374,4 @@ User.propTypes = {
   translations: PropTypes.object.isRequired,
 };
 
-export default User;
+export default WithUser;
