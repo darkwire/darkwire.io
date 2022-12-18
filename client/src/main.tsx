@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-simple-dropdown/styles/Dropdown.css';
 import './stylesheets/app.sass';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'react-tooltip/dist/react-tooltip.css';
 
 import configureStore from '@/store/';
 import Home from '@/components/Home/';

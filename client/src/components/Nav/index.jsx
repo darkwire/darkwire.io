@@ -3,31 +3,23 @@ import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { Info, Settings, PlusCircle, User, Users, Lock, Unlock, Star } from 'react-feather';
 import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
-import Clipboard from 'clipboard';
 import $ from 'jquery';
+import { Tooltip } from 'react-tooltip';
 
 import logoImg from '@/img/logo.png';
 import Username from '@/components/Username';
 
 const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, iAmOwner, translations }) => {
+  const [showCopyTooltip, setShowCopyTooltip] = React.useState(false);
+  const [showLockedTooltip, setShowLockedTooltip] = React.useState(false);
+  const mountedRef = React.useRef(true);
+  const roomUrl = `${window.location.origin}/${roomId}`;
+
   React.useEffect(() => {
-    const clip = new Clipboard('.clipboard-trigger');
-
-    clip.on('success', () => {
-      $('.room-id').tooltip('show');
-      setTimeout(() => {
-        $('.room-id').tooltip('hide');
-      }, 3000);
-    });
-
-    $(() => {
-      $('.room-id').tooltip({
-        trigger: 'manual',
-      });
-      $('.lock-room').tooltip({
-        trigger: 'manual',
-      });
-    });
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
   }, []);
 
   const newRoom = () => {
@@ -47,11 +39,25 @@ const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, i
 
   const handleToggleLock = () => {
     if (!iAmOwner) {
-      $('.lock-room').tooltip('show');
-      setTimeout(() => $('.lock-room').tooltip('hide'), 3000);
+      setShowLockedTooltip(true);
+      setTimeout(() => {
+        if (mountedRef.current) {
+          setShowLockedTooltip(false);
+        }
+      }, 2000);
       return;
     }
     toggleLockRoom();
+  };
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(roomUrl);
+    setShowCopyTooltip(true);
+    setTimeout(() => {
+      if (mountedRef.current) {
+        setShowCopyTooltip(false);
+      }
+    }, 2000);
   };
 
   return (
@@ -60,26 +66,40 @@ const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, i
         <img src={logoImg} alt="Darkwire" className="logo" />
 
         <button
-          data-toggle="tooltip"
-          data-placement="bottom"
-          title={translations.copyButtonTooltip}
-          data-clipboard-text={`${window.location.origin}/${roomId}`}
+          id="copy-room-url-button"
           className="btn btn-plain btn-link clipboard-trigger room-id ellipsis"
+          onClick={handleCopy}
         >
           {`/${roomId}`}
         </button>
-
+        {showCopyTooltip && (
+          <Tooltip
+            anchorId="copy-room-url-button"
+            content={translations.copyButtonTooltip}
+            place="bottom"
+            events={[]}
+            isOpen={true}
+          />
+        )}
         <span className="lock-room-container">
           <button
+            id="lock-room-button"
+            data-testid="lock-room-button"
             onClick={handleToggleLock}
             className="lock-room btn btn-link btn-plain"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title="You must be the owner to lock or unlock the room"
           >
             {roomLocked && <Lock />}
             {!roomLocked && <Unlock className="muted" />}
           </button>
+          {showLockedTooltip && (
+            <Tooltip
+              anchorId="lock-room-button"
+              content="You must be the owner to lock or unlock the room"
+              place="bottom"
+              events={[]}
+              isOpen={true}
+            />
+          )}
         </span>
 
         <Dropdown className="members-dropdown">
@@ -96,13 +116,13 @@ const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, i
                   <Username username={member.username} />
                   <span className="icon-container">
                     {member.id === userId && (
-                      <span data-toggle="tooltip" data-placement="bottom" title="Me" className="me-icon-wrap">
+                      <span className="me-icon-wrap" title="Me">
                         <User className="me-icon" />
                       </span>
                     )}
                     {member.isOwner && (
-                      <span data-toggle="tooltip" data-placement="bottom" title="Owner" className="owner-icon-wrap">
-                        <Star className="owner-icon" />
+                      <span className="owner-icon-wrap">
+                        <Star className="owner-icon" title="Owner" />
                       </span>
                     )}
                   </span>

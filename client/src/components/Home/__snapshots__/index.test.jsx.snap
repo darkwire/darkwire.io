@@ -62,10 +62,7 @@ exports[`Connected Home component > should display 1`] = `
           />
           <button
             class="btn btn-plain btn-link clipboard-trigger room-id ellipsis"
-            data-clipboard-text="http://localhost:3000/"
-            data-placement="bottom"
-            data-toggle="tooltip"
-            title="Copied"
+            id="copy-room-url-button"
           >
             /
           </button>
@@ -74,9 +71,8 @@ exports[`Connected Home component > should display 1`] = `
           >
             <button
               class="lock-room btn btn-link btn-plain"
-              data-placement="bottom"
-              data-toggle="tooltip"
-              title="You must be the owner to lock or unlock the room"
+              data-testid="lock-room-button"
+              id="lock-room-button"
             >
               <svg
                 class="muted"
@@ -164,8 +160,6 @@ exports[`Connected Home component > should display 1`] = `
                   >
                     <span
                       class="me-icon-wrap"
-                      data-placement="bottom"
-                      data-toggle="tooltip"
                       title="Me"
                     >
                       <svg

@@ -1,8 +1,7 @@
-import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import RoomLink from '.';
-import mock$ from 'jquery';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import { act } from 'react-dom/test-utils';
 
 const mockTooltip = vi.fn().mockImplementation(param => {});
 
@@ -26,43 +25,31 @@ const mockTranslations = {
 };
 
 describe('RoomLink', () => {
-  afterEach(() => {
-    mock$.mockClear();
-  });
-
   it('should display', async () => {
-    const { asFragment, unmount } = render(<RoomLink roomId="roomId" translations={mockTranslations} />);
+    const { asFragment } = render(<RoomLink roomId="roomId" translations={mockTranslations} />);
 
     expect(asFragment()).toMatchSnapshot();
-
-    expect(mock$).toHaveBeenLastCalledWith('.copy-room');
-    expect(mockTooltip).toHaveBeenLastCalledWith({ trigger: 'manual' });
-    mock$.mockClear();
-
-    unmount();
-
-    expect(mock$).toHaveBeenLastCalledWith('.copy-room');
-    expect(mockTooltip).toHaveBeenLastCalledWith('hide');
   });
 
   it('should copy link', async () => {
-    // Mock execCommand for paste
-    document.execCommand = vi.fn(() => true);
+    const mockClipboardWriteTest = vi.fn();
+    navigator.clipboard = { writeText: mockClipboardWriteTest };
 
-    const { getByTitle } = render(<RoomLink roomId="roomId" translations={mockTranslations} />);
+    const { getByTestId, queryByText, getByText } = render(
+      <RoomLink roomId="roomId" translations={mockTranslations} />,
+    );
 
-    await fireEvent.click(getByTitle(mockTranslations.copyButtonTooltip));
+    await act(async () => {
+      await fireEvent.click(getByTestId('copy-room-button'));
+    });
 
-    expect(document.execCommand).toHaveBeenLastCalledWith('copy');
-    expect(mock$).toHaveBeenCalledTimes(4);
-    expect(mock$).toHaveBeenLastCalledWith('.copy-room');
-    expect(mockTooltip).toHaveBeenLastCalledWith('show');
+    expect(mockClipboardWriteTest).toHaveBeenLastCalledWith('http://localhost:3000/roomId');
 
-    // Wait for tooltip to close
-    vi.runAllTimers();
+    await getByText(mockTranslations.copyButtonTooltip);
 
-    expect(mock$).toHaveBeenCalledTimes(6);
-    expect(mock$).toHaveBeenLastCalledWith('.copy-room');
-    expect(mockTooltip).toHaveBeenLastCalledWith('hide');
+    // Wait tooltip closing
+    await act(() => vi.runAllTimers());
+
+    expect(queryByText('Copied')).not.toBeInTheDocument();
   });
 });

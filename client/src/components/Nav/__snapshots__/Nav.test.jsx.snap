@@ -15,9 +15,7 @@ exports[`Nav component is displaying 1`] = `
       />
       <button
         class="btn btn-plain btn-link clipboard-trigger room-id ellipsis"
-        data-clipboard-text="http://localhost:3000/testRoom"
-        data-placement="bottom"
-        data-toggle="tooltip"
+        id="copy-room-url-button"
       >
         /testRoom
       </button>
@@ -26,9 +24,8 @@ exports[`Nav component is displaying 1`] = `
       >
         <button
           class="lock-room btn btn-link btn-plain"
-          data-placement="bottom"
-          data-toggle="tooltip"
-          title="You must be the owner to lock or unlock the room"
+          data-testid="lock-room-button"
+          id="lock-room-button"
         >
           <svg
             class="muted"
@@ -257,9 +254,7 @@ exports[`Nav component is displaying with another configuration and can rerender
       />
       <button
         class="btn btn-plain btn-link clipboard-trigger room-id ellipsis"
-        data-clipboard-text="http://localhost:3000/testRoom_2"
-        data-placement="bottom"
-        data-toggle="tooltip"
+        id="copy-room-url-button"
       >
         /testRoom_2
       </button>
@@ -268,9 +263,8 @@ exports[`Nav component is displaying with another configuration and can rerender
       >
         <button
           class="lock-room btn btn-link btn-plain"
-          data-placement="bottom"
-          data-toggle="tooltip"
-          title="You must be the owner to lock or unlock the room"
+          data-testid="lock-room-button"
+          id="lock-room-button"
         >
           <svg
             fill="none"
@@ -357,9 +351,6 @@ exports[`Nav component is displaying with another configuration and can rerender
               >
                 <span
                   class="owner-icon-wrap"
-                  data-placement="bottom"
-                  data-toggle="tooltip"
-                  title="Owner"
                 >
                   <svg
                     class="owner-icon"
@@ -369,6 +360,7 @@ exports[`Nav component is displaying with another configuration and can rerender
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
+                    title="Owner"
                     viewBox="0 0 24 24"
                     width="24"
                     xmlns="http://www.w3.org/2000/svg"
@@ -545,9 +537,7 @@ exports[`Nav component is displaying with another configuration and can rerender
       />
       <button
         class="btn btn-plain btn-link clipboard-trigger room-id ellipsis"
-        data-clipboard-text="http://localhost:3000/testRoom_3"
-        data-placement="bottom"
-        data-toggle="tooltip"
+        id="copy-room-url-button"
       >
         /testRoom_3
       </button>
@@ -556,9 +546,8 @@ exports[`Nav component is displaying with another configuration and can rerender
       >
         <button
           class="lock-room btn btn-link btn-plain"
-          data-placement="bottom"
-          data-toggle="tooltip"
-          title="You must be the owner to lock or unlock the room"
+          data-testid="lock-room-button"
+          id="lock-room-button"
         >
           <svg
             fill="none"
@@ -645,9 +634,6 @@ exports[`Nav component is displaying with another configuration and can rerender
               >
                 <span
                   class="owner-icon-wrap"
-                  data-placement="bottom"
-                  data-toggle="tooltip"
-                  title="Owner"
                 >
                   <svg
                     class="owner-icon"
@@ -657,6 +643,7 @@ exports[`Nav component is displaying with another configuration and can rerender
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
+                    title="Owner"
                     viewBox="0 0 24 24"
                     width="24"
                     xmlns="http://www.w3.org/2000/svg"
