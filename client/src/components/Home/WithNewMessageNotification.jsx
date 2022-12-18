@@ -43,7 +43,6 @@ const WithNewMessageNotification = ({
     const { username, type, text, fileName, locked, newUsername, currentUsername, action } = currentLastMessage;
 
     if (currentLastMessage !== lastMessage && !windowIsFocused) {
-      setLastMessage(currentLastMessage);
       if (notificationIsAllowed && notificationIsEnabled) {
         // Generate the proper notification according to the message type
         switch (type) {
@@ -78,6 +77,8 @@ const WithNewMessageNotification = ({
       }
       if (soundIsEnabled) beep.play();
     }
+
+    setLastMessage(currentLastMessage);
 
     if (unreadMessageCount !== lastUnreadMessageCount) {
       setLastUnreadMessageCount(unreadMessageCount);

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { X, AlertCircle } from 'react-feather';
 import classNames from 'classnames';
+import { useSelector, useDispatch } from 'react-redux';
+import { createUser } from '@/reducers/user';
 
 import Crypto from '@/utils/crypto';
 import { connect as connectSocket } from '@/utils/socket';
@@ -290,15 +292,18 @@ const Home = ({
   );
 };
 
-export const WithUser = ({ createUser, username, ...rest }) => {
+export const WithUser = ({ ...rest }) => {
   const [loaded, setLoaded] = React.useState(false);
   const loading = React.useRef(false);
+
+  const user = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     let mounted = true;
 
     const createUserLocal = async () => {
-      const localUsername = username || nanoid();
+      const localUsername = user.username || nanoid();
 
       const encryptDecryptKeys = await crypto.createEncryptDecryptKeys();
       const exportedEncryptDecryptPrivateKey = await crypto.exportKey(encryptDecryptKeys.privateKey);
@@ -309,11 +314,14 @@ export const WithUser = ({ createUser, username, ...rest }) => {
         return;
       }
 
-      createUser({
+      const payload = {
         username: localUsername,
         publicKey: exportedEncryptDecryptPublicKey,
         privateKey: exportedEncryptDecryptPrivateKey,
-      });
+      };
+      dispatch(createUser(payload));
+
+      dispatch({ type: 'CREATE_USER', payload });
 
       loading.current = false;
       setLoaded(true);
@@ -328,12 +336,13 @@ export const WithUser = ({ createUser, username, ...rest }) => {
       loading.current = false;
       mounted = false;
     };
-  }, [createUser, loaded, username]);
+  }, [dispatch, loaded, user.username]);
 
   if (!loaded) {
     return null;
   }
-  return <Home username={username} {...rest} />;
+
+  return <Home username={user.username} publicKey={user.publicKey} userId={user.id} {...rest} />;
 };
 
 WithUser.defaultProps = {
@@ -343,10 +352,7 @@ WithUser.defaultProps = {
 WithUser.propTypes = {
   receiveEncryptedMessage: PropTypes.func.isRequired,
   receiveUnencryptedMessage: PropTypes.func.isRequired,
-  createUser: PropTypes.func.isRequired,
   activities: PropTypes.array.isRequired,
-  username: PropTypes.string.isRequired,
-  publicKey: PropTypes.object.isRequired,
   members: PropTypes.array.isRequired,
   socketId: PropTypes.string.isRequired,
   roomId: PropTypes.string.isRequired,
@@ -355,7 +361,6 @@ WithUser.propTypes = {
   openModal: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
   iAmOwner: PropTypes.bool.isRequired,
-  userId: PropTypes.string.isRequired,
   toggleWindowFocus: PropTypes.func.isRequired,
   soundIsEnabled: PropTypes.bool.isRequired,
   persistenceIsEnabled: PropTypes.bool.isRequired,

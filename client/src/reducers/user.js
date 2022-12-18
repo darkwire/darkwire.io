@@ -1,27 +1,28 @@
-const initialState = {
-  privateKey: {},
-  publicKey: {},
-  username: '',
-  id: '',
-};
+import { createSlice } from '@reduxjs/toolkit'
 
-const user = (receivedState, action) => {
-  const state = { ...initialState, ...receivedState };
+export const userSlice = createSlice({
+  name: 'user',
+  initialState: {
+    privateKey: {},
+    publicKey: {},
+    username: '',
+    id: '',
+  },
+  reducers: {
+    createUser: (state, action) => {
+      const { privateKey, publicKey, username } = action.payload;
+      state.privateKey = privateKey;
+      state.publicKey = publicKey;
+      state.username = username;
+      state.id = publicKey.n;
+    },
+    changeUsername: (state, action) => {
+      const { newUsername } = action.payload;
+      state.username = newUsername;
+    }
+  },
+})
 
-  switch (action.type) {
-    case 'CREATE_USER':
-      return {
-        ...action.payload,
-        id: action.payload.publicKey.n,
-      };
-    case 'SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME':
-      return {
-        ...state,
-        username: action.payload.newUsername,
-      };
-    default:
-      return state;
-  }
-};
+export const { createUser,changeUsername } = userSlice.actions
 
-export default user;
+export default userSlice.reducer

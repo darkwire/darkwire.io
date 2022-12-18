@@ -206,9 +206,14 @@ describe('Connected Home component', () => {
       </Provider>,
     );
     expect(store.getState().app.unreadMessageCount).toBe(1);
+    expect(notify).toHaveBeenCalledTimes(1);
     expect(notify).toHaveBeenLastCalledWith('sender said:', 'new message');
+    expect(beep.play).toHaveBeenCalledTimes(1);
     expect(beep.play).toHaveBeenLastCalledWith();
     expect(Tinycon.setBubble).toHaveBeenLastCalledWith(1);
+
+    notify.mockClear();
+    beep.play.mockClear();
 
     // Test with sound and notification disabled
     await act(() => toggleNotificationEnabled(false)(store.dispatch));
@@ -227,8 +232,8 @@ describe('Connected Home component', () => {
     );
 
     expect(store.getState().app.unreadMessageCount).toBe(2);
-    expect(notify).toHaveBeenCalledTimes(2);
-    expect(beep.play).toHaveBeenCalledTimes(2);
+    expect(notify).toHaveBeenCalledTimes(0);
+    expect(beep.play).toHaveBeenCalledTimes(0);
     expect(Tinycon.setBubble).toHaveBeenLastCalledWith(2);
   });
 });

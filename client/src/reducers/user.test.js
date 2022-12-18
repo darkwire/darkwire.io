@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import reducer from './user';
+import reducer, { createUser, changeUsername} from './user';
 
 vi.mock('@/i18n', () => {
   return {
@@ -15,7 +15,8 @@ describe('User reducer', () => {
 
   it('should handle CREATE_USER', () => {
     const payload = { publicKey: { n: 'alicekey' }, username: 'alice' };
-    expect(reducer({}, { type: 'CREATE_USER', payload })).toEqual({
+    
+    expect(reducer({},createUser(payload) )).toEqual({
       id: 'alicekey',
       publicKey: { n: 'alicekey' },
       username: 'alice',
@@ -24,10 +25,8 @@ describe('User reducer', () => {
 
   it('should handle SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME', () => {
     const payload = { newUsername: 'alice' };
-    expect(reducer({ username: 'polux' }, { type: 'SEND_ENCRYPTED_MESSAGE_CHANGE_USERNAME', payload })).toEqual({
-      id: '',
-      privateKey: {},
-      publicKey: {},
+    
+    expect(reducer({ username: 'polux' }, changeUsername(payload))).toEqual({
       username: 'alice',
     });
   });

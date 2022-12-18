@@ -40,7 +40,6 @@ describe('App actions', () => {
       [actions.showNotice('test'), 'SHOW_NOTICE'],
       [actions.toggleSoundEnabled('test'), 'TOGGLE_SOUND_ENABLED'],
       [actions.toggleSocketConnected('test'), 'TOGGLE_SOCKET_CONNECTED'],
-      [actions.createUser('test'), 'CREATE_USER'],
       [actions.setLanguage('test'), 'CHANGE_LANGUAGE'],
     ];
 

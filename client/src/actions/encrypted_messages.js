@@ -1,10 +1,18 @@
 import { getSocket } from '@/utils/socket';
 import { prepare as prepareMessage, process as processMessage } from '@/utils/message';
+import { changeUsername } from '@/reducers/user';
 
 export const sendEncryptedMessage = payload => async (dispatch, getState) => {
   const state = getState();
   const msg = await prepareMessage(payload, state);
-  dispatch({ type: `SEND_ENCRYPTED_MESSAGE_${msg.original.type}`, payload: msg.original.payload });
+  switch(msg.original.type){
+    case "CHANGE_USERNAME":
+      dispatch(changeUsername(msg.original.payload));
+      dispatch({ type: `SEND_ENCRYPTED_MESSAGE_${msg.original.type}`, payload: msg.original.payload });
+      break;
+    default:
+      dispatch({ type: `SEND_ENCRYPTED_MESSAGE_${msg.original.type}`, payload: msg.original.payload });
+  }
   getSocket().emit('ENCRYPTED_MESSAGE', msg.toSend);
 };
 

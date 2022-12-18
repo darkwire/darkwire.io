@@ -3,7 +3,6 @@ import { useLoaderData } from 'react-router-dom';
 
 import {
   receiveEncryptedMessage,
-  createUser,
   openModal,
   closeModal,
   toggleWindowFocus,
@@ -26,8 +25,6 @@ const mapStateToProps = state => {
 
   return {
     activities: state.activities.items,
-    userId: state.user.id,
-    username: state.user.username,
     publicKey: state.user.publicKey,
     privateKey: state.user.privateKey,
     members: state.room.members.filter(m => m.username && m.publicKey),
@@ -48,7 +45,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   receiveEncryptedMessage,
-  createUser,
   openModal,
   closeModal,
   toggleWindowFocus,
