@@ -101,93 +101,43 @@ exports[`Connected Home component > should display 1`] = `
             </button>
           </span>
           <div
-            class="dropdown members-dropdown"
+            class="members-menu"
           >
-            <a
-              class="dropdown__trigger "
+            <button
+              class="btn btn-link btn-plain members-action"
+              title="Users"
             >
-              <button
-                class="btn btn-link btn-plain members-action"
-                title="Users"
+              <svg
+                class="users-icon"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-                  class="users-icon"
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
-                  />
-                  <circle
-                    cx="9"
-                    cy="7"
-                    r="4"
-                  />
-                  <path
-                    d="M23 21v-2a4 4 0 0 0-3-3.87"
-                  />
-                  <path
-                    d="M16 3.13a4 4 0 0 1 0 7.75"
-                  />
-                </svg>
-              </button>
-              <span>
-                1
-              </span>
-            </a>
-            <div
-              class="dropdown__content "
-            >
-              <ul
-                class="plain"
-              >
-                <li>
-                  <span
-                    class="username"
-                    style="color: rgb(159, 244, 144);"
-                  >
-                    shortidgenerated
-                  </span>
-                  <span
-                    class="icon-container"
-                  >
-                    <span
-                      class="me-icon-wrap"
-                      title="Me"
-                    >
-                      <svg
-                        class="me-icon"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
-                        />
-                        <circle
-                          cx="12"
-                          cy="7"
-                          r="4"
-                        />
-                      </svg>
-                    </span>
-                  </span>
-                </li>
-              </ul>
-            </div>
+                <path
+                  d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+                />
+                <circle
+                  cx="9"
+                  cy="7"
+                  r="4"
+                />
+                <path
+                  d="M23 21v-2a4 4 0 0 0-3-3.87"
+                />
+                <path
+                  d="M16 3.13a4 4 0 0 1 0 7.75"
+                />
+              </svg>
+            </button>
+            <span>
+              1
+            </span>
           </div>
         </div>
         <button

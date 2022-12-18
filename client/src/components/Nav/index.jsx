@@ -2,25 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { Info, Settings, PlusCircle, User, Users, Lock, Unlock, Star } from 'react-feather';
-import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
 import $ from 'jquery';
 import { Tooltip } from 'react-tooltip';
+import { useClickOutside, useSafeState } from '@react-hookz/web/esnext';
 
 import logoImg from '@/img/logo.png';
 import Username from '@/components/Username';
 
 const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, iAmOwner, translations }) => {
-  const [showCopyTooltip, setShowCopyTooltip] = React.useState(false);
-  const [showLockedTooltip, setShowLockedTooltip] = React.useState(false);
-  const mountedRef = React.useRef(true);
+  const [showCopyTooltip, setShowCopyTooltip] = useSafeState(false);
+  const [showLockedTooltip, setShowLockedTooltip] = useSafeState(false);
+  const [showMemberList, setShowMemberList] = useSafeState(false);
+  const userListRef = React.useRef(null);
   const roomUrl = `${window.location.origin}/${roomId}`;
 
-  React.useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
+  useClickOutside(userListRef, () => {
+    setShowMemberList(false);
+  });
 
   const newRoom = () => {
     $('.navbar-collapse').collapse('hide');
@@ -41,22 +39,18 @@ const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, i
     if (!iAmOwner) {
       setShowLockedTooltip(true);
       setTimeout(() => {
-        if (mountedRef.current) {
-          setShowLockedTooltip(false);
-        }
+        setShowLockedTooltip(false);
       }, 2000);
-      return;
+    } else {
+      toggleLockRoom();
     }
-    toggleLockRoom();
   };
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(roomUrl);
     setShowCopyTooltip(true);
     setTimeout(() => {
-      if (mountedRef.current) {
-        setShowCopyTooltip(false);
-      }
+      setShowCopyTooltip(false);
     }, 2000);
   };
 
@@ -101,16 +95,18 @@ const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, i
             />
           )}
         </span>
+        <div className="members-menu" ref={userListRef}>
+          <button
+            className="btn btn-link btn-plain members-action"
+            title="Users"
+            onClick={() => setShowMemberList(prev => !prev)}
+          >
+            <Users className="users-icon" />
+          </button>
+          <span>{members.length}</span>
 
-        <Dropdown className="members-dropdown">
-          <DropdownTrigger>
-            <button className="btn btn-link btn-plain members-action" title="Users">
-              <Users className="users-icon" />
-            </button>
-            <span>{members.length}</span>
-          </DropdownTrigger>
-          <DropdownContent>
-            <ul className="plain">
+          {showMemberList && (
+            <ul className="member-list">
               {members.map((member, index) => (
                 <li key={`user-${index}`}>
                   <Username username={member.username} />
@@ -129,8 +125,8 @@ const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, i
                 </li>
               ))}
             </ul>
-          </DropdownContent>
-        </Dropdown>
+          )}
+        </div>
       </div>
 
       <button

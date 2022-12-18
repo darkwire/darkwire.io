@@ -13,6 +13,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@react-hookz/web": "^20.0.2",
     "bootstrap": "^4.6.2",
     "classnames": "^2.3.2",
     "jquery": "3",
@@ -27,7 +28,6 @@
     "react-redux": "^8.0.5",
     "react-router": "^6.4.4",
     "react-router-dom": "^6.4.4",
-    "react-simple-dropdown": "^3.2.3",
     "react-tooltip": "^5.2.0",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.2",
