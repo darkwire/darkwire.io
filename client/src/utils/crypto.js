@@ -3,7 +3,7 @@ export default class Crypto {
     this._crypto = window.crypto || false;
 
     if (!this._crypto || (!this._crypto.subtle && !this._crypto.webkitSubtle)) {
-      return false;
+      return false
     }
   }
 
