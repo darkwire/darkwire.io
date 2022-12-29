@@ -3,7 +3,7 @@ let host;
 let protocol;
 let port;
 
-switch (import.meta.env.NODE_ENV) {
+switch (import.meta.env.MODE) {
   case 'staging':
     host = import.meta.env.VITE_API_HOST;
     protocol = import.meta.env.VITE_API_PROTOCOL || 'https';
