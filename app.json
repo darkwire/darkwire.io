@@ -50,8 +50,5 @@
       "required": false
     }
   },
-  "image": "heroku/nodejs",
-  "addons": [
-    "heroku-redis"
-  ]
+  "image": "heroku/nodejs"
 }

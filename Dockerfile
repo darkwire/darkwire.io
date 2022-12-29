@@ -1,10 +1,8 @@
-FROM node:18-alpine3.17
-
-# Installing yarn
-RUN apt update -y && \ 
-    apt install yarn=v1.22.4 -v -y
+FROM node:18-bullseye-slim
 
 USER node:node
+
+WORKDIR /home/node
 
 # Server environmental variables will be put into server/.env
 ENV MAILGUN_API_KEY=api-key \
@@ -22,11 +20,11 @@ ENV TZ=UTC \
     VITE_API_PROTOCOL=http \
     VITE_API_PORT=3001 \
     VITE_COMMIT_SHA=some_sha \
-    VITE_MAX_FILE_SIZE=4 
+    VITE_MAX_FILE_SIZE=4
 
 COPY --chown=node:node . .
 
-RUN yarn build
+RUN yarn && yarn build
 
 STOPSIGNAL SIGINT
 EXPOSE 3001

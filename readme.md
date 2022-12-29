@@ -8,7 +8,7 @@ Simple encrypted web chat. Powered by [socket.io](http://socket.io), the [web cr
 
 ### Darkwire Server
 
-[Darkwire server](/server) is a Node.js application that requires redis.
+[Darkwire server](/server) is a Node.js application.
 
 ### Darkwire Web Client
 
@@ -21,18 +21,19 @@ The Darkwire.io [web client](/client) is written in JavaScript with React JS and
 Copy `.env.dist` files in `server/` and `client/` directories without the `.dist`
 extensions and adapt them to your needs.
 
-You need [Redis](https://redis.io/) in order to make the server works.
-A simple way to achieve this, if you have docker, is to execute the following
-command:
+You must have a https connection for Darkwire to work because it's using crypto browser
+API which is accessible only on localhost and behind a https connection.
+
+
+#### Manual setup
+
+You can use nvm to install the right version of node using this command:
 
 ```
-docker run --name darkwire-redis --rm -p 6379:6379 -d redis redis-server --appendonly yes
+nvm install # If not already installed
+nvm use
+npm install yarn -g
 ```
-
-Alternatively, you can select the _memory_ `STORE_BACKEND` instead of _redis_
-in your server `.env` file to avoid Redis use.
-
-#### Setup
 
 Install dependencies
 
@@ -55,7 +56,7 @@ Just run the following:
 $ docker-compose up
 ```
 
-This will automatically create the default `.env` files, and run redis for you.
+This will automatically create the default `.env` files for you.
 
 ### Production
 
@@ -82,7 +83,7 @@ $ docker build --tag darkwire.io:latest .
 Then run it. Example:
 
 ```
-$ docker run --name darkwire.io --env STORE_HOST=redis://redis.host:6379 darkwire.io
+$ docker run --init --name darkwire.io --rm -p 3001:3001 darkwire.io
 ```
 
 You are able to use any of the enviroment variables available in `server/.env.dist` and `client/.env.dist`. The defaults are available in [Dockerfile](Dockerfile)

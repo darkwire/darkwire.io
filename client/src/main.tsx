@@ -12,6 +12,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import configureStore from '@/store/';
 import Home from '@/components/Home/';
 import { hasTouchSupport } from '@/utils/dom';
+import { AlertTriangle } from 'react-feather';
 
 const store = configureStore();
 
@@ -44,6 +45,11 @@ const Main = () => {
 };
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
+
+if (!window.crypto || !window.crypto.subtle) {
+  window.alert("You must access Darkwire from a secure HTTPS connection.")
+  throw new Error("You must access Darkwire from a secure HTTPS connection.")
+}
 
 root.render(
   <React.StrictMode>
