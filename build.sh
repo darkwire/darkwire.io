@@ -9,11 +9,7 @@ fi
 
 echo "building client..."
 cd client
-yarn  --production=false
-VITE_COMMIT_SHA=$SOURCE_VERSION \
-VITE_API_HOST=$api_host \
-VITE_API_PROTOCOL=$API_PROTOCOL \
-VITE_API_PORT=$API_PORT \
+yarn --production=false
 yarn build
 cd ../
 

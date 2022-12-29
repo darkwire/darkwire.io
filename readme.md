@@ -30,9 +30,9 @@ API which is accessible only on localhost and behind a https connection.
 You can use nvm to install the right version of node using this command:
 
 ```
-nvm install # If not already installed
+nvm install # If the right node version is not already installed
 nvm use
-npm install yarn -g
+npm install yarn -g # To install yarn
 ```
 
 Install dependencies
