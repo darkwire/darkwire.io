@@ -128,6 +128,11 @@ exports[`Settings component > should display 1`] = `
             Русский
           </option>
           <option
+            value="pl"
+          >
+            Polish
+          </option>
+          <option
             value="zhCN"
           >
             中文
@@ -332,6 +337,11 @@ exports[`Settings component > should display 2`] = `
             value="ru"
           >
             Русский
+          </option>
+          <option
+            value="pl"
+          >
+            Polish
           </option>
           <option
             value="zhCN"

@@ -1,0 +1,8 @@
+*
+!package.json
+!yarn.lock
+!docker-entrypoint.sh
+!build.sh
+!server/*
+!client/*
+**/node_modules/*
