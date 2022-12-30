@@ -119,6 +119,7 @@ class Settings extends Component {
               <option value="nl">Nederlands</option>
               <option value="it">Italiano</option>
               <option value="ru">Русский</option>
+              <option value="pl">Polish</option>
               <option value="zhCN">中文</option>
               <option value="ja">日本語</option>
               <option value="tr">Türkçe</option>
