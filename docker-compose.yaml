@@ -3,9 +3,23 @@ services:
   darkwire.io:
     build:
       context: .
-    networks:
-      - db
+    environment:
+      - TZ=UTC
+      - VITE_API_PORT=80
+      - VITE_API_HOST=localhost
+      - VITE_API_PROTOCOL=http
+      - VITE_COMMIT_SHA=some_sha
+      - VITE_MAX_FILE_SIZE=4
+      - MAILGUN_API_KEY=api-key
+      - MAILGUN_DOMAIN=darkwire.io
+      - ABUSE_TO_EMAIL_ADDRESS=abuse@darkwire.io
+      - ABUSE_FROM_EMAIL_ADDRESS=Darkwire <no-reply@darkwire.io>
+      - CLIENT_DIST_DIRECTORY='client/dist'
+      - ROOM_HASH_SECRET='some-uuid'
+      - SITE_URL=https://darkwire.io
+      - STORE_BACKEND=memory
+      #- STORE_HOST=$STORE_HOST
+
     ports:
-      - 3001:3001
-networks:
-  db:
+      - 80:80
+

@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
 # We use this file to translate environmental variables to .env files used by the application
-
+set_env() {
 set -e
 
 
@@ -17,7 +17,7 @@ VITE_COMMIT_SHA=$VITE_COMMIT_SHA
 
 # Set max transferable file size in MB
 VITE_MAX_FILE_SIZE=$VITE_MAX_FILE_SIZE
-" > client/.env
+" > client/.env.dist
 
 
 echo"
@@ -35,6 +35,13 @@ SITE_URL=$SITE_URL
 # Store configuration
 STORE_BACKEND=$STORE_BACKEND
 STORE_HOST=$STORE_HOST
-" > server/.env
+" > server/.env.dist
 
 exec "$@"
+}
+set_env &&
+# Start your application
+yarn start #&
+
+# Start Nginx
+#nginx -g "daemon off;"

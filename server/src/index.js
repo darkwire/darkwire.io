@@ -20,7 +20,7 @@ dotenv.config();
 const env = process.env.NODE_ENV || 'development';
 
 const app = new Koa();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.VITE_API_PORT;
 
 const router = new Router();
 const koaBody = new KoaBody();
