@@ -1,0 +1,5 @@
+Flask
+ifcfg
+configparser
+icmplib
+flask-qrcode

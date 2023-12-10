@@ -1,0 +1,77 @@
+<!-- index.html - < WGDashboard > - Copyright(C) 2021 Donald Zou [https://github.com/donaldzou]-->
+<html lang="en">
+{% with %}
+    {% set title="Home" %}
+    {% include "header.html"%}
+{% endwith %}
+
+<body>
+	{% include "navbar.html" %}
+	<div class="container-fluid">
+        {% include "sidebar.html" %}
+		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 mb-4">
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <h1 class="pb-4 mt-4">Home</h1>
+            </div>
+            <!-- {% if msg != "" %}
+                <div class="alert alert-danger" role="alert">
+                    Configuration toggle failed. Please check the following error message:
+                </div>
+                <pre class="index-alert"><code>{{ msg }}</code></pre>
+            {% endif %} -->
+            <div class="index-alert alert alert-danger d-none" role="alert">
+                Configuration toggle failed. Please check the following error message:
+            </div>
+            <pre class="index-alert index-alert-full d-none"><code></code></pre>
+
+            {% if conf == [] %}
+                <p class="text-muted">You don't have any WireGuard configurations yet. Please check the configuration folder or change it in "Settings". By default the folder is "/etc/wireguard".</p>
+            {% endif %}
+
+
+			{% for i in conf%}
+				<div class="card mt-3 conf_card" data-conf-id="{{i['conf']}}">
+					<div class="card-body">
+						<div class="row">
+							<div class="col card-col">
+								<small class="text-muted"><strong>ZONE</strong></small>
+								<a href="/configuration/{{i['conf']}}" class="conf_link">
+									<h6 class="card-title" style="margin:0 !important;"><samp>{{i['conf']}}</samp></h6>
+								</a>
+							</div>
+							<div class="col card-col">
+								<small class="text-muted"><strong>STATUS</strong></small>
+								<h6 style="text-transform: uppercase; margin:0 !important;"><span>{{i['status']}}</span><span class="dot dot-{{i['status']}}"></span></h6>
+							</div>
+							<div class="col-sm card-col">
+								<small class="text-muted"><strong>PUBLIC KEY</strong></small>
+								<h6 style="margin:0 !important;"><samp>{{i['public_key']}}</samp></h6>
+							</div>
+							<div class="col-sm index-switch">
+								<div class="switch-test">
+									<input type="checkbox" class="toggle--switch" id="{{i['conf']}}-switch" {{i['checked']}} data-conf-id="{{i['conf']}}">
+									<label for="{{i['conf']}}-switch" class="toggleLabel"></label>
+								</div>
+							</div>
+						</div>
+                        <div class="card-message"></div>
+					</div>
+
+				</div>
+			{%endfor%}
+		</main>
+	</div>
+	<div class="position-fixed top-0 right-0 p-3 toastContainer" style="z-index: 5; right: 0; top: 50px;"></div>
+				</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+{% include "tools.html" %}
+</body>
+{% include "footer.html" %}
+<script src="{{ url_for('static',filename='js/wireguard.min.js') }}"></script>
+<script src="{{ url_for('static',filename='js/index.min.js') }}"></script>
+
+</html>

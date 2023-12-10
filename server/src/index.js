@@ -17,7 +17,7 @@ import getStore from './store/index.js';
 
 dotenv.config();
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || 'production';
 
 const app = new Koa();
 const PORT = process.env.VITE_API_PORT;
@@ -31,10 +31,10 @@ const siteURL = process.env.SITE_URL;
 
 const store = getStore();
 
-if ((siteURL || env === 'development') && !isReviewApp) {
+if ((siteURL || env === 'production') && !isReviewApp) {
   app.use(
     cors({
-      origin: env === 'development' ? '*' : siteURL,
+      origin: env === 'production' ? '*' : siteURL,
       allowMethods: ['GET', 'HEAD', 'POST'],
       credentials: true,
     }),
@@ -66,7 +66,7 @@ router.post('/abuse/:roomId', koaBody, async ctx => {
 app.use(router.routes());
 
 const apiHost = process.env.API_HOST;
-const cspDefaultSrc = `'self'${apiHost ? ` https://${apiHost} wss://${apiHost}` : ''}`;
+const cspDefaultSrc = `'self'${apiHost ? ` http://${apiHost} wss://${apiHost}` : ''}`;
 
 function setStaticFileHeaders(ctx) {
   ctx.set({
@@ -99,7 +99,7 @@ if (clientDistDirectory) {
   });
 }
 
-const protocol = (process.env.PROTOCOL || 'http') === 'http' ? http : https;
+const protocol = (process.env.PROTOCOL || 'http') === 'http' ? http : http;
 
 const httpServer = protocol.createServer(app.callback());
 

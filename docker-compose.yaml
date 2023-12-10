@@ -6,7 +6,7 @@ services:
     environment:
       - TZ=UTC
       - VITE_API_PORT=80
-      - VITE_API_HOST=localhost
+      - VITE_API_HOST=127.0.0.1
       - VITE_API_PROTOCOL=http
       - VITE_COMMIT_SHA=some_sha
       - VITE_MAX_FILE_SIZE=4

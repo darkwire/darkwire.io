@@ -1,7 +1,7 @@
 #FROM nginx:alpine3.18
 FROM node:20.9.0-alpine3.18
 
-RUN apk update && apk add --no-cache bash 
+RUN apk update && apk add --no-cache bash nginx
 
 USER node:node
 

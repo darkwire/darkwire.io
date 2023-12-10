@@ -1,0 +1,73 @@
+
+version: "3"
+
+networks:
+  private_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.2.0.0/24
+     
+
+services:
+  darkwire.io:
+    build:
+      context: .
+    environment:
+      - TZ=UTC
+      - VITE_API_PORT=4242
+      - VITE_API_HOST=127.0.0.1
+      - VITE_API_PROTOCOL=http
+      - VITE_COMMIT_SHA=some_sha
+      - VITE_MAX_FILE_SIZE=4
+      - MAILGUN_API_KEY=api-key
+      - MAILGUN_DOMAIN=darkwire.io
+      - ABUSE_TO_EMAIL_ADDRESS=abuse@darkwire.io
+      - ABUSE_FROM_EMAIL_ADDRESS=Darkwire <no-reply@darkwire.io>
+      - CLIENT_DIST_DIRECTORY='client/dist'
+      - ROOM_HASH_SECRET='some-uuid'
+      - SITE_URL=https://darkwire.io
+      - STORE_BACKEND=memory
+      #- STORE_HOST=$STORE_HOST
+
+    ports:
+      - 80:4242
+    networks:
+      private_network:
+        ipv4_address: 10.2.0.4
+
+  wiregate:
+    build: ./WG-Dash
+    #image: noxcis/wg-dashboard:kraken
+    container_name: wiregate
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    restart: unless-stopped
+    volumes:
+      - ./Global-Configs/Wiregate-Database:/home/app/db
+      - ./Global-Configs/Master-Key:/home/app/master-key
+    environment:
+      - WG_DASH_USER=admin
+      - WG_DASH_PASS=admin
+      - WG_DASH_SECRET_KEY=some-super-secret_key
+      - WG_DASH_SERVER_IP=0.0.0.0
+      - WG_DASH_DNS=1.1.1.1, 8.8.8.8
+      - WG_DASH_PEER_ENDPOINT_ALLOWED_IP=0.0.0.0/0
+      - WG_DASH_KEEP_ALIVE=21
+      - WG_DASH_MTU=1420
+      - WG_DASH_PORT_RANGE_STARTPORT=443
+    ports:
+      - "443-448:443-448/udp"
+      - 8000:80/tcp
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.forwarding=1
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=0
+    networks:
+      private_network:
+        ipv4_address: 10.2.0.3
+
+
+  

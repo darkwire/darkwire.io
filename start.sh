@@ -4,6 +4,11 @@
 set_env() {
 set -e
 
+echo "
+
+" > /etc/nginx/http.d/default.conf
+
+
 
 echo "
 TZ=UTC
@@ -11,6 +16,7 @@ VITE_API_HOST=$VITE_API_HOST
 VITE_API_PROTOCOL=$VITE_API_PROTOCOL
 VITE_API_PORT=$VITE_API_PORT
 VITE_COMMIT_SHA=$VITE_COMMIT_SHA
+MODE=production
 
 # To display darkwire version
 VITE_COMMIT_SHA=$VITE_COMMIT_SHA
