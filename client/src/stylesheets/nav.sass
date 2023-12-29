@@ -1,0 +1,104 @@
+@import 'colors'
+
+.logo
+  height: 30px
+  margin-right: 10px
+
+.nav-container
+  position: fixed
+  top: 0px
+  width: 100%
+  z-index: 5
+  background: black
+  .alert-banner
+    display: flex
+    align-items: center
+    width: 100%
+    height: 30px
+    background: $error
+    color: white
+    padding: 5px 15px
+    .icon
+      margin-right: 3px
+
+nav
+  border-bottom: 1px solid $inactive
+  .meta
+    padding-left: 1rem
+    height: 100%
+    align-items: center
+    display: flex
+    flex-basis: 80%
+@media(min-width: 768px)
+  nav .meta
+    flex-basis: 40%
+
+.navbar-toggler
+  border: 0px
+
+.navbar
+  padding-left: 0
+  padding-right: 0
+  padding-top: 0px
+  padding-bottom: 0px
+  height: 55px
+  .room-id
+    margin-right: 15px
+    max-width: 95px
+
+ul.navbar-nav
+  li
+    padding-bottom: 10px
+    svg
+      width: 20px
+      margin-right: 10px
+    span
+      width: auto
+
+button.lock-room
+  margin-right: 15px
+  display: flex
+
+@media(min-width: 768px)
+  ul.navbar-nav li
+    margin-left: 25px
+    padding-bottom: 0px
+
+.nav-link
+  display: flex
+  align-items: center
+  color: $md-gray !important
+  &:hover
+    color: white !important
+
+.navbar-collapse
+  padding: 0px 1rem
+  background: black
+
+.members-dropdown
+  margin-left: 10px
+  .dropdown__trigger
+    .members-action
+      margin-right: 5px
+  .dropdown__content 
+    background: black
+    border-radius: 3px
+    border: 1px solid $inactive
+    padding: 15px
+    width: 175px
+    left: -10px
+    top: 35px
+  ul
+    li
+      overflow: auto
+      height: 25px
+      .username
+        overflow: hidden
+        text-overflow: ellipsis
+        display: inline-block
+        width: 100px
+        white-space: nowrap
+      .icon-container
+        float: right
+      .me-icon, .owner-icon
+        width: 15px

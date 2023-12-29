@@ -1,0 +1,250 @@
+@import 'colors'
+@import 'typography'
+@import 'nav'
+@import 'footer'
+
+body
+  background-color: $primary
+  color: $body
+  overflow: hidden
+
+ul.plain
+  list-style: none
+  margin: 0px
+  padding: 0px
+
+a
+  cursor: pointer
+  color: $link-blue
+  &:hover
+    color: $link-blue
+
+button
+  cursor: pointer
+
+button.btn-link.btn-plain
+  padding: 0px
+  color: white
+  text-decoration: none
+  color: white
+  &:hover, &:focus
+    color: white
+
+button.btn-link
+  color: $link-blue
+  &:hover
+    color: $link-blue
+
+.page-header
+  height: 50px
+
+svg.disabled
+  color: $inactive
+
+svg text
+  user-select: none
+
+svg:hover
+  background: none
+
+svg text::selection
+  background: none
+
+textarea.chat
+  border-radius: 0px
+  resize: none !important
+  width: 100%
+  max-height: 200px
+  min-height: 50px
+  background-color: $secondary
+  border-top: 1px solid $inactive
+  border-left: 0px
+  border-right: 0px
+  border-bottom: 0px
+  color: $body
+  outline: 0
+  font-size: 16px
+  padding: 12px 50px 12px 12px
+
+body.touch textarea.chat
+  padding-right: 100px
+
+input[type='text'],
+textarea
+  font-size: 16px
+
+.right-border
+  border-right: 1px solid $inactive
+
+.bottom-border
+  border-bottom: 1px solid $inactive
+
+.sidebar
+  top: 0
+  bottom: 0
+  left: 0
+  z-index: 2
+  overflow-x: hidden
+  overflow-y: auto
+  border-right: 1px solid $inactive
+  background-color: $secondary
+
+.online-users
+  font-size: 11px
+  font-weight: bold
+  text-transform: uppercase
+  color: $inactive
+  margin: 10px 0
+
+.chat-container
+  margin-top: auto
+  width: 100%
+  .chat-preflight-container
+    position: relative
+    .input-controls-left
+      position: absolute
+      left: 0px
+      bottom: 0px
+      height: 100%
+      display: flex
+      width: 45px
+      .send
+        padding: 0px
+        padding-top: 12px
+        width: 100%
+    .input-controls
+      position: absolute
+      right: 0px
+      bottom: 0px
+      height: 100%
+      display: flex
+      button
+        &.send
+          padding-top: 12px
+          height: 50px
+          border-radius: 0px
+          &.active
+            background: #007bff
+            color: white
+
+.message-stream
+  padding: 0px 15px
+  overflow: auto
+  overflow-y: scroll
+  -webkit-overflow-scrolling: touch
+  flex: 1
+  display: flex
+  flex-direction: column
+  ul
+    width: 100%
+    margin-top: auto
+    li:last-child
+      border-bottom: 0
+
+.activity-item
+  margin-bottom: 15px
+  &.TEXT_MESSAGE
+    .chat-meta
+      font-size: 13px
+      .timestamp
+        font-size: 11px
+        padding-left: 10px
+    .chat
+      word-wrap: break-word
+      font-size: 16px
+      white-space: pre-line
+  .image-transfer
+    display: block
+    margin-top: 10px
+    max-width: 100%
+
+@media(min-width: 576px)
+  .activity-item
+    .image-transfer
+      max-width: 500px  
+
+.react-modal-overlay
+  position: fixed
+  top: 0px
+  left: 0px
+  right: 0px
+  bottom: 0px
+  background-color: rgba(0, 0, 0, 0.5)
+  z-index: 10
+  .react-modal-content
+    -webkit-overflow-scrolling: touch  
+    border: 1px solid rgb(204, 204, 204)
+    background: rgb(0, 0, 0)
+    overflow: auto
+    border-radius: 4px
+    outline: none
+    padding: 20px
+    max-width: 600px
+    width: calc(100% - 30px)
+    margin: 20px auto 0px auto
+    max-height: 75%
+    position: relative
+    .close-modal
+      padding: 7px
+      position: absolute
+      right: 15px
+      top: 15px
+      &:hover
+        background-color: #333
+  .react-modal-header
+    overflow: auto
+    margin-bottom: 20px
+  .react-modal-footer
+    margin-top: 25px
+    button
+      float: right
+
+.ellipsis
+  text-overflow: ellipsis
+  overflow: hidden
+  white-space: nowrap
+
+.main-chat
+  padding-top: 55px
+  display: flex
+  flex-direction: column
+  height: 100%
+
+.zoom-overlay
+  z-index: 420
+  background: rgba(255, 255, 255, 0.9)
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  pointer-events: none
+  filter: "alpha(opacity=0)"
+  opacity: 0
+  transition: opacity 300ms
+
+.zoom-overlay-open .zoom-overlay
+  filter: "alpha(opacity=100)"
+  opacity: 1
+
+.zoom-img,
+.zoom-img-wrap 
+  position: relative
+  z-index: 666
+  transition: all 300ms
+
+img.zoom-img
+  cursor: zoom-out
+
+img.zoomable
+  cursor: zoom-in
+
+.react-modal-content
+  opacity: 0
+  transition: opacity 150ms ease-in-out
+
+.react-modal-content_after-open
+  opacity: 1
+
+.react-modal-content_before-close
+  opacity: 0

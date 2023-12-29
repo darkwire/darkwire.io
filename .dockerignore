@@ -1,0 +1,9 @@
+*
+!package.json
+!yarn.lock
+!build.sh
+!default.conf
+!start.sh
+!server/*
+!client/*
+**/node_modules/*

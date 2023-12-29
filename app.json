@@ -1,0 +1,54 @@
+{
+  "name": "Darkwire",
+  "description": "End-to-end encrypted web chat",
+  "keywords": [
+    "cryptography",
+    "chat",
+    "privacy"
+  ],
+  "website": "https://darkwire.io",
+  "repository": "https://github.com/darkwire/darkwire.io",
+  "env": {
+    "HEROKU_APP_NAME": {
+      "required": false
+    },
+    "HEROKU_PARENT_APP_NAME": {
+      "required": false
+    },
+    "MAILGUN_API_KEY": {
+      "description": "Mailgun API Key (only required for abuse reporting)",
+      "required": false
+    },
+    "ABUSE_TO_EMAIL_ADDRESS": {
+      "description": "Where to send abuse reports (only required for abuse reporting)",
+      "required": false
+    },
+    "MAILGUN_DOMAIN": {
+      "description": "Mailgun domain (only required for abuse reporting)",
+      "required": false
+    },
+    "ABUSE_FROM_EMAIL_ADDRESS": {
+      "description": "From address on abuse emails (only required for abuse reporting)",
+      "required": false
+    },
+    "API_HOST": {
+      "description": "Example: 'api.your-darkwire-api.com'",
+      "required": false
+    },
+    "API_PROTOCOL": {
+      "description": "Example: 'https'",
+      "required": false,
+      "value": "https"
+    },
+    "API_PORT": {
+      "description": "Example: 443",
+      "required": false,
+      "value": "443"
+    },
+    "SITE_URL": {
+      "description": "Full URL of site. Example: https://darkwire.io",
+      "required": false
+    }
+  },
+  "image": "heroku/nodejs"
+}
