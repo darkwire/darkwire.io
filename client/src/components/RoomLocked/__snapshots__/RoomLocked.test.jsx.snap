@@ -1,9 +1,0 @@
-// Vitest Snapshot v1
-
-exports[`RoomLocked component should display 1`] = `
-<DocumentFragment>
-  <div>
-    test
-  </div>
-</DocumentFragment>
-`;

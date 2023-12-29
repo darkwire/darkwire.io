@@ -1,8 +1,0 @@
-*
-!package.json
-!yarn.lock
-!build.sh
-!start.sh
-!server/*
-!client/*
-**/node_modules/*
