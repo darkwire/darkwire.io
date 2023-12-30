@@ -30,3 +30,6 @@ jobs:
           VITE_COMMIT_SHA: some_sha
       - run: yarn lint
       - run: yarn test
+        env:
+          TZ: UTC
+          VITE_COMMIT_SHA: some_sha
