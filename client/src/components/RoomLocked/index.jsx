@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
+const RoomLocked = ({ modalContent }) => {
+  return <div>{modalContent}</div>;
+};
 
-export default class RoomLocked extends Component {
-  render() {
-    return <div>{this.props.modalContent}</div>;
-  }
-}
+export default RoomLocked;

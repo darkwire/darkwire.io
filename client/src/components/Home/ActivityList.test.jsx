@@ -1,7 +1,7 @@
-import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { describe, it, expect, vi } from 'vitest';
+import { act } from 'react-dom/test-utils';
 
 import configureStore from '@/store';
 
@@ -58,21 +58,25 @@ describe('ActivityList component', () => {
       </Provider>,
     );
 
-    fireEvent.click(getByText('By using Darkwire, you are agreeing to our Acceptable Use Policy and Terms of Service'));
-    vi.runAllTimers();
+    await fireEvent.click(
+      getByText('By using Darkwire, you are agreeing to our Acceptable Use Policy and Terms of Service'),
+    );
+    await act(() => vi.runAllTimers());
 
     expect(mockOpenModal.mock.calls[0][0]).toBe('About');
-    vi.runAllTimers();
+    await act(() => vi.runAllTimers());
   });
 
-  it('should focus chat', () => {
+  it('should focus chat', async () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <ActivityList openModal={vi.fn()} activities={[]} />
       </Provider>,
     );
-    fireEvent.click(getByTestId('main-div'));
-    vi.runAllTimers();
+
+    await fireEvent.click(getByTestId('main-div'));
+
+    await act(() => vi.runAllTimers());
   });
 
   it('should scroll to bottom on new message if not scrolled', () => {

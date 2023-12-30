@@ -1,171 +1,134 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import sanitizeHtml from 'sanitize-html';
 import { CornerDownRight } from 'react-feather';
 
-import { getSelectedText, hasTouchSupport } from '@/utils/dom';
+import { hasTouchSupport } from '@/utils/dom';
 
 import FileTransfer from '@/components/FileTransfer';
 
-export class Chat extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      message: '',
-      touchSupport: hasTouchSupport,
-      shiftKeyDown: false,
-    };
+export const Chat = ({ sendEncryptedMessage, showNotice, userId, username, clearActivities, translations }) => {
+  const [message, setMessage] = React.useState('');
+  const [shiftKeyDown, setShiftKeyDown] = React.useState(false);
+  const textInputRef = React.useRef();
 
-    this.commands = [
-      {
-        command: 'nick',
-        description: 'Changes nickname.',
-        parameters: ['{username}'],
-        usage: '/nick {username}',
-        scope: 'global',
-        action: params => {
-          // eslint-disable-line
-          let newUsername = params.join(' ') || ''; // eslint-disable-line
+  const touchSupport = hasTouchSupport;
 
-          // Remove things that aren't digits or chars
-          newUsername = newUsername.replace(/[^A-Za-z0-9]/g, '-');
+  const canSend = message.trim().length;
 
-          const errors = [];
+  const commands = [
+    {
+      command: 'nick',
+      description: 'Changes nickname.',
+      parameters: ['{username}'],
+      usage: '/nick {username}',
+      scope: 'global',
+      action: params => {
+        // eslint-disable-line
+        let newUsername = params.join(' ') || ''; // eslint-disable-line
 
-          if (!newUsername.trim().length) {
-            errors.push('Username cannot be blank');
-          }
+        // Remove things that aren't digits or chars
+        newUsername = newUsername.replace(/[^A-Za-z0-9]/g, '-');
 
-          if (newUsername.toString().length > 16) {
-            errors.push('Username cannot be greater than 16 characters');
-          }
+        const errors = [];
 
-          if (!newUsername.match(/^[A-Z]/i)) {
-            errors.push('Username must start with a letter');
-          }
+        if (!newUsername.trim().length) {
+          errors.push('Username cannot be blank');
+        }
 
-          if (errors.length) {
-            return this.props.showNotice({
-              message: `${errors.join(', ')}`,
-              level: 'error',
-            });
-          }
+        if (newUsername.toString().length > 16) {
+          errors.push('Username cannot be greater than 16 characters');
+        }
 
-          this.props.sendEncryptedMessage({
-            type: 'CHANGE_USERNAME',
-            payload: {
-              id: this.props.userId,
-              newUsername,
-              currentUsername: this.props.username,
-            },
+        if (!newUsername.match(/^[A-Z]/i)) {
+          errors.push('Username must start with a letter');
+        }
+
+        if (errors.length) {
+          return showNotice({
+            message: `${errors.join(', ')}`,
+            level: 'error',
           });
-        },
-      },
-      {
-        command: 'help',
-        description: 'Shows a list of commands.',
-        paramaters: [],
-        usage: '/help',
-        scope: 'local',
-        action: params => {
-          // eslint-disable-line
-          const validCommands = this.commands.map(command => `/${command.command}`);
-          this.props.showNotice({
-            message: `Valid commands: ${validCommands.sort().join(', ')}`,
-            level: 'info',
-          });
-        },
-      },
-      {
-        command: 'me',
-        description: 'Invoke virtual action',
-        paramaters: ['{action}'],
-        usage: '/me {action}',
-        scope: 'global',
-        action: params => {
-          // eslint-disable-line
-          const actionMessage = params.join(' ');
-          if (!actionMessage.trim().length) {
-            return false;
-          }
+        }
 
-          this.props.sendEncryptedMessage({
-            type: 'USER_ACTION',
-            payload: {
-              action: actionMessage,
-            },
-          });
-        },
-      },
-      {
-        command: 'clear',
-        description: 'Clears the chat screen',
-        paramaters: [],
-        usage: '/clear',
-        scope: 'local',
-        action: (params = null) => {
-          // eslint-disable-line
-          this.props.clearActivities();
-        },
-      },
-    ];
-  }
-
-  componentDidMount() {
-    if (!hasTouchSupport) {
-      // Disable for now due to vary issues:
-      // Paste not working, shift+enter line breaks
-      // autosize(this.textInput);
-      this.textInput.addEventListener('autosize:resized', () => {
-        this.props.scrollToBottom();
-      });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.focusChat) {
-      if (!getSelectedText()) {
-        // Don't focus for now, evaluate UX benfits
-        // this.textInput.focus()
-      }
-    }
-  }
-
-  componentDidUpdate(nextProps, nextState) {
-    if (!nextState.message.trim().length) {
-      // autosize.update(this.textInput)
-    }
-  }
-
-  handleKeyUp(e) {
-    if (e.key === 'Shift') {
-      this.setState({
-        shiftKeyDown: false,
-      });
-    }
-  }
-
-  handleKeyPress(e) {
-    if (e.key === 'Shift') {
-      this.setState({
-        shiftKeyDown: true,
-      });
-    }
-    // Fix when autosize is enabled - line breaks require shift+enter twice
-    if (e.key === 'Enter' && !hasTouchSupport && !this.state.shiftKeyDown) {
-      e.preventDefault();
-      if (this.canSend()) {
-        this.sendMessage();
-      } else {
-        this.setState({
-          message: '',
+        sendEncryptedMessage({
+          type: 'CHANGE_USERNAME',
+          payload: {
+            id: userId,
+            newUsername,
+            currentUsername: username,
+          },
         });
+      },
+    },
+    {
+      command: 'help',
+      description: 'Shows a list of commands.',
+      parameters: [],
+      usage: '/help',
+      scope: 'local',
+      action: () => {
+        const validCommands = commands.map(command => `/${command.command}`);
+        showNotice({
+          message: `Valid commands: ${validCommands.sort().join(', ')}`,
+          level: 'info',
+        });
+      },
+    },
+    {
+      command: 'me',
+      description: 'Invoke virtual action',
+      parameters: ['{action}'],
+      usage: '/me {action}',
+      scope: 'global',
+      action: params => {
+        const actionMessage = params.join(' ');
+        if (!actionMessage.trim().length) {
+          return false;
+        }
+
+        sendEncryptedMessage({
+          type: 'USER_ACTION',
+          payload: {
+            action: actionMessage,
+          },
+        });
+      },
+    },
+    {
+      command: 'clear',
+      description: 'Clears the chat screen',
+      parameters: [],
+      usage: '/clear',
+      scope: 'local',
+      action: () => {
+        clearActivities();
+      },
+    },
+  ];
+
+  const handleKeyUp = e => {
+    if (e.key === 'Shift') {
+      setShiftKeyDown(false);
+    }
+  };
+
+  const handleKeyPress = e => {
+    if (e.key === 'Shift') {
+      setShiftKeyDown(true);
+    }
+    if (e.key === 'Enter' && !hasTouchSupport && !shiftKeyDown) {
+      e.preventDefault();
+      if (canSend) {
+        sendMessage();
+      } else {
+        setMessage('');
       }
     }
-  }
+  };
 
-  executeCommand(command) {
-    const commandToExecute = this.commands.find(cmnd => cmnd.command === command.command);
+  const executeCommand = command => {
+    const commandToExecute = commands.find(cmnd => cmnd.command === command.command);
 
     if (commandToExecute) {
       const { params } = command;
@@ -175,19 +138,20 @@ export class Chat extends Component {
     }
 
     return null;
-  }
+  };
 
-  handleSendClick() {
-    this.sendMessage.bind(this);
-    this.textInput.focus();
-  }
-
-  handleFormSubmit(evt) {
+  const handleSendClick = evt => {
     evt.preventDefault();
-    this.sendMessage();
-  }
+    sendMessage();
+    textInputRef.current.focus();
+  };
 
-  parseCommand(message) {
+  const handleFormSubmit = evt => {
+    evt.preventDefault();
+    sendMessage();
+  };
+
+  const parseCommand = message => {
     const commandTrigger = {
       command: null,
       params: [],
@@ -207,23 +171,22 @@ export class Chat extends Component {
     }
 
     return false;
-  }
+  };
 
-  sendMessage() {
-    if (!this.canSend()) {
+  const sendMessage = () => {
+    if (!canSend) {
       return;
     }
 
-    const { message } = this.state;
-    const isCommand = this.parseCommand(message);
+    const isCommand = parseCommand(message);
 
     if (isCommand) {
-      const res = this.executeCommand(isCommand);
+      const res = executeCommand(isCommand);
       if (res === false) {
         return;
       }
     } else {
-      this.props.sendEncryptedMessage({
+      sendEncryptedMessage({
         type: 'TEXT_MESSAGE',
         payload: {
           text: message,
@@ -232,55 +195,41 @@ export class Chat extends Component {
       });
     }
 
-    this.setState({
-      message: '',
-    });
-  }
+    setMessage('');
+  };
 
-  handleInputChange(evt) {
-    this.setState({
-      message: evt.target.value,
-    });
-  }
+  const handleInputChange = evt => {
+    setMessage(evt.target.value);
+  };
 
-  canSend() {
-    return this.state.message.trim().length;
-  }
-
-  render() {
-    const touchSupport = this.state.touchSupport;
-
-    return (
-      <form onSubmit={this.handleFormSubmit.bind(this)} className="chat-preflight-container">
-        <textarea
-          rows="1"
-          onKeyUp={this.handleKeyUp.bind(this)}
-          onKeyDown={this.handleKeyPress.bind(this)}
-          ref={input => {
-            this.textInput = input;
-          }}
-          autoFocus
-          className="chat"
-          value={this.state.message}
-          placeholder={this.props.translations.typePlaceholder}
-          onChange={this.handleInputChange.bind(this)}
-        />
-        <div className="input-controls">
-          <FileTransfer sendEncryptedMessage={this.props.sendEncryptedMessage} />
-          {touchSupport && (
-            <button
-              onClick={this.handleSendClick.bind(this)}
-              className={`icon is-right send btn btn-link ${this.canSend() ? 'active' : ''}`}
-              title="Send"
-            >
-              <CornerDownRight className={this.canSend() ? '' : 'disabled'} />
-            </button>
-          )}
-        </div>
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleFormSubmit} className="chat-preflight-container">
+      <textarea
+        rows="1"
+        onKeyUp={handleKeyUp}
+        onKeyDown={handleKeyPress}
+        ref={textInputRef}
+        autoFocus
+        className="chat"
+        value={message}
+        placeholder={translations.typePlaceholder}
+        onChange={handleInputChange}
+      />
+      <div className="input-controls">
+        <FileTransfer sendEncryptedMessage={sendEncryptedMessage} />
+        {touchSupport && (
+          <button
+            onClick={handleSendClick}
+            className={`icon is-right send btn btn-link ${canSend ? 'active' : ''}`}
+            title="Send"
+          >
+            <CornerDownRight className={canSend ? '' : 'disabled'} />
+          </button>
+        )}
+      </div>
+    </form>
+  );
+};
 
 Chat.propTypes = {
   sendEncryptedMessage: PropTypes.func.isRequired,

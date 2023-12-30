@@ -1,62 +1,61 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Copy } from 'react-feather';
-import Clipboard from 'clipboard';
-import $ from 'jquery';
+import { Tooltip } from 'react-tooltip';
 
-class RoomLink extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      roomUrl: `${window.location.origin}/${props.roomId}`,
+const RoomLink = ({ roomId, translations }) => {
+  const [showTooltip, setShowTooltip] = React.useState(false);
+  const mountedRef = React.useRef(true);
+
+  const roomUrl = `${window.location.origin}/${roomId}`;
+
+  React.useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
     };
-  }
+  }, []);
 
-  componentDidMount() {
-    const clip = new Clipboard('.copy-room');
+  const handleClick = async () => {
+    await navigator.clipboard.writeText(roomUrl);
+    setShowTooltip(true);
+    setTimeout(() => {
+      if (mountedRef.current) {
+        setShowTooltip(false);
+      }
+    }, 2000);
+  };
 
-    clip.on('success', () => {
-      $('.copy-room').tooltip('show');
-      setTimeout(() => {
-        $('.copy-room').tooltip('hide');
-      }, 3000);
-    });
-
-    $(() => {
-      $('.copy-room').tooltip({
-        trigger: 'manual',
-      });
-    });
-  }
-
-  componentWillUnmount() {
-    if ($('.copy-room').tooltip) $('.copy-room').tooltip('hide');
-  }
-
-  render() {
-    return (
-      <form>
-        <div className="form-group">
-          <div className="input-group">
-            <input id="room-url" className="form-control" type="text" readOnly value={this.state.roomUrl} />
-            <div className="input-group-append">
-              <button
-                className="copy-room btn btn-secondary"
-                type="button"
-                data-toggle="tooltip"
-                data-placement="bottom"
-                data-clipboard-text={this.state.roomUrl}
-                title={this.props.translations.copyButtonTooltip}
-              >
-                <Copy />
-              </button>
-            </div>
+  return (
+    <form>
+      <div className="form-group">
+        <div className="input-group">
+          <input id="room-url" className="form-control" type="text" readOnly value={roomUrl} />
+          <div className="input-group-append">
+            <button
+              id="copy-room"
+              data-testid="copy-room-button"
+              className="copy-room btn btn-secondary"
+              type="button"
+              onClick={handleClick}
+            >
+              <Copy />
+            </button>
           </div>
+          {showTooltip && (
+            <Tooltip
+              anchorId="copy-room"
+              content={translations.copyButtonTooltip}
+              place="top"
+              events={[]}
+              isOpen={true}
+            />
+          )}
         </div>
-      </form>
-    );
-  }
-}
+      </div>
+    </form>
+  );
+};
 
 RoomLink.propTypes = {
   roomId: PropTypes.string.isRequired,

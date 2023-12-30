@@ -86,7 +86,7 @@ Then run it. Example:
 $ docker run --init --name darkwire.io --rm -p 3001:3001 darkwire.io
 ```
 
-You are able to use any of the enviroment variables available in `server/.env.dist` and `client/.env.dist`. The defaults are available in [Dockerfile](Dockerfile)
+You are able to use any of the environment variables available in `server/.env.dist` and `client/.env.dist`. The defaults are available in [Dockerfile](Dockerfile)
 
 ### Security
 

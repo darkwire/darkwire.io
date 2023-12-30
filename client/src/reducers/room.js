@@ -50,7 +50,7 @@ const room = (state = initialState, action) => {
       return {
         ...state,
         members: [
-          ...state.members,
+          ...state.members.filter(({ id })=> id !== action.payload.publicKey.n),
           {
             username: action.payload.username,
             publicKey: action.payload.publicKey,

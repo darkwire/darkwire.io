@@ -1,160 +1,167 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { Info, Settings, PlusCircle, User, Users, Lock, Unlock, Star } from 'react-feather';
-import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
-import Clipboard from 'clipboard';
 import $ from 'jquery';
+import { Tooltip } from 'react-tooltip';
+import { useClickOutside, useSafeState } from '@react-hookz/web/esnext';
 
 import logoImg from '@/img/logo.png';
 import Username from '@/components/Username';
 
-class Nav extends Component {
-  componentDidMount() {
-    const clip = new Clipboard('.clipboard-trigger');
+const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, iAmOwner, translations }) => {
+  const [showCopyTooltip, setShowCopyTooltip] = useSafeState(false);
+  const [showLockedTooltip, setShowLockedTooltip] = useSafeState(false);
+  const [showMemberList, setShowMemberList] = useSafeState(false);
+  const userListRef = React.useRef(null);
+  const roomUrl = `${window.location.origin}/${roomId}`;
 
-    clip.on('success', () => {
-      $('.room-id').tooltip('show');
-      setTimeout(() => {
-        $('.room-id').tooltip('hide');
-      }, 3000);
-    });
+  useClickOutside(userListRef, () => {
+    setShowMemberList(false);
+  });
 
-    $(() => {
-      $('.room-id').tooltip({
-        trigger: 'manual',
-      });
-      $('.lock-room').tooltip({
-        trigger: 'manual',
-      });
-    });
-  }
-
-  componentDidUpdate() {
-    $(() => {
-      $('.me-icon-wrap').tooltip();
-      $('.owner-icon-wrap').tooltip();
-    });
-  }
-
-  newRoom() {
+  const newRoom = () => {
     $('.navbar-collapse').collapse('hide');
     window.open(`/${nanoid()}`);
-  }
+  };
 
-  handleSettingsClick() {
+  const handleSettingsClick = () => {
     $('.navbar-collapse').collapse('hide');
-    this.props.openModal('Settings');
-  }
+    openModal('Settings');
+  };
 
-  handleAboutClick() {
+  const handleAboutClick = () => {
     $('.navbar-collapse').collapse('hide');
-    this.props.openModal('About');
-  }
+    openModal('About');
+  };
 
-  handleToggleLock() {
-    if (!this.props.iAmOwner) {
-      $('.lock-room').tooltip('show');
-      setTimeout(() => $('.lock-room').tooltip('hide'), 3000);
-      return;
+  const handleToggleLock = () => {
+    if (!iAmOwner) {
+      setShowLockedTooltip(true);
+      setTimeout(() => {
+        setShowLockedTooltip(false);
+      }, 2000);
+    } else {
+      toggleLockRoom();
     }
-    this.props.toggleLockRoom();
-  }
+  };
 
-  render() {
-    return (
-      <nav className="navbar navbar-expand-md navbar-dark">
-        <div className="meta">
-          <img src={logoImg} alt="Darkwire" className="logo" />
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(roomUrl);
+    setShowCopyTooltip(true);
+    setTimeout(() => {
+      setShowCopyTooltip(false);
+    }, 2000);
+  };
 
-          <button
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title={this.props.translations.copyButtonTooltip}
-            data-clipboard-text={`${window.location.origin}/${this.props.roomId}`}
-            className="btn btn-plain btn-link clipboard-trigger room-id ellipsis"
-          >
-            {`/${this.props.roomId}`}
-          </button>
-
-          <span className="lock-room-container">
-            <button
-              onClick={this.handleToggleLock.bind(this)}
-              className="lock-room btn btn-link btn-plain"
-              data-toggle="tooltip"
-              data-placement="bottom"
-              title="You must be the owner to lock or unlock the room"
-            >
-              {this.props.roomLocked && <Lock />}
-              {!this.props.roomLocked && <Unlock className="muted" />}
-            </button>
-          </span>
-
-          <Dropdown className="members-dropdown">
-            <DropdownTrigger>
-              <button className="btn btn-link btn-plain members-action" title="Users">
-                <Users className="users-icon" />
-              </button>
-              <span>{this.props.members.length}</span>
-            </DropdownTrigger>
-            <DropdownContent>
-              <ul className="plain">
-                {this.props.members.map((member, index) => (
-                  <li key={`user-${index}`}>
-                    <Username username={member.username} />
-                    <span className="icon-container">
-                      {member.id === this.props.userId && (
-                        <span data-toggle="tooltip" data-placement="bottom" title="Me" className="me-icon-wrap">
-                          <User className="me-icon" />
-                        </span>
-                      )}
-                      {member.isOwner && (
-                        <span data-toggle="tooltip" data-placement="bottom" title="Owner" className="owner-icon-wrap">
-                          <Star className="owner-icon" />
-                        </span>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </DropdownContent>
-          </Dropdown>
-        </div>
+  return (
+    <nav className="navbar navbar-expand-md navbar-dark">
+      <div className="meta">
+        <img src={logoImg} alt="Darkwire" className="logo" />
 
         <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+          id="copy-room-url-button"
+          className="btn btn-plain btn-link clipboard-trigger room-id ellipsis"
+          onClick={handleCopy}
         >
-          <span className="navbar-toggler-icon" />
+          {`/${roomId}`}
         </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <button className="btn btn-plain nav-link" onClick={this.newRoom.bind(this)} target="blank">
-                <PlusCircle /> <span>{this.props.translations.newRoomButton}</span>
-              </button>
-            </li>
-            <li className="nav-item">
-              <button onClick={this.handleSettingsClick.bind(this)} className="btn btn-plain nav-link">
-                <Settings /> <span>{this.props.translations.settingsButton}</span>
-              </button>
-            </li>
-            <li className="nav-item">
-              <button onClick={this.handleAboutClick.bind(this)} className="btn btn-plain nav-link">
-                <Info /> <span>{this.props.translations.aboutButton}</span>
-              </button>
-            </li>
-          </ul>
+        {showCopyTooltip && (
+          <Tooltip
+            anchorId="copy-room-url-button"
+            content={translations.copyButtonTooltip}
+            place="bottom"
+            events={[]}
+            isOpen={true}
+          />
+        )}
+        <span className="lock-room-container">
+          <button
+            id="lock-room-button"
+            data-testid="lock-room-button"
+            onClick={handleToggleLock}
+            className="lock-room btn btn-link btn-plain"
+          >
+            {roomLocked && <Lock />}
+            {!roomLocked && <Unlock className="muted" />}
+          </button>
+          {showLockedTooltip && (
+            <Tooltip
+              anchorId="lock-room-button"
+              content="You must be the owner to lock or unlock the room"
+              place="bottom"
+              events={[]}
+              isOpen={true}
+            />
+          )}
+        </span>
+        <div className="members-menu" ref={userListRef}>
+          <button
+            className="btn btn-link btn-plain members-action"
+            title="Users"
+            onClick={() => setShowMemberList(prev => !prev)}
+          >
+            <Users className="users-icon" />
+          </button>
+          <span>{members.length}</span>
+
+          {showMemberList && (
+            <ul className="member-list">
+              {members.map((member, index) => (
+                <li key={`user-${index}`}>
+                  <Username username={member.username} />
+                  <span className="icon-container">
+                    {member.id === userId && (
+                      <span className="me-icon-wrap" title="Me">
+                        <User className="me-icon" />
+                      </span>
+                    )}
+                    {member.isOwner && (
+                      <span className="owner-icon-wrap">
+                        <Star className="owner-icon" title="Owner" />
+                      </span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      </nav>
-    );
-  }
-}
+      </div>
+
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon" />
+      </button>
+      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item">
+            <button className="btn btn-plain nav-link" onClick={newRoom} target="blank">
+              <PlusCircle /> <span>{translations.newRoomButton}</span>
+            </button>
+          </li>
+          <li className="nav-item">
+            <button onClick={handleSettingsClick} className="btn btn-plain nav-link">
+              <Settings /> <span>{translations.settingsButton}</span>
+            </button>
+          </li>
+          <li className="nav-item">
+            <button onClick={handleAboutClick} className="btn btn-plain nav-link">
+              <Info /> <span>{translations.aboutButton}</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  );
+};
 
 Nav.propTypes = {
   members: PropTypes.array.isRequired,

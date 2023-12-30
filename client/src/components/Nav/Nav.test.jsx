@@ -1,7 +1,7 @@
-import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import mock$ from 'jquery';
 import { test, expect, vi } from 'vitest';
+import { act } from 'react-dom/test-utils';
 
 import Nav from '.';
 
@@ -35,13 +35,15 @@ vi.mock('nanoid', () => {
   };
 });
 
-vi.useFakeTimers();
+const mockClipboardWriteTest = vi.fn();
 
 const mockTranslations = {
   newRoomButton: 'new room',
   settingsButton: 'settings',
   aboutButton: 'about',
 };
+
+vi.useFakeTimers();
 
 test('Nav component is displaying', async () => {
   const { asFragment } = render(
@@ -58,10 +60,6 @@ test('Nav component is displaying', async () => {
   );
 
   expect(asFragment()).toMatchSnapshot();
-
-  expect(mock$).toHaveBeenCalledWith('.room-id');
-  expect(mock$).toHaveBeenLastCalledWith('.lock-room');
-  expect(mockTooltip).toHaveBeenLastCalledWith({ trigger: 'manual' });
 });
 
 test('Nav component is displaying with another configuration and can rerender', async () => {
@@ -99,16 +97,15 @@ test('Nav component is displaying with another configuration and can rerender', 
     />,
   );
 
-  expect(mock$).toHaveBeenCalledWith('.me-icon-wrap');
-  expect(mock$).toHaveBeenLastCalledWith('.owner-icon-wrap');
+  expect(asFragment()).toMatchSnapshot();
 });
 
 test('Can copy room url', async () => {
-  document.execCommand = vi.fn(() => true);
+  navigator.clipboard = { writeText: mockClipboardWriteTest };
 
   const toggleLockRoom = vi.fn();
 
-  const { getByText } = render(
+  const { getByText, queryByText } = render(
     <Nav
       members={[
         { id: 'id1', username: 'alan', isOwner: true },
@@ -120,27 +117,28 @@ test('Can copy room url', async () => {
       toggleLockRoom={toggleLockRoom}
       openModal={() => {}}
       iAmOwner={false}
-      translations={{}}
+      translations={{ copyButtonTooltip: 'Copied' }}
     />,
   );
 
-  fireEvent.click(getByText(`/testRoom`));
+  await act(async () => {
+    await fireEvent.click(getByText('/testRoom'));
+  });
 
-  expect(document.execCommand).toHaveBeenLastCalledWith('copy');
-  expect(mock$).toHaveBeenCalledTimes(15);
-  expect(mockTooltip).toHaveBeenLastCalledWith('show');
+  expect(mockClipboardWriteTest).toHaveBeenLastCalledWith('http://localhost:3000/testRoom');
+
+  await getByText('Copied');
 
   // Wait tooltip closing
-  vi.runAllTimers();
+  await act(() => vi.runAllTimers());
 
-  expect(mock$).toHaveBeenCalledTimes(18);
-  expect(mockTooltip).toHaveBeenLastCalledWith('hide');
+  expect(queryByText('Copied')).not.toBeInTheDocument();
 });
 
 test('Can lock/unlock room is room owner only', async () => {
   const toggleLockRoom = vi.fn();
 
-  const { rerender, getByTitle } = render(
+  const { rerender, getByTestId, getByText, queryByText } = render(
     <Nav
       members={[
         { id: 'id1', username: 'alan', isOwner: true },
@@ -156,13 +154,13 @@ test('Can lock/unlock room is room owner only', async () => {
     />,
   );
 
-  const toggleLockRoomButton = getByTitle('You must be the owner to lock or unlock the room');
+  const toggleLockRoomButton = getByTestId('lock-room-button');
 
-  fireEvent.click(toggleLockRoomButton);
+  await fireEvent.click(toggleLockRoomButton);
 
   expect(toggleLockRoom).toHaveBeenCalledWith();
 
-  fireEvent.click(toggleLockRoomButton);
+  await fireEvent.click(toggleLockRoomButton);
 
   expect(toggleLockRoom).toHaveBeenCalledTimes(2);
 
@@ -183,11 +181,16 @@ test('Can lock/unlock room is room owner only', async () => {
     />,
   );
 
-  fireEvent.click(toggleLockRoomButton);
+  await fireEvent.click(toggleLockRoomButton);
 
   expect(toggleLockRoom).toHaveBeenCalledTimes(2);
-  expect(mock$).toHaveBeenLastCalledWith('.lock-room');
-  expect(mockTooltip).toHaveBeenLastCalledWith('show');
+
+  await getByText('You must be the owner to lock or unlock the room');
+
+  // Wait tooltip closing
+  await act(() => vi.runAllTimers());
+
+  expect(queryByText('You must be the owner to lock or unlock the room')).not.toBeInTheDocument();
 });
 
 test('Can show user list', async () => {
@@ -227,8 +230,10 @@ test('Can show user list', async () => {
       translations={{}}
     />,
   );
+
   await waitFor(() => expect(getByText('alan')).toBeInTheDocument());
   await waitFor(() => expect(getByText('dan')).toBeInTheDocument());
+
   expect(queryByTitle('Owner')).not.toBeInTheDocument();
   expect(queryByTitle('Me')).not.toBeInTheDocument();
 });

@@ -21,10 +21,8 @@ exports[`RoomLink > should display 1`] = `
         >
           <button
             class="copy-room btn btn-secondary"
-            data-clipboard-text="http://localhost:3000/roomId"
-            data-placement="bottom"
-            data-toggle="tooltip"
-            title="copyButton"
+            data-testid="copy-room-button"
+            id="copy-room"
             type="button"
           >
             <svg

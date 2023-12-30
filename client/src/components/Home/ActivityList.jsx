@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { defer } from 'lodash';
+import { useSafeState, useEventListener } from '@react-hookz/web/esnext';
 
 import ChatInput from '@/components/Chat';
 import T from '@/components/T';
@@ -10,39 +11,28 @@ import styles from './styles.module.scss';
 
 const ActivityList = ({ activities, openModal }) => {
   const [focusChat, setFocusChat] = React.useState(false);
-  const [scrolledToBottom, setScrolledToBottom] = React.useState(true);
+  const [scrolledToBottom, setScrolledToBottom] = useSafeState(true);
   const messageStream = React.useRef(null);
   const activitiesList = React.useRef(null);
 
-  React.useEffect(() => {
-    const currentMessageStream = messageStream.current;
+  useEventListener(messageStream, 'scroll', () => {
+    const messageStreamHeight = messageStream.current.clientHeight;
+    const activitiesListHeight = activitiesList.current.clientHeight;
 
-    // Update scrolledToBottom state if we scroll the activity stream
-    const onScroll = () => {
-      const messageStreamHeight = messageStream.current.clientHeight;
-      const activitiesListHeight = activitiesList.current.clientHeight;
+    const bodyRect = document.body.getBoundingClientRect();
+    const elemRect = activitiesList.current.getBoundingClientRect();
+    const offset = elemRect.top - bodyRect.top;
+    const activitiesListYPos = offset;
 
-      const bodyRect = document.body.getBoundingClientRect();
-      const elemRect = activitiesList.current.getBoundingClientRect();
-      const offset = elemRect.top - bodyRect.top;
-      const activitiesListYPos = offset;
-
-      const newScrolledToBottom = activitiesListHeight + (activitiesListYPos - 60) <= messageStreamHeight;
-      if (newScrolledToBottom) {
-        if (!scrolledToBottom) {
-          setScrolledToBottom(true);
-        }
-      } else if (scrolledToBottom) {
-        setScrolledToBottom(false);
+    const newScrolledToBottom = activitiesListHeight + (activitiesListYPos - 60) <= messageStreamHeight;
+    if (newScrolledToBottom) {
+      if (!scrolledToBottom) {
+        setScrolledToBottom(true);
       }
-    };
-
-    currentMessageStream.addEventListener('scroll', onScroll);
-    return () => {
-      // Unbind event if component unmounted
-      currentMessageStream.removeEventListener('scroll', onScroll);
-    };
-  }, [scrolledToBottom]);
+    } else if (scrolledToBottom) {
+      setScrolledToBottom(false);
+    }
+  });
 
   const scrollToBottomIfShould = React.useCallback(() => {
     if (scrolledToBottom) {
@@ -57,7 +47,7 @@ const ActivityList = ({ activities, openModal }) => {
   const scrollToBottom = React.useCallback(() => {
     messageStream.current.scrollTop = messageStream.current.scrollHeight;
     setScrolledToBottom(true);
-  }, []);
+  }, [setScrolledToBottom]);
 
   const handleChatClick = () => {
     setFocusChat(true);
