@@ -25,6 +25,6 @@
     "lint": "cd server && yarn lint && cd ../client && yarn lint"
   },
   "devDependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^8.2.2"
   }
 }
