@@ -14,12 +14,6 @@ RUN apk update \
         && yarn cache clean \
         && yarn autoclean --force
 
-
-
-    
-
-
-
 # Stage 2: Production Stage
 FROM node:alpine3.19
 
@@ -32,4 +26,8 @@ RUN apk add --no-cache nginx openssl && \
     chmod +x /home/node/start.sh
 
 STOPSIGNAL SIGINT
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \ 
+    CMD [ "curl", "-f", "${VITE_API_PROTOCOL}://localhost:${VITE_API_PORT}", "||", "exit", "1" ]
+
 CMD ["/home/node/start.sh"]

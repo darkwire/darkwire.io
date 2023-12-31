@@ -19,7 +19,7 @@ VITE_MAX_FILE_SIZE=$VITE_MAX_FILE_SIZE
 " > client/.env
 
 
-echo"
+echo "
 
 CLIENT_DIST_DIRECTORY='client/dist/'
 ROOM_HASH_SECRET=$ROOM_HASH_SECRET
