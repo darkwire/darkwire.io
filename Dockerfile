@@ -20,7 +20,7 @@ FROM node:alpine3.19
 WORKDIR /home/node
 COPY --from=builder /home/node .
 
-RUN apk add --no-cache nginx openssl && \
+RUN apk add --no-cache curl nginx openssl && \
     rm /etc/nginx/http.d/default.conf && \
     mv /home/node/default.conf /etc/nginx/http.d/ && \
     chmod +x /home/node/start.sh
@@ -28,6 +28,6 @@ RUN apk add --no-cache nginx openssl && \
 STOPSIGNAL SIGINT
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \ 
-    CMD [ "curl", "-f", "${VITE_API_PROTOCOL}://localhost:${VITE_API_PORT}", "||", "exit", "1" ]
+    CMD [ "curl", "-f", "http://localhost:3001", "||", "exit", "1" ]
 
 CMD ["/home/node/start.sh"]
