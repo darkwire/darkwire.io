@@ -21,17 +21,26 @@ const Nav = ({ members, roomId, userId, roomLocked, toggleLockRoom, openModal, i
   });
 
   const newRoom = () => {
-    $('.navbar-collapse').collapse('hide');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+      new bootstrap.Collapse(navbarCollapse).hide();
+    }
     window.open(`/${nanoid()}`);
   };
-
+  
   const handleSettingsClick = () => {
-    $('.navbar-collapse').collapse('hide');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+      new bootstrap.Collapse(navbarCollapse).hide();
+    }
     openModal('Settings');
   };
-
+  
   const handleAboutClick = () => {
-    $('.navbar-collapse').collapse('hide');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+      new bootstrap.Collapse(navbarCollapse).hide();
+    }
     openModal('About');
   };
 

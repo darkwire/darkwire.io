@@ -1,0 +1,13 @@
+##### Do not edit. #####
+UseBridges 1
+AutomapHostsOnResolve 1
+VirtualAddrNetwork 10.192.0.0/10
+User tor
+DataDirectory /var/lib/tor
+SocksPort auto
+TransPort 10.2.0.3:59040 IsolateClientAddr IsolateClientProtocol IsolateDestAddr IsolateDestPort
+ClientTransportPlugin webtunnel exec ./client
+%include /etc/tor/torrc.d/*.conf
+
+
+

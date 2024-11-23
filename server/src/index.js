@@ -118,7 +118,9 @@ if (store.hasSocketAdapter) {
   io.adapter(store.getSocketAdapter());
 }
 
-const roomHashSecret = process.env.ROOM_HASH_SECRET;
+
+const roomHashSecret = process.env.ROOM_HASH_SECRET || crypto.randomBytes(256).toString('hex');
+
 
 const getRoomIdHash = id => {
   if (env === 'development') {

@@ -1,35 +1,40 @@
-FROM node:18-bullseye-slim
+# builder: Builder For Darkwore
+FROM --platform=$BUILDPLATFORM node:current-alpine AS builder
 
-USER node:node
 
-WORKDIR /home/node
-
-# Server environmental variables will be put into server/.env
-ENV MAILGUN_API_KEY=api-key \
-    MAILGUN_DOMAIN=darkwire.io \
-    ABUSE_TO_EMAIL_ADDRESS=abuse@darkwire.io \
-    ABUSE_FROM_EMAIL_ADDRESS="Darkwire <no-reply@darkwire.io>" \
-    CLIENT_DIST_DIRECTORY='client/dist/'\
-    ROOM_HASH_SECRET='some-uuid'\
-    SITE_URL=https://darkwire.io \
-    STORE_BACKEND=memory
 
 # Client configuration will be put into client/.env
 ENV TZ=UTC \
-    VITE_API_HOST=localhost \
-    VITE_API_PROTOCOL=http \
-    VITE_API_PORT=3001 \
-    VITE_COMMIT_SHA=some_sha \
-    VITE_MAX_FILE_SIZE=4
+    VITE_COMMIT_SHA=terra-firma
 
-COPY --chown=node:node . .
+WORKDIR /opt/app
+COPY  . . 
+RUN     npm install -g yarn@latest --force \
+        && yarn install --flat --production --no-cache \
+        && yarn build --no-cache \
+        && rm -rf /opt/app/node_modules \
+        && yarn cache clean \
+        && yarn autoclean --force
 
-RUN yarn && yarn build
+# final: Final Darkwire Image
+FROM alpine:latest
 
-STOPSIGNAL SIGINT
-EXPOSE 3001
-HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \ 
-    CMD [ "curl", "-f", "${VITE_API_PROTOCOL}://localhost:${VITE_API_PORT}", "||", "exit", "1" ]
+WORKDIR /opt/app
 
-ENTRYPOINT [ "docker-entrypoint.sh" ]
-CMD ["yarn", "start"]
+RUN apk add --no-cache nginx yarn openssl iptables
+COPY --from=builder /opt/app/client/dist /opt/app/client/dist
+COPY --from=builder /opt/app/server /opt/app/server
+COPY package.json /opt/app/package.json
+COPY default.conf /etc/nginx/http.d/
+COPY start.sh /opt/app/start.sh
+
+
+RUN  chmod +x /opt/app/start.sh
+
+    
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD \
+    sh -c 'pgrep nginx > /dev/null && pgrep node > /dev/null' || exit 1
+
+CMD ["/opt/app/start.sh", "start" ]
+
+STOPSIGNAL SIGTERM

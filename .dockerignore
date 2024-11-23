@@ -3,6 +3,8 @@
 !yarn.lock
 !docker-entrypoint.sh
 !build.sh
+!start.sh
+!default.conf
 !server/*
 !client/*
 **/node_modules/*

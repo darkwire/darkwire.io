@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 api_host=$API_HOST
 
@@ -9,11 +9,15 @@ fi
 
 echo "building client..."
 cd client
+yarn install
+yarn upgrade
 yarn --production=false
 yarn build
 cd ../
 
 echo "building server..."
 cd server
+yarn install
+yarn upgrade
 yarn  --production=false
 yarn build

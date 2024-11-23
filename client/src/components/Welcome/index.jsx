@@ -10,8 +10,7 @@ const Welcome = ({ roomId, translations, close }) => {
           <li>Support on all modern browsers (Chrome, Firefox, Safari, Safari iOS, Android)</li>
           <li>Slash commands (/nick, /me, /clear)</li>
           <li>Room owners can lock the room, preventing anyone else from joining</li>
-          <li>Front-end rewritten in React.js and Redux</li>
-          <li>Send files up to 4 MB</li>
+          <li>Send files</li>
         </ul>
         <div>
           You can learn more{' '}

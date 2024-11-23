@@ -1,11 +1,17 @@
-version: '3.0'
+
 services:
-  darkwire.io:
-    build:
-      context: .
-    networks:
-      - db
+  darkwire:
+    build: .
+    #image: noxcis/darkwire:test
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
     ports:
-      - 3001:3001
-networks:
-  db:
+      - 3002:80
+      - 4001:443
+      - 5001:3001
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+      

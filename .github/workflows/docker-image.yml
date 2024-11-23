@@ -1,0 +1,51 @@
+name: Build and Push Docker Image (Daily)
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Daily at midnight (UTC)
+  workflow_dispatch:  # Allows manual triggering of the workflow
+    inputs:
+      trigger-build:
+        description: 'Trigger a manual build and push'
+        default: 'true'
+
+jobs:
+  build_and_push_multiarch:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 42  # Job will timeout after 42 minutes
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Log in to Docker Hub using secrets
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+
+      # Step 3: Create and use a new builder with multi-platform support
+      - name: Set up Docker Buildx (Multi-Arch Builder)
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: image=moby/buildkit:master
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+
+      # Step 4: Set up QEMU (for multi-platform emulation)
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+        
+      # Step 5: Build and Push Docker Image with multi-platform support (No cache)
+      - name: Build and Push Docker Image (Multi-Arch)
+        uses: docker/build-push-action@v4
+        with:
+          context: .  # Path to Dockerfile in repository
+          push: true  # Push image after build
+          tags: noxcis/darkwire:terra-firma  # Tag for all platforms
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7  # Platforms to build for
+          no-cache: true  # Disable caching to force a fresh build
